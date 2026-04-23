@@ -8,10 +8,10 @@ import { ModelSwitcher } from './ModelSwitcher';
 import { AddMenu } from './chat/AddMenu';
 import { ChatMessageList } from './chat/ChatMessageList';
 import { CommentChipBar } from './chat/CommentChipBar';
-import { EmptyState } from './chat/EmptyState';
-import { PromptInput, type PromptInputHandle } from './chat/PromptInput';
 import { DesignSystemPicker } from './chat/DesignSystemPicker';
+import { EmptyState } from './chat/EmptyState';
 import { FidelityChip } from './chat/FidelityChip';
+import { PromptInput, type PromptInputHandle } from './chat/PromptInput';
 import { WorkspaceChip } from './chat/WorkspaceChip';
 
 export interface SidebarProps {

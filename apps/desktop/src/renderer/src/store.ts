@@ -489,10 +489,7 @@ interface CodesignState {
    *  picks allow/deny. */
   pendingPermissions: PermissionRequest[];
   loadWorkspaceForDesign: (designId: string) => Promise<void>;
-  setWorkspaceForDesign: (
-    designId: string,
-    workspace: WorkspaceContext | null,
-  ) => Promise<void>;
+  setWorkspaceForDesign: (designId: string, workspace: WorkspaceContext | null) => Promise<void>;
   pickWorkspaceDirectory: (designId: string) => Promise<string | null>;
   receivePermissionRequest: (req: PermissionRequest) => void;
   resolvePermission: (decision: PermissionDecision) => void;
@@ -792,17 +789,15 @@ async function persistArtifactSnapshot(
     // above is the source of truth; the FS copy is a cache.
     try {
       if (window.codesign.files) {
-        await window.codesign.files.create(designId, filePath, artifact.content).catch(
-          async () => {
-            // Row already exists — fall back to the rename-then-replace
-            // dance via delete + create so `UNIQUE(design_id, path)`
-            // doesn't fire. In practice the text-editor tool keeps the
-            // row fresh during the run; this branch only trips on first
-            // generate of a new file.
-            await window.codesign?.files?.delete(designId, filePath);
-            await window.codesign?.files?.create(designId, filePath, artifact.content);
-          },
-        );
+        await window.codesign.files.create(designId, filePath, artifact.content).catch(async () => {
+          // Row already exists — fall back to the rename-then-replace
+          // dance via delete + create so `UNIQUE(design_id, path)`
+          // doesn't fire. In practice the text-editor tool keeps the
+          // row fresh during the run; this branch only trips on first
+          // generate of a new file.
+          await window.codesign?.files?.delete(designId, filePath);
+          await window.codesign?.files?.create(designId, filePath, artifact.content);
+        });
       }
     } catch (err) {
       rendererLogger.warn('store', '[files] mirror failed', {
@@ -1563,14 +1558,10 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     });
 
     try {
-      const workspace = designIdAtStart
-        ? get().workspaceByDesign[designIdAtStart] ?? null
-        : null;
+      const workspace = designIdAtStart ? (get().workspaceByDesign[designIdAtStart] ?? null) : null;
       const targetFilePath =
         (designIdAtStart && get().currentFilePathByDesign[designIdAtStart]) || 'index.html';
-      const fidelity = designIdAtStart
-        ? get().fidelityByDesign[designIdAtStart]
-        : undefined;
+      const fidelity = designIdAtStart ? get().fidelityByDesign[designIdAtStart] : undefined;
       await runGenerate(
         get,
         set,

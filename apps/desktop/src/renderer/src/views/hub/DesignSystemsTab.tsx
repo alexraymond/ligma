@@ -7,15 +7,12 @@ import { useCodesignStore } from '../../store';
 function Swatches({ colors }: { colors: string[] }) {
   const shown = colors.slice(0, 8);
   if (shown.length === 0) {
-    return (
-      <div className="text-[11px] text-[var(--color-text-muted)] italic">No color tokens</div>
-    );
+    return <div className="text-[11px] text-[var(--color-text-muted)] italic">No color tokens</div>;
   }
   return (
     <div className="flex items-center gap-[4px]">
       {shown.map((c, i) => (
         <span
-          // biome-ignore lint/suspicious/noArrayIndexKey: colors are stable within a row
           key={`${c}-${i}`}
           title={c}
           style={{ background: c }}
@@ -58,10 +55,7 @@ export function DesignSystemsTab() {
   }, [refresh]);
 
   const scanNew = async () => {
-    const rootPath = window.prompt(
-      'Root path of the design system to scan (absolute path)',
-      '',
-    );
+    const rootPath = window.prompt('Root path of the design system to scan (absolute path)', '');
     if (!rootPath || rootPath.trim().length === 0) return;
     if (!window.codesign?.designSystems) return;
     try {
@@ -101,7 +95,8 @@ export function DesignSystemsTab() {
   };
 
   const onDelete = async (row: DesignSystemRow) => {
-    if (!window.confirm(`Delete design system "${row.name}"? Linked designs stay, unbound.`)) return;
+    if (!window.confirm(`Delete design system "${row.name}"? Linked designs stay, unbound.`))
+      return;
     if (!window.codesign?.designSystems) return;
     try {
       await window.codesign.designSystems.delete(row.id);

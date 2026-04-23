@@ -7,9 +7,9 @@
  * The `db` argument is injected so tests can pass an in-memory instance.
  */
 
+import { basename } from 'node:path';
 import type { Design, DesignSystemRow } from '@ligma/shared';
 import { CodesignError } from '@ligma/shared';
-import { basename } from 'node:path';
 import type BetterSqlite3 from 'better-sqlite3';
 import { scanDesignSystem } from './design-system';
 import { ipcMain } from './electron-runtime';
@@ -40,10 +40,7 @@ function requireString(r: Record<string, unknown>, key: string): string {
 export function registerDesignSystemsIpc(db: Database): void {
   ipcMain.handle('designSystems:v1:list', (_e: unknown, raw: unknown): DesignSystemRow[] => {
     if (typeof raw !== 'object' || raw === null) {
-      throw new CodesignError(
-        'designSystems:v1:list expects an object payload',
-        'IPC_BAD_INPUT',
-      );
+      throw new CodesignError('designSystems:v1:list expects an object payload', 'IPC_BAD_INPUT');
     }
     requireSchemaV1(raw as Record<string, unknown>, 'designSystems:v1:list');
     return listDesignSystems(db);
@@ -53,10 +50,7 @@ export function registerDesignSystemsIpc(db: Database): void {
     'designSystems:v1:scan',
     async (_e: unknown, raw: unknown): Promise<DesignSystemRow> => {
       if (typeof raw !== 'object' || raw === null) {
-        throw new CodesignError(
-          'designSystems:v1:scan expects an object payload',
-          'IPC_BAD_INPUT',
-        );
+        throw new CodesignError('designSystems:v1:scan expects an object payload', 'IPC_BAD_INPUT');
       }
       const r = raw as Record<string, unknown>;
       requireSchemaV1(r, 'designSystems:v1:scan');
@@ -83,10 +77,7 @@ export function registerDesignSystemsIpc(db: Database): void {
 
   ipcMain.handle('designSystems:v1:rename', (_e: unknown, raw: unknown): DesignSystemRow => {
     if (typeof raw !== 'object' || raw === null) {
-      throw new CodesignError(
-        'designSystems:v1:rename expects an object payload',
-        'IPC_BAD_INPUT',
-      );
+      throw new CodesignError('designSystems:v1:rename expects an object payload', 'IPC_BAD_INPUT');
     }
     const r = raw as Record<string, unknown>;
     requireSchemaV1(r, 'designSystems:v1:rename');
@@ -95,10 +86,7 @@ export function registerDesignSystemsIpc(db: Database): void {
 
   ipcMain.handle('designSystems:v1:delete', (_e: unknown, raw: unknown): void => {
     if (typeof raw !== 'object' || raw === null) {
-      throw new CodesignError(
-        'designSystems:v1:delete expects an object payload',
-        'IPC_BAD_INPUT',
-      );
+      throw new CodesignError('designSystems:v1:delete expects an object payload', 'IPC_BAD_INPUT');
     }
     const r = raw as Record<string, unknown>;
     requireSchemaV1(r, 'designSystems:v1:delete');
@@ -117,10 +105,7 @@ export function registerDesignSystemsIpc(db: Database): void {
     const designId = requireString(r, 'designId');
     const dsId = r['designSystemId'];
     if (dsId !== null && (typeof dsId !== 'string' || dsId.trim().length === 0)) {
-      throw new CodesignError(
-        'designSystemId must be a non-empty string or null',
-        'IPC_BAD_INPUT',
-      );
+      throw new CodesignError('designSystemId must be a non-empty string or null', 'IPC_BAD_INPUT');
     }
     return linkDesignSystemToDesign(db, designId, dsId as string | null);
   });
