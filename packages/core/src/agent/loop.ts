@@ -42,9 +42,9 @@ import type {
   TurnDone,
 } from './events.js';
 import { AGENT_EVENT_SCHEMA_VERSION } from './events.js';
-import { initialTurnState, type TurnState } from './state.js';
+import { type TurnState, initialTurnState } from './state.js';
 import type { ToolCall, ToolRegistry, ToolRunResult } from './tools/index.js';
-import { batchAndRun, type BatchAndRunResult } from './tools/orchestration.js';
+import { type BatchAndRunResult, batchAndRun } from './tools/orchestration.js';
 
 export type ProviderStreamItem =
   | { type: 'text'; delta: string }
@@ -135,12 +135,7 @@ function toolStart(call: ToolCall, seq: number): ToolStart {
   };
 }
 
-function toolEnd(
-  call: ToolCall,
-  result: ToolRunResult,
-  durationMs: number,
-  seq: number,
-): ToolEnd {
+function toolEnd(call: ToolCall, result: ToolRunResult, durationMs: number, seq: number): ToolEnd {
   const base: ToolEnd = {
     type: 'tool_end',
     schemaVersion: AGENT_EVENT_SCHEMA_VERSION,
@@ -167,9 +162,7 @@ function turnDone(state: TurnState, stopReason: TurnDone['stopReason'], error?: 
   return done;
 }
 
-export async function* runTurn(
-  options: RunTurnOptions,
-): AsyncGenerator<AgentEvent, TurnDone> {
+export async function* runTurn(options: RunTurnOptions): AsyncGenerator<AgentEvent, TurnDone> {
   const state = initialTurnState();
   const signal = options.signal;
   const maxBatches = options.maxToolBatches ?? DEFAULT_MAX_TOOL_BATCHES;
@@ -200,36 +193,21 @@ export async function* runTurn(
           break;
         }
         case 'permission_request': {
-          yield permissionRequest(
-            item.toolUseId,
-            item.toolName,
-            item.input,
-            item.reason,
-          );
+          yield permissionRequest(item.toolUseId, item.toolName, item.input, item.reason);
           break;
         }
         case 'tool_call_batch': {
           if (batches >= maxBatches) {
-            const done = turnDone(
-              state,
-              'error',
-              `tool batch cap (${maxBatches}) exceeded`,
-            );
+            const done = turnDone(state, 'error', `tool batch cap (${maxBatches}) exceeded`);
             yield done;
             return done;
           }
           batches += 1;
-          const startedCalls = new Set<string>();
+          const perCallSeq = new Map<string, number>();
           for (const call of item.calls) {
             seq += 1;
             yield toolStart(call, seq);
-            startedCalls.add(call.id);
-          }
-          const perCallSeq = new Map<string, number>();
-          let yieldSeq = seq - item.calls.length;
-          for (const call of item.calls) {
-            yieldSeq += 1;
-            perCallSeq.set(call.id, yieldSeq);
+            perCallSeq.set(call.id, seq);
           }
 
           const runOpts: Parameters<typeof batchAndRun>[2] = {};
@@ -254,9 +232,7 @@ export async function* runTurn(
           break;
         }
         case 'done': {
-          const stopReason: TurnDone['stopReason'] = signal?.aborted
-            ? 'aborted'
-            : item.stopReason;
+          const stopReason: TurnDone['stopReason'] = signal?.aborted ? 'aborted' : item.stopReason;
           const done = turnDone(state, stopReason, item.error);
           yield done;
           return done;
@@ -272,11 +248,7 @@ export async function* runTurn(
       yield done;
       return done;
     }
-    const done = turnDone(
-      state,
-      'error',
-      err instanceof Error ? err.message : String(err),
-    );
+    const done = turnDone(state, 'error', err instanceof Error ? err.message : String(err));
     yield done;
     return done;
   }

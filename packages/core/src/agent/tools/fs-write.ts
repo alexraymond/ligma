@@ -19,10 +19,7 @@ export interface FsWriteInput {
   content: string;
 }
 
-export type WriteFile = (
-  input: FsWriteInput,
-  ctx: ToolRunContext,
-) => Promise<FsUpdatedAckV1>;
+export type WriteFile = (input: FsWriteInput, ctx: ToolRunContext) => Promise<FsUpdatedAckV1>;
 
 export function makeFsWriteTool(writeFile: WriteFile): Tool {
   return {

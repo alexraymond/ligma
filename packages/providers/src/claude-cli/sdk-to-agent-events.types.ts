@@ -13,3 +13,20 @@ export interface ToolCall {
   name: string;
   input: unknown;
 }
+
+/**
+ * Structural mirror of `BatchAndRunResult` from
+ * `packages/core/src/agent/tools/orchestration.ts`. Used by
+ * `adaptSdkStreamToProviderTurn`'s `provideToolResults` callback so
+ * the adapter can forward results without taking a circular dep on
+ * the core package.
+ */
+export interface ToolRunOutcome {
+  call: ToolCall;
+  result: {
+    ok: boolean;
+    result?: unknown;
+    error?: string;
+  };
+  durationMs: number;
+}

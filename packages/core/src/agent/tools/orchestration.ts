@@ -40,16 +40,13 @@ interface Batch {
   calls: ToolCall[];
 }
 
-export function partitionToolCalls(
-  toolCalls: ToolCall[],
-  registry: ToolRegistry,
-): Batch[] {
+export function partitionToolCalls(toolCalls: ToolCall[], registry: ToolRegistry): Batch[] {
   const batches: Batch[] = [];
   for (const call of toolCalls) {
     const tool = registry.get(call.name);
     const safe = safeIsConcurrencySafe(tool, call.input);
     const last = batches[batches.length - 1];
-    if (last && last.concurrencySafe && safe) {
+    if (last?.concurrencySafe && safe) {
       last.calls.push(call);
       continue;
     }

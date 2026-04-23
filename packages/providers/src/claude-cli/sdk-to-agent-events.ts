@@ -21,9 +21,9 @@
  * agent-loop side imports these types through the shared barrel.
  */
 
-import type { ToolCall } from './sdk-to-agent-events.types.js';
+import type { ToolCall, ToolRunOutcome } from './sdk-to-agent-events.types.js';
 
-export type { ToolCall };
+export type { ToolCall, ToolRunOutcome };
 
 // ---------------------------------------------------------------------------
 // ProviderStreamItem mirror (structural — do NOT re-import from core to
@@ -92,21 +92,11 @@ export interface SdkResultMessage {
   result?: string;
 }
 
-export type SdkStreamMessage =
-  | SdkAssistantMessage
-  | SdkResultMessage
-  | { type: string };
+export type SdkStreamMessage = SdkAssistantMessage | SdkResultMessage | { type: string };
 
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
-
-export interface ToolResultEnvelope {
-  toolUseId: string;
-  ok: boolean;
-  result?: unknown;
-  error?: string;
-}
 
 export interface AdaptSdkStreamOptions {
   /** Async iterable the SDK's `query()` returns. */
@@ -114,8 +104,10 @@ export interface AdaptSdkStreamOptions {
   /** Invoked when the loop has executed a tool batch. Wire-through
    *  callback so downstream transports that require an explicit "post
    *  tool results" hop can do it here. Left undefined when the SDK
-   *  drives the follow-up round-trip internally. */
-  provideToolResults?: (results: ToolResultEnvelope[]) => Promise<void> | void;
+   *  drives the follow-up round-trip internally. The structural shape
+   *  of the argument matches `BatchAndRunResult[]` from the core
+   *  orchestrator. */
+  provideToolResults?: (results: ToolRunOutcome[]) => Promise<void> | void;
 }
 
 /**
@@ -126,7 +118,7 @@ export interface AdaptSdkStreamOptions {
 export function adaptSdkStreamToProviderTurn(
   options: AdaptSdkStreamOptions,
 ): AsyncIterable<ProviderStreamItem> & {
-  provideToolResults?: (results: ToolResultEnvelope[]) => Promise<void> | void;
+  provideToolResults?: (results: ToolRunOutcome[]) => Promise<void> | void;
 } {
   const iterable: AsyncIterable<ProviderStreamItem> = {
     [Symbol.asyncIterator]() {
@@ -226,9 +218,15 @@ export interface ReplayAgentEvent {
   [key: string]: unknown;
 }
 
+export interface ReplayResolvedResult {
+  ok: boolean;
+  result?: unknown;
+  error?: string;
+}
+
 export function assistantMessageToReplayEvents(
   message: SdkAssistantMessage,
-  resolvedResults: Map<string, ToolResultEnvelope>,
+  resolvedResults: Map<string, ReplayResolvedResult>,
 ): ReplayAgentEvent[] {
   const out: ReplayAgentEvent[] = [];
   let seq = 0;

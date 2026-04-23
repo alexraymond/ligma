@@ -23,10 +23,7 @@ export interface FsReadInput {
   viewRange?: [number, number];
 }
 
-export type ReadFile = (
-  input: FsReadInput,
-  ctx: ToolRunContext,
-) => Promise<FsViewAckV1>;
+export type ReadFile = (input: FsReadInput, ctx: ToolRunContext) => Promise<FsViewAckV1>;
 
 export function makeFsReadTool(readFile: ReadFile): Tool {
   return {
@@ -57,9 +54,7 @@ export function makeFsReadTool(readFile: ReadFile): Tool {
   };
 }
 
-function parseInput(
-  raw: unknown,
-): { ok: true; value: FsReadInput } | { ok: false; error: string } {
+function parseInput(raw: unknown): { ok: true; value: FsReadInput } | { ok: false; error: string } {
   if (typeof raw !== 'object' || raw === null) {
     return { ok: false, error: 'fs_read: input must be an object' };
   }
