@@ -1,3 +1,31 @@
+# Morning review notes — W6 (Docs + NOTICE + architecture overview, story US-006)
+
+All W6 acceptance criteria are met against the current `overnight` state. Artifacts:
+
+- `NOTICE.md` at repo root (new file) — third-party OSS notices only. The old `NOTICE` file (no extension) was removed so there is a single canonical location.
+- `docs/LIGMA-ARCHITECTURE.md` — one-page overview.
+- `docs/RELIABILITY-AUDIT-2026-04.md` — durable record of the five W1 root causes.
+- `CHANGELOG.md` enriched for the 0.1.0 entry with per-workstream bullets (W1, W2, W3, W7).
+- `README.md` polished: install steps, Max-vs-BYOK section, NOTICE / docs links, under 60 lines.
+
+## Things worth a second look
+
+1. **W4 session log bullet intentionally omitted from CHANGELOG.** At the time this WS ran, `ligma/overnight/w4` had not been merged into the integration branch — `packages/session/` does not exist in the tree here. The W4 story instructions explicitly said "omit this bullet if W4 is not merged when you run." If W4 merges into `overnight` before tag, add a `### Session log` stanza to `CHANGELOG.md` modeled on the existing `### Agent loop` one, and cross-link `packages/session/` from `docs/LIGMA-ARCHITECTURE.md` (the architecture doc already describes the package — the paragraph stays accurate once the package lands).
+
+2. **Grep audit status.** `rg -i 'open.codesign|opencoworkai|open coworkai' --glob '!pnpm-lock.yaml' --glob '!node_modules' -n` returns:
+   - `LICENSE:3` — legally required, preserved byte-for-byte.
+   - `tasks/prd.json` + `tasks/findings.md` — W5-owned swarm-execution artifacts. These are internal planning documents tracked in the repo for auditability of the overnight run, not user-facing project content. Per W6 file ownership I cannot edit W5 files. Options to decide in the morning: (a) `.gitignore` the `tasks/` directory (simplest — it's scratch state), (b) move it under `docs/` which is already gitignored, (c) leave as-is. My recommendation is (a).
+
+3. **Audit command in `scripts/overnight-report.sh`.** W3's notes flagged that the report script's echo of the audit pattern was rewritten to reference `CLAUDE.md` instead. Confirm the audit output still makes sense to the morning reader once they see it in context.
+
+4. **Placeholder URLs everywhere.** README still points at `github.com/TODO-MORNING/ligma`. W3's notes already cover this; W6 intentionally did not duplicate the sweep list.
+
+## Quality gates
+
+Run `pnpm typecheck && pnpm lint && pnpm test` from `/tmp/ligma-ws/w6` before committing onward. Results captured in the W6 commit trailer.
+
+---
+
 # Morning review notes — W3 (Ligma rebrand, story US-003)
 
 Everything listed in the acceptance criteria is done and all quality gates pass. A few items the reviewer should sanity-check:
