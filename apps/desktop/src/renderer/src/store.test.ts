@@ -626,6 +626,7 @@ describe('useCodesignStore artifact persistence', () => {
       updatedAt: '2024-01-01T00:00:00.000Z',
       thumbnailText: null,
       deletedAt: null,
+      designSystemId: null,
     };
 
     // Stand-in for the SQLite-backed snapshots table.

@@ -23,6 +23,8 @@ import {
   GeneratePayload,
   GeneratePayloadV1,
   type PermissionRequest,
+  STORED_DESIGN_SYSTEM_SCHEMA_VERSION,
+  type StoredDesignSystem,
   isFsUpdatedAckV1,
 } from '@ligma/shared';
 import { computeFingerprint } from '@ligma/shared/fingerprint';
@@ -42,6 +44,7 @@ import {
 } from './codex-oauth-ipc';
 import { registerCommentsIpc, registerCommentsUnavailableIpc } from './comments-ipc';
 import { registerDesignFilesIpc } from './design-files-ipc';
+import { registerDesignSystemsIpc } from './design-systems-ipc';
 import { configDir } from './config';
 import { registerConnectionIpc } from './connection-ipc';
 import { scanDesignSystem } from './design-system';
@@ -73,7 +76,13 @@ import { cleanupStaleTmps } from './reported-fingerprints';
 import { resolveActiveApiKey, resolveApiKeyWithKeylessFallback } from './resolve-api-key';
 import { withRun } from './runContext';
 import { registerSessionIpc } from './session-ipc';
-import { pruneDiagnosticEvents, recordDiagnosticEvent, safeInitSnapshotsDb } from './snapshots-db';
+import {
+  getDesign,
+  getDesignSystem,
+  pruneDiagnosticEvents,
+  recordDiagnosticEvent,
+  safeInitSnapshotsDb,
+} from './snapshots-db';
 import { registerSnapshotsIpc, registerSnapshotsUnavailableIpc } from './snapshots-ipc';
 import { initStorageSettings } from './storage-settings';
 // region:window-chrome
@@ -218,6 +227,43 @@ function resolveApiKeyForActive(providerId: string, allowKeyless: boolean): Prom
     getCodexAccessToken: () => getCodexTokenStore().getValidAccessToken(),
     getApiKeyForProvider,
   });
+}
+
+/** Resolve the StoredDesignSystem to feed into the generate pipeline.
+ *
+ * Preference order:
+ *   1. The design_system linked to payload.designId via designs.design_system_id.
+ *   2. cfg.designSystem (legacy global scan) — used until the post-Phase-4
+ *      config migration drops this field.
+ *   3. null (no design system).
+ *
+ * Non-throwing: a missing DB or unknown id just falls through to the next
+ * source so a boot-time DB failure doesn't break generation.
+ */
+function resolveDesignSystemForGenerate(
+  db: Database | null,
+  designId: string | undefined,
+  legacyGlobal: StoredDesignSystem | undefined,
+): StoredDesignSystem | null {
+  if (db !== null && designId !== undefined) {
+    const design = getDesign(db, designId);
+    const linked = design?.designSystemId ? getDesignSystem(db, design.designSystemId) : null;
+    if (linked) {
+      return {
+        schemaVersion: STORED_DESIGN_SYSTEM_SCHEMA_VERSION,
+        rootPath: linked.rootPath,
+        summary: linked.summary,
+        extractedAt: linked.extractedAt,
+        sourceFiles: linked.sourceFiles,
+        colors: linked.colors,
+        fonts: linked.fonts,
+        spacing: linked.spacing,
+        radius: linked.radius,
+        shadows: linked.shadows,
+      };
+    }
+  }
+  return legacyGlobal ?? null;
 }
 
 function registerIpcHandlers(db: Database | null): void {
@@ -772,7 +818,7 @@ function registerIpcHandlers(db: Database | null): void {
       const promptContext = await preparePromptContext({
         attachments: payload.attachments,
         referenceUrl: payload.referenceUrl,
-        designSystem: cfg.designSystem ?? null,
+        designSystem: resolveDesignSystemForGenerate(db, payload.designId, cfg.designSystem),
       });
 
       logIpc.info('generate', {
@@ -893,7 +939,7 @@ function registerIpcHandlers(db: Database | null): void {
       const promptContext = await preparePromptContext({
         attachments: payload.attachments,
         referenceUrl: payload.referenceUrl,
-        designSystem: cfg.designSystem ?? null,
+        designSystem: resolveDesignSystemForGenerate(db, payload.designId, cfg.designSystem),
       });
 
       logIpc.info('generate', {
@@ -1002,7 +1048,10 @@ function registerIpcHandlers(db: Database | null): void {
       const promptContext = await preparePromptContext({
         attachments: payload.attachments,
         referenceUrl: payload.referenceUrl,
-        designSystem: cfg.designSystem ?? null,
+        // applyComment payload has no designId; the revise path reuses whatever
+        // design system is currently bound to the design in the renderer,
+        // which round-trips into `cfg.designSystem` during onboarding migration.
+        designSystem: resolveDesignSystemForGenerate(db, undefined, cfg.designSystem),
       });
 
       logIpc.info('applyComment', {
@@ -1252,6 +1301,7 @@ void app.whenReady().then(async () => {
       registerChatMessagesIpc(dbResult.db);
       registerCommentsIpc(dbResult.db);
       registerDesignFilesIpc(dbResult.db);
+      registerDesignSystemsIpc(dbResult.db);
       try {
         pruneDiagnosticEvents(dbResult.db, 500);
       } catch (err) {

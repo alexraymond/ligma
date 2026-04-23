@@ -32,8 +32,34 @@ export const DesignV1 = z.object({
   updatedAt: z.string(),
   thumbnailText: z.string().nullable().default(null),
   deletedAt: z.string().nullable().default(null),
+  /** FK into design_systems.id. Null = no design system bound; the
+   *  generation pipeline treats the prompt as not having a constrained
+   *  token set. */
+  designSystemId: z.string().nullable().default(null),
 });
 export type Design = z.infer<typeof DesignV1>;
+
+/** A persisted design system — tokens extracted once via scanDesignSystem,
+ *  then linked to any number of designs via designs.design_system_id.
+ *  Mirrors StoredDesignSystem but carries an identity + display name so
+ *  the hub DesignSystemsTab can manage multiple scans at once. */
+export const DesignSystemRowV1 = z.object({
+  schemaVersion: z.literal(1).default(1),
+  id: z.string().min(1),
+  name: z.string().min(1),
+  rootPath: z.string().min(1),
+  summary: z.string().min(1),
+  extractedAt: z.string().min(1),
+  sourceFiles: z.array(z.string()).default([]),
+  colors: z.array(z.string()).default([]),
+  fonts: z.array(z.string()).default([]),
+  spacing: z.array(z.string()).default([]),
+  radius: z.array(z.string()).default([]),
+  shadows: z.array(z.string()).default([]),
+  createdAt: z.string().min(1),
+  updatedAt: z.string().min(1),
+});
+export type DesignSystemRow = z.infer<typeof DesignSystemRowV1>;
 
 export const DesignMessageV1 = z.object({
   schemaVersion: z.literal(1).default(1),

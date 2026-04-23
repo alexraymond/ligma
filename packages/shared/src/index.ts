@@ -329,6 +329,7 @@ export {
   DesignFileV1,
   DesignMessageV1,
   DesignSnapshotV1,
+  DesignSystemRowV1,
   DesignV1,
 } from './snapshot';
 export type {
@@ -347,6 +348,7 @@ export type {
   DesignFile,
   DesignMessage,
   DesignSnapshot,
+  DesignSystemRow,
   SnapshotCreateInput,
 } from './snapshot';
 

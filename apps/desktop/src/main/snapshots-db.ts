@@ -25,6 +25,7 @@ import type {
   Design,
   DesignFile,
   DesignSnapshot,
+  DesignSystemRow,
   DiagnosticEventInput,
   DiagnosticEventRow,
   DiagnosticLevel,
@@ -183,6 +184,24 @@ function applySchema(db: Database): void {
 
     CREATE INDEX IF NOT EXISTS idx_diag_events_ts          ON diagnostic_events(ts DESC);
     CREATE INDEX IF NOT EXISTS idx_diag_events_fingerprint ON diagnostic_events(fingerprint);
+
+    CREATE TABLE IF NOT EXISTS design_systems (
+      id              TEXT PRIMARY KEY,
+      schema_version  INTEGER NOT NULL DEFAULT 1,
+      name            TEXT NOT NULL,
+      root_path       TEXT NOT NULL,
+      summary         TEXT NOT NULL,
+      extracted_at    TEXT NOT NULL,
+      source_files    TEXT NOT NULL, -- JSON array
+      colors          TEXT NOT NULL, -- JSON array
+      fonts           TEXT NOT NULL,
+      spacing         TEXT NOT NULL,
+      radius          TEXT NOT NULL,
+      shadows         TEXT NOT NULL,
+      created_at      TEXT NOT NULL,
+      updated_at      TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_design_systems_updated ON design_systems(updated_at DESC);
   `);
 
   applyAdditiveMigrations(db);
@@ -206,6 +225,14 @@ function applyAdditiveMigrations(db: Database): void {
   if (!designCols.includes('deleted_at')) {
     db.exec('ALTER TABLE designs ADD COLUMN deleted_at TEXT');
     db.exec('CREATE INDEX IF NOT EXISTS idx_designs_deleted_at ON designs(deleted_at)');
+  }
+  if (!designCols.includes('design_system_id')) {
+    db.exec(
+      'ALTER TABLE designs ADD COLUMN design_system_id TEXT REFERENCES design_systems(id) ON DELETE SET NULL',
+    );
+    db.exec(
+      'CREATE INDEX IF NOT EXISTS idx_designs_design_system_id ON designs(design_system_id)',
+    );
   }
 
   // Comments v2 — add scope ('element'|'global') and parent_outer_html for
@@ -364,6 +391,7 @@ interface DesignRow {
   updated_at: string;
   thumbnail_text: string | null;
   deleted_at: string | null;
+  design_system_id: string | null;
 }
 
 interface SnapshotRow {
@@ -401,6 +429,7 @@ function rowToDesign(row: DesignRow): Design {
     updatedAt: row.updated_at,
     thumbnailText: row.thumbnail_text ?? null,
     deletedAt: row.deleted_at ?? null,
+    designSystemId: row.design_system_id ?? null,
   };
 }
 
@@ -1163,6 +1192,156 @@ export function renameDesignFile(
 export function deleteDesignFile(db: Database, designId: string, path: string): void {
   const p = normalizeDesignFilePath(path);
   db.prepare('DELETE FROM design_files WHERE design_id = ? AND path = ?').run(designId, p);
+}
+
+// ---------------------------------------------------------------------------
+// design_systems (Phase 4 — first-class entities)
+//
+// Tokens were previously stored as a single global blob in config.designSystem.
+// They now live as N rows here so the hub can manage multiple scans and each
+// design links to one via designs.design_system_id.
+// ---------------------------------------------------------------------------
+
+interface DesignSystemRowDb {
+  id: string;
+  schema_version: number;
+  name: string;
+  root_path: string;
+  summary: string;
+  extracted_at: string;
+  source_files: string;
+  colors: string;
+  fonts: string;
+  spacing: string;
+  radius: string;
+  shadows: string;
+  created_at: string;
+  updated_at: string;
+}
+
+function parseArr(raw: string): string[] {
+  try {
+    const v = JSON.parse(raw);
+    return Array.isArray(v) ? (v as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function rowToDesignSystem(row: DesignSystemRowDb): DesignSystemRow {
+  return {
+    schemaVersion: 1,
+    id: row.id,
+    name: row.name,
+    rootPath: row.root_path,
+    summary: row.summary,
+    extractedAt: row.extracted_at,
+    sourceFiles: parseArr(row.source_files),
+    colors: parseArr(row.colors),
+    fonts: parseArr(row.fonts),
+    spacing: parseArr(row.spacing),
+    radius: parseArr(row.radius),
+    shadows: parseArr(row.shadows),
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+export interface DesignSystemInsertInput {
+  name: string;
+  rootPath: string;
+  summary: string;
+  extractedAt: string;
+  sourceFiles: string[];
+  colors: string[];
+  fonts: string[];
+  spacing: string[];
+  radius: string[];
+  shadows: string[];
+}
+
+export function createDesignSystem(
+  db: Database,
+  input: DesignSystemInsertInput,
+): DesignSystemRow {
+  const id = crypto.randomUUID();
+  const now = new Date().toISOString();
+  db.prepare(
+    `INSERT INTO design_systems
+       (id, schema_version, name, root_path, summary, extracted_at,
+        source_files, colors, fonts, spacing, radius, shadows,
+        created_at, updated_at)
+     VALUES (?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  ).run(
+    id,
+    input.name,
+    input.rootPath,
+    input.summary,
+    input.extractedAt,
+    JSON.stringify(input.sourceFiles),
+    JSON.stringify(input.colors),
+    JSON.stringify(input.fonts),
+    JSON.stringify(input.spacing),
+    JSON.stringify(input.radius),
+    JSON.stringify(input.shadows),
+    now,
+    now,
+  );
+  const row = db
+    .prepare('SELECT * FROM design_systems WHERE id = ?')
+    .get(id) as DesignSystemRowDb;
+  return rowToDesignSystem(row);
+}
+
+export function listDesignSystems(db: Database): DesignSystemRow[] {
+  return (
+    db
+      .prepare('SELECT * FROM design_systems ORDER BY updated_at DESC')
+      .all() as DesignSystemRowDb[]
+  ).map(rowToDesignSystem);
+}
+
+export function getDesignSystem(db: Database, id: string): DesignSystemRow | null {
+  const row = db.prepare('SELECT * FROM design_systems WHERE id = ?').get(id) as
+    | DesignSystemRowDb
+    | undefined;
+  return row ? rowToDesignSystem(row) : null;
+}
+
+export function renameDesignSystem(db: Database, id: string, name: string): DesignSystemRow {
+  const now = new Date().toISOString();
+  const result = db
+    .prepare('UPDATE design_systems SET name = ?, updated_at = ? WHERE id = ?')
+    .run(name, now, id);
+  if (result.changes === 0) throw new Error(`Design system not found: ${id}`);
+  const out = getDesignSystem(db, id);
+  if (!out) throw new Error(`Design system not found after rename: ${id}`);
+  return out;
+}
+
+export function deleteDesignSystem(db: Database, id: string): void {
+  // Rows in `designs` carry an ON DELETE SET NULL FK, so linked designs
+  // simply lose their binding without cascading deletes.
+  db.prepare('DELETE FROM design_systems WHERE id = ?').run(id);
+}
+
+/** Bind (or unbind with null) a design to a design system. Returns the
+ *  updated design row so callers can refresh caches. */
+export function linkDesignSystemToDesign(
+  db: Database,
+  designId: string,
+  designSystemId: string | null,
+): Design {
+  db.prepare('UPDATE designs SET design_system_id = ?, updated_at = ? WHERE id = ?').run(
+    designSystemId,
+    new Date().toISOString(),
+    designId,
+  );
+  const row = db.prepare('SELECT * FROM designs WHERE id = ?').get(designId) as
+    | DesignRow
+    | undefined;
+  if (!row) throw new Error(`Design not found: ${designId}`);
+  return rowToDesign(row);
 }
 
 // ---------------------------------------------------------------------------
