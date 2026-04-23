@@ -5,7 +5,7 @@ import {
   type SupportedOnboardingProvider,
   isSupportedOnboardingProvider,
   stripInferenceEndpointSuffix,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 import { looksLikeClaudeOAuthToken, withClaudeCodeIdentity } from './claude-code-compat';
 
 export type ValidateResult =

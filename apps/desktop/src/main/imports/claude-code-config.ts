@@ -1,7 +1,7 @@
 import { access } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import type { ProviderEntry } from '@open-codesign/shared';
+import type { ProviderEntry } from '@ligma/shared';
 import { safeReadImportFile } from './safe-read';
 
 export function claudeCodeSettingsPath(home: string = homedir()): string {
@@ -165,7 +165,7 @@ export function parseClaudeCodeSettings(
     settings.apiKeyHelper.length > 0
   ) {
     warnings.push(
-      `Claude Code settings.json defines apiKeyHelper ("${settings.apiKeyHelper}"). Open CoDesign does not execute helper scripts — please paste a key manually, or export ANTHROPIC_API_KEY in your shell before launching from terminal.`,
+      `Claude Code settings.json defines apiKeyHelper ("${settings.apiKeyHelper}"). Ligma does not execute helper scripts — please paste a key manually, or export ANTHROPIC_API_KEY in your shell before launching from terminal.`,
     );
   }
 

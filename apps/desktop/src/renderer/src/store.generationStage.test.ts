@@ -1,5 +1,5 @@
-import { initI18n } from '@open-codesign/i18n';
-import type { OnboardingState } from '@open-codesign/shared';
+import { initI18n } from '@ligma/i18n';
+import type { OnboardingState } from '@ligma/shared';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useCodesignStore } from './store';
 

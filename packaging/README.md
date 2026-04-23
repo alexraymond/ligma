@@ -1,6 +1,6 @@
 # Distribution channels
 
-Canonical sources for Open CoDesign's package manager manifests. The `packaging/` tree is the source of truth; after each tag push `release.yml` auto-runs `update-shas.sh` and commits the synced manifests back to `main`.
+Canonical sources for Ligma's package manager manifests. The `packaging/` tree is the source of truth; after each tag push `release.yml` auto-runs `update-shas.sh` and commits the synced manifests back to `main`.
 
 All artifacts are **unsigned** for the v0.1 line. Each channel's README / caveats explains the Gatekeeper or SmartScreen workaround.
 
@@ -9,16 +9,16 @@ All artifacts are **unsigned** for the v0.1 line. Each channel's README / caveat
 ```
 packaging/
 ├── homebrew/
-│   └── Casks/open-codesign.rb
+│   └── Casks/ligma.rb
 ├── winget/
-│   └── manifests/o/OpenCoworkAI/OpenCoDesign/<version>/
-│       ├── OpenCoworkAI.OpenCoDesign.yaml
-│       ├── OpenCoworkAI.OpenCoDesign.installer.yaml
-│       └── OpenCoworkAI.OpenCoDesign.locale.en-US.yaml
+│   └── manifests/l/TODO-MORNING/Ligma/<version>/
+│       ├── TODO-MORNING.Ligma.yaml
+│       ├── TODO-MORNING.Ligma.installer.yaml
+│       └── TODO-MORNING.Ligma.locale.en-US.yaml
 ├── scoop/
-│   └── bucket/open-codesign.json
+│   └── bucket/ligma.json
 ├── flatpak/
-│   └── ai.opencowork.codesign.yaml
+│   └── com.ligma.app.yaml
 └── update-shas.sh
 ```
 
@@ -40,66 +40,66 @@ The script derives the mac `.app` bundle name and Windows `.exe` from `productNa
 
 ## Channel-specific mirroring
 
-### Homebrew Cask — `OpenCoworkAI/homebrew-tap`
+### Homebrew Cask — `TODO-MORNING/homebrew-tap`
 
-The tap is a separate public repo. Clone it, copy `packaging/homebrew/Casks/open-codesign.rb` into its `Casks/`, commit, push.
+The tap is a separate public repo. Clone it, copy `packaging/homebrew/Casks/ligma.rb` into its `Casks/`, commit, push.
 
 ```sh
 # Create the tap repo once:
-gh repo create OpenCoworkAI/homebrew-tap --public \
-  --description "Homebrew tap for Open CoDesign and friends"
-git clone git@github.com:OpenCoworkAI/homebrew-tap.git /tmp/homebrew-tap
+gh repo create TODO-MORNING/homebrew-tap --public \
+  --description "Homebrew tap for Ligma and friends"
+git clone git@github.com:TODO-MORNING/homebrew-tap.git /tmp/homebrew-tap
 mkdir -p /tmp/homebrew-tap/Casks
-cp packaging/homebrew/Casks/open-codesign.rb /tmp/homebrew-tap/Casks/
+cp packaging/homebrew/Casks/ligma.rb /tmp/homebrew-tap/Casks/
 cd /tmp/homebrew-tap && git add -A && \
-  git commit -m "open-codesign 0.1.0" && git push
+  git commit -m "ligma 0.1.0" && git push
 ```
 
 Users install with:
 
 ```sh
-brew tap OpenCoworkAI/tap
-brew install --cask open-codesign
+brew tap TODO-MORNING/tap
+brew install --cask ligma
 ```
 
 ### winget — `microsoft/winget-pkgs`
 
-Microsoft's monorepo. Fork it, copy `packaging/winget/manifests/o/OpenCoworkAI/OpenCoDesign/<version>/` into the same path in the fork, open a PR. `wingetcreate validate` is worth running first:
+Microsoft's monorepo. Fork it, copy `packaging/winget/manifests/l/TODO-MORNING/Ligma/<version>/` into the same path in the fork, open a PR. `wingetcreate validate` is worth running first:
 
 ```sh
-wingetcreate validate packaging/winget/manifests/o/OpenCoworkAI/OpenCoDesign/0.1.2
+wingetcreate validate packaging/winget/manifests/l/TODO-MORNING/Ligma/0.1.2
 ```
 
 Users install with:
 
 ```pwsh
-winget install OpenCoworkAI.OpenCoDesign
+winget install TODO-MORNING.Ligma
 ```
 
-### Scoop — `OpenCoworkAI/scoop-bucket`
+### Scoop — `TODO-MORNING/scoop-bucket`
 
-Separate public bucket repo. Copy `packaging/scoop/bucket/open-codesign.json` to its `bucket/` directory.
+Separate public bucket repo. Copy `packaging/scoop/bucket/ligma.json` to its `bucket/` directory.
 
 ```sh
-gh repo create OpenCoworkAI/scoop-bucket --public \
-  --description "Scoop bucket for Open CoDesign"
-git clone git@github.com:OpenCoworkAI/scoop-bucket.git /tmp/scoop-bucket
+gh repo create TODO-MORNING/scoop-bucket --public \
+  --description "Scoop bucket for Ligma"
+git clone git@github.com:TODO-MORNING/scoop-bucket.git /tmp/scoop-bucket
 mkdir -p /tmp/scoop-bucket/bucket
-cp packaging/scoop/bucket/open-codesign.json /tmp/scoop-bucket/bucket/
+cp packaging/scoop/bucket/ligma.json /tmp/scoop-bucket/bucket/
 cd /tmp/scoop-bucket && git add -A && \
-  git commit -m "open-codesign 0.1.0" && git push
+  git commit -m "ligma 0.1.0" && git push
 ```
 
 Users install with:
 
 ```pwsh
-scoop bucket add opencowork https://github.com/OpenCoworkAI/scoop-bucket
-scoop install opencowork/open-codesign
+scoop bucket add ligma https://github.com/TODO-MORNING/scoop-bucket
+scoop install ligma/ligma
 ```
 
 ## Signing status
 
-- macOS: **unsigned / not notarized**. On first launch Gatekeeper shows "damaged, move to Trash". Users run `xattr -d com.apple.quarantine /Applications/open-codesign.app`, or right-click the app and choose Open. Caveat text in the cask surfaces this.
+- macOS: **unsigned / not notarized**. On first launch Gatekeeper shows "damaged, move to Trash". Users run `xattr -d com.apple.quarantine /Applications/ligma.app`, or right-click the app and choose Open. Caveat text in the cask surfaces this.
 - Windows: **unsigned**. SmartScreen will warn; users click "More info" → "Run anyway". No workaround needed beyond that.
 - Linux AppImage: runs as-is.
 

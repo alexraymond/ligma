@@ -1,5 +1,5 @@
 /**
- * open-codesign brand wordmark.
+ * ligma brand wordmark.
  * Logo icon + word, optional pre-alpha pill.
  * Use anywhere the app needs to identify itself.
  */

@@ -7,7 +7,7 @@
 
 import { describe, expect, it } from 'vitest';
 // NOTE: direct relative import into the providers package is intentional:
-// `@open-codesign/providers` only re-exports its public barrel, and adding
+// `@ligma/providers` only re-exports its public barrel, and adding
 // a subpath export would require modifying providers/package.json (W3
 // territory). The e2e test is the one caller that needs the adapter from
 // core; production code keeps the adapter consumption inside providers/.

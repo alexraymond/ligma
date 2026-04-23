@@ -1,5 +1,5 @@
-appId: ai.opencowork.codesign
-productName: Open CoDesign
+appId: com.ligma.app
+productName: Ligma
 # Declare the publish target explicitly so electron-builder's updater-info
 # machinery (channels, provider, latest.yml) has something non-null to hang
 # on — otherwise NSIS packaging crashes with "Cannot read properties of null
@@ -7,8 +7,8 @@ productName: Open CoDesign
 # electron-builder with `--publish never`, so nothing is actually uploaded.
 publish:
   - provider: github
-    owner: OpenCoworkAI
-    repo: open-codesign
+    owner: TODO-MORNING
+    repo: ligma
 directories:
   buildResources: resources
   output: release
@@ -22,13 +22,13 @@ mac:
   hardenedRuntime: true
   gatekeeperAssess: false
   notarize: false
-  artifactName: open-codesign-${version}-${arch}.${ext}
+  artifactName: ligma-${version}-${arch}.${ext}
   target:
     - target: dmg
       arch: [arm64, x64]
 dmg:
   # Custom window layout guides users to drag the app into /Applications.
-  # Running Open CoDesign from a mounted DMG instead of /Applications
+  # Running Ligma from a mounted DMG instead of /Applications
   # breaks (1) the auto-update code path (read-only volume can't receive
   # electron-updater's staged binary), and (2) XDG-style user-data-dir
   # resolution (Electron falls back to a path inside the mounted image
@@ -49,7 +49,7 @@ dmg:
       path: /Applications
 win:
   icon: resources/icon.ico
-  artifactName: open-codesign-${version}-${arch}-setup.${ext}
+  artifactName: ligma-${version}-${arch}-setup.${ext}
   target:
     - target: nsis
       arch: [x64, arm64]
@@ -59,33 +59,33 @@ nsis:
 linux:
   icon: resources/icon.png
   # `executableName` controls the binary name AND the deb/rpm package name.
-  # Without it electron-builder falls back to `productName` ("Open CoDesign"),
+  # Without it electron-builder falls back to `productName` ("Ligma"),
   # which rpmbuild rejects because RPM package names can't contain spaces or
-  # uppercase — the fpm invocation `--name Open CoDesign` gets shell-split
-  # into two args and the generated spec file ends up at "Open CoDesign.spec"
+  # uppercase — the fpm invocation `--name Ligma` gets shell-split
+  # into two args and the generated spec file ends up at "Ligma.spec"
   # which rpmbuild then refuses to read. Scoped to `linux.` so the macOS
-  # `.app` bundle and Windows `.exe` keep their pretty "Open CoDesign" name.
-  executableName: open-codesign
+  # `.app` bundle and Windows `.exe` keep their pretty "Ligma" name.
+  executableName: ligma
   # `maintainer`, `vendor`, `synopsis`, and `description` are REQUIRED metadata
   # for deb/rpm. electron-builder falls back to `author@noreply.github.com` and
   # "Unknown" when they're missing, which causes lintian warnings and gets the
   # package rejected by strict apt mirrors. Values kept in sync with
-  # opencowork.ai's other published contacts (security@, conduct@).
-  maintainer: Open CoDesign Maintainers <maintainers@opencowork.ai>
-  vendor: OpenCoworkAI
+  # todo-morning.local's other published contacts (security@, conduct@).
+  maintainer: Ligma Maintainers <maintainers@todo-morning.local>
+  vendor: TODO-MORNING
   # `synopsis` is the deb `Description:` one-liner and the rpm `Summary:`
   # field. Debian convention says no trailing period — lintian emits
   # "synopsis-ends-with-a-full-stop" if you add one.
   synopsis: Prompt-to-design desktop app for HTML prototypes, decks, and marketing assets
   # Single-line description: fpm passes it through as a shell arg and some
   # rpmbuild paths choke on embedded newlines even when the arg is quoted.
-  description: Open CoDesign turns natural-language prompts into interactive HTML prototypes, PDF-ready slide decks, and marketing assets. Multi-provider model support (Anthropic, OpenAI, Google Gemini, DeepSeek, local Ollama, any OpenAI-compatible endpoint), BYOK, local-first storage, no telemetry.
+  description: Ligma turns natural-language prompts into interactive HTML prototypes, PDF-ready slide decks, and marketing assets. Multi-provider model support (Anthropic, OpenAI, Google Gemini, DeepSeek, local Ollama, any OpenAI-compatible endpoint), BYOK, local-first storage, no telemetry.
   # Hardcode `x64` (not ${arch}) because electron-builder substitutes ${arch}
   # differently per Linux target convention (AppImage → x86_64, deb → amd64,
   # rpm → x86_64). SmartDownload.vue + Homebrew cask + Flatpak manifest all
   # reference `-x64.ext`; picking a fixed literal keeps them in sync. We
   # only ship one Linux arch, so this is safe until we add arm64.
-  artifactName: open-codesign-${version}-x64.${ext}
+  artifactName: ligma-${version}-x64.${ext}
   target:
     - target: AppImage
       arch: [x64]
@@ -102,17 +102,17 @@ snap:
   grade: stable
   confinement: strict
   summary: Prompt → polished HTML prototypes, slide decks, and marketing assets.
-# electron-builder defaults fpm's `--name` arg to productName ("Open CoDesign"),
+# electron-builder defaults fpm's `--name` arg to productName ("Ligma"),
 # which rpmbuild rejects outright (spaces + uppercase are forbidden in RPM
-# package names) and which makes `Package: Open CoDesign` in the deb control
+# package names) and which makes `Package: Ligma` in the deb control
 # file — lintian trips on both. `linux.executableName` fixes binary / desktop
 # file / icon names but NOT the fpm --name, so we override that explicitly
 # here. Passing --name last in the fpm arg list makes it win argparse.
 deb:
   fpm:
     - "--name"
-    - "open-codesign"
+    - "ligma"
 rpm:
   fpm:
     - "--name"
-    - "open-codesign"
+    - "ligma"

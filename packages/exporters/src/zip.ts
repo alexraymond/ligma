@@ -1,4 +1,4 @@
-import { CodesignError, ERROR_CODES } from '@open-codesign/shared';
+import { CodesignError, ERROR_CODES } from '@ligma/shared';
 import type { ExportResult } from './index';
 
 export interface ZipAsset {
@@ -17,7 +17,7 @@ export interface ExportZipOptions {
 
 const README_TEMPLATE = (title: string, generatedAt: string) => `# ${title}
 
-This bundle was exported from [open-codesign](https://github.com/OpenCoworkAI/open-codesign).
+This bundle was exported from [ligma](https://github.com/TODO-MORNING/ligma).
 
 ## Layout
 
@@ -32,7 +32,7 @@ This bundle was exported from [open-codesign](https://github.com/OpenCoworkAI/op
 
 - Generated: ${generatedAt}
 - The HTML is self-contained; opening \`index.html\` directly works without a server.
-- To re-edit, open the bundle in open-codesign via *File → Import bundle*.
+- To re-edit, open the bundle in ligma via *File → Import bundle*.
 `;
 
 /**
@@ -58,10 +58,7 @@ export async function exportZip(
     const indexPath = path.join(stagingDir, 'index.html');
     await fs.writeFile(indexPath, htmlContent, 'utf8');
 
-    const readme = README_TEMPLATE(
-      opts.readmeTitle ?? 'open-codesign export',
-      new Date().toISOString(),
-    );
+    const readme = README_TEMPLATE(opts.readmeTitle ?? 'ligma export', new Date().toISOString());
     const readmePath = path.join(stagingDir, 'README.md');
     await fs.writeFile(readmePath, readme, 'utf8');
 

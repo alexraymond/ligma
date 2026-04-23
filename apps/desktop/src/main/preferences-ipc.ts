@@ -2,7 +2,7 @@
  * User preferences IPC handlers (main process).
  *
  * Persists non-provider, non-locale preferences to
- * `~/.config/open-codesign/preferences.json`.  Kept separate from config.toml
+ * `~/.config/ligma/preferences.json`.  Kept separate from config.toml
  * so it can be read quickly at boot before the TOML loader finishes.
  *
  * Schema: { schemaVersion: 1, updateChannel: 'stable'|'beta', generationTimeoutSec: number }
@@ -10,7 +10,7 @@
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import { CodesignError, ERROR_CODES } from '@open-codesign/shared';
+import { CodesignError, ERROR_CODES } from '@ligma/shared';
 import { ipcMain } from 'electron';
 import { configDir } from './config';
 import { getLogger } from './logger';

@@ -366,9 +366,9 @@ describe('diagnostics:v1:reportEvent', () => {
     };
 
     expect(result.schemaVersion).toBe(1);
-    expect(result.bundlePath).toMatch(/open-codesign-diagnostics-.*\.zip$/);
+    expect(result.bundlePath).toMatch(/ligma-diagnostics-.*\.zip$/);
     expect(result.summaryMarkdown).toMatch(/SOMETHING_BROKE/);
-    expect(result.issueUrl).toContain('github.com/OpenCoworkAI/open-codesign/issues/new');
+    expect(result.issueUrl).toContain('github.com/TODO-MORNING/ligma/issues/new');
 
     const url = new URL(result.issueUrl);
     expect(url.searchParams.get('template')).toBe('bug_report.yml');
@@ -462,7 +462,7 @@ describe('diagnostics:v1:reportEvent', () => {
       }),
     );
 
-    const recomputed = (await import('@open-codesign/shared/fingerprint')).computeFingerprint({
+    const recomputed = (await import('@ligma/shared/fingerprint')).computeFingerprint({
       errorCode: 'FP_CODE',
       stack: 'Error: fp\n    at foo (a.ts:1:1)',
       message: 'fp check',
@@ -494,7 +494,7 @@ describe('diagnostics:v1:reportEvent', () => {
     );
     const url = buildIssueUrlWithTemplate({
       error,
-      bundlePath: '/tmp/open-codesign-diagnostics-test.zip',
+      bundlePath: '/tmp/ligma-diagnostics-test.zip',
       appVersion: '9.9.9-test',
       platform: 'darwin',
       platformVersion: '24.0.0',
@@ -744,13 +744,13 @@ describe('buildIssueUrlWithTemplate privacy pipeline', () => {
     const home = os.homedir();
     const url = buildIssueUrlWithTemplate({
       error: makeEvent(),
-      bundlePath: `${home}/Downloads/open-codesign-diagnostics-abc.zip`,
+      bundlePath: `${home}/Downloads/ligma-diagnostics-abc.zip`,
       appVersion: '1.0.0',
       platform: 'darwin',
       logTail: [],
     });
     const diagnostics = new URL(url).searchParams.get('diagnostics') ?? '';
-    expect(diagnostics).toContain('~/Downloads/open-codesign-diagnostics-abc.zip');
+    expect(diagnostics).toContain('~/Downloads/ligma-diagnostics-abc.zip');
     expect(diagnostics).not.toContain(home);
   });
 
@@ -859,7 +859,7 @@ describe('diagnostics:v1:showItemInFolder allowlist', () => {
     const db = initInMemoryDb();
     registerDiagnosticsIpc(db);
     expect(() =>
-      invoke('diagnostics:v1:showItemInFolder', '/tmp/open-codesign-diagnostics-2025-01-01.zip'),
+      invoke('diagnostics:v1:showItemInFolder', '/tmp/ligma-diagnostics-2025-01-01.zip'),
     ).not.toThrow();
   });
 

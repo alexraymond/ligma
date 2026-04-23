@@ -9,9 +9,9 @@ import { getActiveStorageLocations } from './storage-settings';
  * Centralized logger for the main + preload + renderer processes.
  *
  * Files:
- *   macOS:   ~/Library/Logs/open-codesign/main.log
- *   Windows: %APPDATA%/open-codesign/logs/main.log
- *   Linux:   ~/.config/open-codesign/logs/main.log
+ *   macOS:   ~/Library/Logs/ligma/main.log
+ *   Windows: %APPDATA%/ligma/logs/main.log
+ *   Linux:   ~/.config/ligma/logs/main.log
  *
  * Console mirror: WARN+ in dev, ERROR only in prod, off when packaged-quiet.
  * Format example:
@@ -60,7 +60,7 @@ export function initLogger(): typeof log {
   });
 
   log.scope.labelPadding = false;
-  log.info('[boot] open-codesign starting', {
+  log.info('[boot] ligma starting', {
     version: app.getVersion(),
     platform: process.platform,
     electron: process.versions.electron,

@@ -10,7 +10,7 @@
  * (used on aborted generation).
  */
 
-import type { CoreLogger } from '@open-codesign/core';
+import type { CoreLogger } from '@ligma/core';
 
 export interface FsAckTrackerOptions {
   /** Log scope for warn/info emissions. */

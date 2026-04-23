@@ -1,18 +1,16 @@
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { ChatMessage, LoadedSkill, ModelRef, StoredDesignSystem } from '@open-codesign/shared';
-import { CodesignError, STORED_DESIGN_SYSTEM_SCHEMA_VERSION } from '@open-codesign/shared';
+import type { ChatMessage, LoadedSkill, ModelRef, StoredDesignSystem } from '@ligma/shared';
+import { CodesignError, STORED_DESIGN_SYSTEM_SCHEMA_VERSION } from '@ligma/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PROMPT_SECTIONS, PROMPT_SECTION_FILES, composeSystemPrompt } from './prompts/index.js';
 
 const completeMock = vi.fn();
 const loadBuiltinSkillsMock = vi.fn(async (): Promise<LoadedSkill[]> => []);
 
-vi.mock('@open-codesign/providers', async () => {
-  const actual = await vi.importActual<typeof import('@open-codesign/providers')>(
-    '@open-codesign/providers',
-  );
+vi.mock('@ligma/providers', async () => {
+  const actual = await vi.importActual<typeof import('@ligma/providers')>('@ligma/providers');
   return {
     ...actual,
     complete: (...args: unknown[]) => completeMock(...args),
@@ -499,7 +497,7 @@ describe('generate()', () => {
     const system = messages[0];
     if (!system) throw new Error('expected system message');
     expect(system.role).toBe('system');
-    expect(system.content).toContain('open-codesign');
+    expect(system.content).toContain('ligma');
     expect(system.content).toContain('artifact');
   });
 
@@ -1175,7 +1173,7 @@ describe('applyComment()', () => {
 describe('composeSystemPrompt()', () => {
   it('create mode includes identity, workflow, and anti-slop sections', () => {
     const prompt = composeSystemPrompt({ mode: 'create' });
-    expect(prompt).toContain('open-codesign'); // identity
+    expect(prompt).toContain('ligma'); // identity
     expect(prompt).toContain('Design workflow'); // workflow
     expect(prompt).toContain('Visual taste guidelines'); // anti-slop
   });
@@ -1433,7 +1431,7 @@ describe('composeSystemPrompt() — progressive disclosure', () => {
   it('Layer 1 sections always present regardless of input', () => {
     for (const userPrompt of ['做个数据看板', 'iOS 移动端', '随便做点东西', '']) {
       const p = composeSystemPrompt({ mode: 'create', userPrompt });
-      expect(p, `identity missing for "${userPrompt}"`).toContain('open-codesign');
+      expect(p, `identity missing for "${userPrompt}"`).toContain('ligma');
       expect(p, `workflow missing for "${userPrompt}"`).toContain('Design workflow');
       expect(p, `output rules missing for "${userPrompt}"`).toContain('Output rules');
       expect(p, `safety missing for "${userPrompt}"`).toContain('Safety and scope');

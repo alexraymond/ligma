@@ -1,6 +1,6 @@
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import type { ProviderEntry, WireApi } from '@open-codesign/shared';
+import type { ProviderEntry, WireApi } from '@ligma/shared';
 import { safeReadImportFile } from './safe-read';
 
 /**

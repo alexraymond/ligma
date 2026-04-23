@@ -1,4 +1,4 @@
-import { CodesignError } from '@open-codesign/shared';
+import { CodesignError } from '@ligma/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock electron and logger before importing the module under test.
@@ -63,7 +63,7 @@ describe('readPersisted()', () => {
     try {
       await readPersisted();
       expect(readFileMock).toHaveBeenLastCalledWith(
-        '/tmp/xdg-test-home/open-codesign/preferences.json',
+        '/tmp/xdg-test-home/ligma/preferences.json',
         'utf8',
       );
     } finally {

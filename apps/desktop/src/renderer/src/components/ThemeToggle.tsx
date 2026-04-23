@@ -1,5 +1,5 @@
-import { useT } from '@open-codesign/i18n';
-import { IconButton } from '@open-codesign/ui';
+import { useT } from '@ligma/i18n';
+import { IconButton } from '@ligma/ui';
 import { Moon, Sun } from 'lucide-react';
 import { useCodesignStore } from '../store';
 

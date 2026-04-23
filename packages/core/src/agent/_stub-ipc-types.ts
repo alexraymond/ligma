@@ -2,7 +2,7 @@
  * Temporary stub for the IPC-ACK contract that W1 is adding at
  * `packages/shared/src/ipc-ack.ts`. When W1 lands, the imports in
  * `./tools/fs-read.ts` and `./tools/fs-write.ts` should be flipped to
- * `@open-codesign/shared` (or whatever W3 has renamed the package to by
+ * `@ligma/shared` (or whatever W3 has renamed the package to by
  * then) and this file deleted.
  *
  * Only the shapes the W2 agent-loop tools actually consume live here —

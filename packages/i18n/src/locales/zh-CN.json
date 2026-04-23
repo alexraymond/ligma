@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "open-codesign",
+    "appName": "ligma",
     "send": "发送",
     "cancel": "取消",
     "retry": "重试",
@@ -352,7 +352,7 @@
       "logs": "日志",
       "data": "数据目录",
       "change": "更改",
-      "restartHint": "选择 open-codesign 保存配置、日志和本地设计数据的位置。更改会永久保存，重启应用后生效。",
+      "restartHint": "选择 ligma 保存配置、日志和本地设计数据的位置。更改会永久保存，重启应用后生效。",
       "locationSavedToast": "存储位置已保存。重启应用后生效。",
       "locationSaveFailed": "无法保存存储位置",
       "onboardingTitle": "首次引导",
@@ -431,7 +431,7 @@
     },
     "paste": {
       "title": "粘贴你的 API Key",
-      "description": "自动识别提供商。点击\"测试连通\"验证 Key 与端点后再继续。你的 Key 仅保存在本机 ~/.config/open-codesign/config.toml（文件权限 0600）。",
+      "description": "自动识别提供商。点击\"测试连通\"验证 Key 与端点后再继续。你的 Key 仅保存在本机 ~/.config/ligma/config.toml（文件权限 0600）。",
       "placeholder": "sk-…",
       "recognized": "已识别提供商：{{provider}}",
       "connected_one": "已连接 {{count}} 个模型",
@@ -483,7 +483,7 @@
           "404": "Base URL 路径错误。试试加 /v1 后缀（如 https://your-host/v1）。",
           "ECONNREFUSED": "无法连接到 Base URL，检查域名 / 端口 / 网络。",
           "NETWORK": "网络错误，检查你的网络连接。",
-          "PARSE": "响应格式异常。请查看日志 ~/Library/Logs/open-codesign/main.log",
+          "PARSE": "响应格式异常。请查看日志 ~/Library/Logs/ligma/main.log",
           "IPC_BAD_INPUT": "传给连接测试的参数不合法，请检查提供商 / API Key / Base URL。"
         }
       },
@@ -580,7 +580,7 @@
   "inlineComment": {
     "title": "评论",
     "closeComposer": "关闭局部评论面板",
-    "description": "被点击的元素会在画布中保持选中。描述你想调整的视觉或内容变化，open-codesign 会围绕该目标重写产物。",
+    "description": "被点击的元素会在画布中保持选中。描述你想调整的视觉或内容变化，ligma 会围绕该目标重写产物。",
     "placeholder": "让这个区块更紧凑、标题更有冲击力，并与已关联的设计系统对齐…",
     "applying": "应用中…",
     "applyChange": "应用修改"

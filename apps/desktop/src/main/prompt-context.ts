@@ -1,12 +1,12 @@
 import { open } from 'node:fs/promises';
 import { extname } from 'node:path';
-import type { AttachmentContext, ReferenceUrlContext } from '@open-codesign/core';
+import type { AttachmentContext, ReferenceUrlContext } from '@ligma/core';
 import {
   CodesignError,
   ERROR_CODES,
   type LocalInputFile,
   type StoredDesignSystem,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 
 const TEXT_EXTS = new Set([
   '.css',
@@ -227,7 +227,7 @@ async function inspectReferenceUrl(url: string): Promise<ReferenceUrlContext> {
   const timer = setTimeout(() => controller.abort(), 4_000);
   try {
     const response = await fetch(url, {
-      headers: { 'user-agent': 'open-codesign/0.0.0 (+local desktop app)' },
+      headers: { 'user-agent': 'ligma/0.0.0 (+local desktop app)' },
       signal: controller.signal,
     });
     if (!response.ok) {

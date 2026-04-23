@@ -26,8 +26,8 @@ import {
   type ReportEventInput,
   type ReportEventResult,
   type ReportableError,
-} from '@open-codesign/shared';
-import { computeFingerprint } from '@open-codesign/shared/fingerprint';
+} from '@ligma/shared';
+import { computeFingerprint } from '@ligma/shared/fingerprint';
 import type BetterSqlite3 from 'better-sqlite3';
 import { configDir, configPath } from './config';
 import {
@@ -48,7 +48,7 @@ type Database = BetterSqlite3.Database;
 
 const logger = getLogger('diagnostics-ipc');
 
-const GITHUB_REPO_URL = 'https://github.com/OpenCoworkAI/open-codesign';
+const GITHUB_REPO_URL = 'https://github.com/TODO-MORNING/ligma';
 // GitHub issue URL soft cap. Past ~8KB the URL is silently truncated on some
 // browsers; we keep 7KB as headroom and trim `logs` first when needed.
 const GH_URL_MAX = 7000;
@@ -514,7 +514,7 @@ export async function buildBundle(opts: {
 
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
   const destDir = app.getPath('downloads');
-  const destPath = path.join(destDir, `open-codesign-diagnostics-${timestamp}.zip`);
+  const destPath = path.join(destDir, `ligma-diagnostics-${timestamp}.zip`);
 
   let logContent: string;
   try {
@@ -591,7 +591,7 @@ async function buildDiagnosticsZip(): Promise<string> {
   const summary = [
     '# Diagnostic Export',
     '',
-    `Exported at ${new Date().toISOString()} from open-codesign ${app.getVersion()}.`,
+    `Exported at ${new Date().toISOString()} from ligma ${app.getVersion()}.`,
     '',
     'This bundle contains recent logs, redacted config, and environment metadata.',
     '',

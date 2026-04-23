@@ -12,8 +12,8 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import type { ChatMessage } from '@open-codesign/shared';
-import { CodesignError, ERROR_CODES } from '@open-codesign/shared';
+import type { ChatMessage } from '@ligma/shared';
+import { CodesignError, ERROR_CODES } from '@ligma/shared';
 import type { GenerateOptions, GenerateResult } from '../index';
 
 /**

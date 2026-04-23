@@ -1,7 +1,7 @@
 /**
  * Public surface of the new agent subtree.
  *
- * Callers should import from `@open-codesign/core` (the workspace
+ * Callers should import from `@ligma/core` (the workspace
  * barrel). This file keeps the internal module boundaries clear and is
  * re-exported by `../agent.ts` so the flat `generate()` path and the
  * new loop path coexist without caller regressions.

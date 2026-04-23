@@ -13,7 +13,7 @@
  *   - any AbortSignal abort short-circuits immediately, no retry
  */
 
-import { type ChatMessage, CodesignError, ERROR_CODES, type ModelRef } from '@open-codesign/shared';
+import { type ChatMessage, CodesignError, ERROR_CODES, type ModelRef } from '@ligma/shared';
 import { normalizeProviderError } from './errors';
 import { type GenerateOptions, type GenerateResult, complete } from './index';
 

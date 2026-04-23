@@ -1,11 +1,11 @@
 ---
 title: Quickstart
-description: Install Open CoDesign and render your first AI-generated prototype in 90 seconds.
+description: Install Ligma and render your first AI-generated prototype in 90 seconds.
 ---
 
 # Quickstart
 
-Get Open CoDesign running on macOS, Windows, or Linux in three steps.
+Get Ligma running on macOS, Windows, or Linux in three steps.
 
 ## 1. Install
 
@@ -13,32 +13,32 @@ Get Open CoDesign running on macOS, Windows, or Linux in three steps.
 
 ```sh
 # macOS
-brew install --cask opencoworkai/tap/open-codesign
+brew install --cask todo-morning/tap/ligma
 
 # Windows — Scoop
-scoop bucket add opencoworkai https://github.com/OpenCoworkAI/scoop-bucket
-scoop install open-codesign
+scoop bucket add todo-morning https://github.com/TODO-MORNING/scoop-bucket
+scoop install ligma
 
 # Windows — winget  (pending microsoft/winget-pkgs#363055)
-winget install OpenCoworkAI.OpenCoDesign
+winget install TODO-MORNING.Ligma
 ```
 
 ### Or direct download
 
-Pick the matching installer from [GitHub Releases](https://github.com/OpenCoworkAI/open-codesign/releases):
+Pick the matching installer from [GitHub Releases](https://github.com/TODO-MORNING/ligma/releases):
 
 | Platform | File |
 |---|---|
-| macOS (Apple Silicon) | `open-codesign-*-arm64.dmg` |
-| macOS (Intel) | `open-codesign-*-x64.dmg` |
-| Windows (x64) | `open-codesign-*-x64-setup.exe` |
-| Windows (ARM64) | `open-codesign-*-arm64-setup.exe` |
-| Linux (AppImage) | `open-codesign-*-x64.AppImage` |
-| Linux (Debian/Ubuntu) | `open-codesign-*-x64.deb` |
-| Linux (Fedora/RHEL) | `open-codesign-*-x64.rpm` |
+| macOS (Apple Silicon) | `ligma-*-arm64.dmg` |
+| macOS (Intel) | `ligma-*-x64.dmg` |
+| Windows (x64) | `ligma-*-x64-setup.exe` |
+| Windows (ARM64) | `ligma-*-arm64-setup.exe` |
+| Linux (AppImage) | `ligma-*-x64.AppImage` |
+| Linux (Debian/Ubuntu) | `ligma-*-x64.deb` |
+| Linux (Fedora/RHEL) | `ligma-*-x64.rpm` |
 
 ::: tip v0.1 note
-v0.1 installers are unsigned. **macOS Sequoia 15+**: right-click → Open no longer bypasses Gatekeeper; run `xattr -cr "/Applications/Open CoDesign.app"` once after installing (0.1.2 and earlier used `/Applications/open-codesign.app`). **Windows**: SmartScreen → More info → Run anyway. Prefer a verified build? Compile from source — see [Architecture](./architecture).
+v0.1 installers are unsigned. **macOS Sequoia 15+**: right-click → Open no longer bypasses Gatekeeper; run `xattr -cr "/Applications/Ligma.app"` once after installing (0.1.2 and earlier used `/Applications/ligma.app`). **Windows**: SmartScreen → More info → Run anyway. Prefer a verified build? Compile from source — see [Architecture](./architecture).
 :::
 
 ## 2. Add a provider
@@ -49,7 +49,7 @@ First launch opens the Settings page. Pick one path:
 - **Manual** — paste any API key. Provider is auto-detected from prefix (`sk-ant-…` → Anthropic, `sk-…` → OpenAI, etc.).
 - **Keyless** — for IP-allowlisted proxies (enterprise gateways, local Ollama), leave the key blank.
 
-Supported out of the box: Anthropic Claude, OpenAI GPT, Google Gemini, DeepSeek, OpenRouter, SiliconFlow, local Ollama, and any OpenAI-compatible endpoint. Credentials stay in `~/.config/open-codesign/config.toml`, encrypted via Electron `safeStorage`. Nothing is uploaded.
+Supported out of the box: Anthropic Claude, OpenAI GPT, Google Gemini, DeepSeek, OpenRouter, SiliconFlow, local Ollama, and any OpenAI-compatible endpoint. Credentials stay in `~/.config/ligma/config.toml`, encrypted via Electron `safeStorage`. Nothing is uploaded.
 
 ## 3. Type your first prompt
 
@@ -65,8 +65,8 @@ Pick one of eight built-in demos from the Hub, or type your own. The first artif
 ## Build from source
 
 ```bash
-git clone https://github.com/OpenCoworkAI/open-codesign.git
-cd open-codesign
+git clone https://github.com/TODO-MORNING/ligma.git
+cd ligma
 pnpm install
 pnpm dev
 ```
@@ -77,4 +77,4 @@ Requires Node 22 LTS and pnpm 9.15+. See [Architecture](./architecture) for the 
 
 - [Architecture](./architecture) — how the packages fit together.
 - [Roadmap](./roadmap) — what ships when.
-- [GitHub Issues](https://github.com/OpenCoworkAI/open-codesign/issues) — bug reports and feature requests.
+- [GitHub Issues](https://github.com/TODO-MORNING/ligma/issues) — bug reports and feature requests.

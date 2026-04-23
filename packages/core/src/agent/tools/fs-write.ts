@@ -10,7 +10,7 @@
  */
 
 // TODO(w1-integration): swap to `import type { FsUpdatedAckV1 } from
-//   '@open-codesign/shared';` once W1's shared module lands.
+//   '@ligma/shared';` once W1's shared module lands.
 import type { FsUpdatedAckV1 } from '../_stub-ipc-types.js';
 import type { Tool, ToolRunContext, ToolRunResult } from './index.js';
 

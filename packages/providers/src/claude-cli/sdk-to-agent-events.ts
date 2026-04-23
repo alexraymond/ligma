@@ -1,7 +1,7 @@
 /**
  * Adapter: Claude-Agent SDK stream events → W2 agent loop stream.
  *
- * The loop in `@open-codesign/core` consumes `ProviderStreamItem`s,
+ * The loop in `@ligma/core` consumes `ProviderStreamItem`s,
  * which this file produces from the async-iterable the SDK's `query()`
  * function exposes.
  *
@@ -16,7 +16,7 @@
  * message. Finer-grained streaming is a follow-up once the SDK exposes
  * partial-content deltas on a stable type.
  *
- * This module does NOT import from `@open-codesign/core` (avoid
+ * This module does NOT import from `@ligma/core` (avoid
  * circular deps). It only uses structural shapes declared inline. The
  * agent-loop side imports these types through the shared barrel.
  */

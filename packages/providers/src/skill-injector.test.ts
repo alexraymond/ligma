@@ -1,4 +1,4 @@
-import type { ChatMessage, LoadedSkill } from '@open-codesign/shared';
+import type { ChatMessage, LoadedSkill } from '@ligma/shared';
 import { describe, expect, it } from 'vitest';
 import { formatSkillsForPrompt, injectSkillsIntoMessages } from './skill-injector.js';
 

@@ -15,7 +15,7 @@ import {
 const tempDirs: string[] = [];
 
 async function tempRoot(): Promise<string> {
-  const dir = await mkdtemp(join(tmpdir(), 'open-codesign-storage-'));
+  const dir = await mkdtemp(join(tmpdir(), 'ligma-storage-'));
   tempDirs.push(dir);
   return dir;
 }
@@ -26,18 +26,14 @@ afterEach(async () => {
 
 describe('buildAppPaths', () => {
   it('returns file paths and their containing folders for config and logs', () => {
-    const paths = buildAppPaths(
-      '/tmp/open-codesign/config.toml',
-      '/tmp/open-codesign/logs/main.log',
-      '/tmp/open-codesign',
-    );
+    const paths = buildAppPaths('/tmp/ligma/config.toml', '/tmp/ligma/logs/main.log', '/tmp/ligma');
 
     expect(paths).toEqual({
-      config: '/tmp/open-codesign/config.toml',
-      configFolder: '/tmp/open-codesign',
-      logs: '/tmp/open-codesign/logs/main.log',
-      logsFolder: '/tmp/open-codesign/logs',
-      data: '/tmp/open-codesign',
+      config: '/tmp/ligma/config.toml',
+      configFolder: '/tmp/ligma',
+      logs: '/tmp/ligma/logs/main.log',
+      logsFolder: '/tmp/ligma/logs',
+      data: '/tmp/ligma',
     });
   });
 

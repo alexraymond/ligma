@@ -22,20 +22,13 @@
  *     events directly via `onEvent`.
  */
 
-import {
-  Agent,
-  type AgentEvent,
-  type AgentMessage,
-  type AgentTool,
-} from '@mariozechner/pi-agent-core';
-import type { Message as PiAiMessage, Model as PiAiModel } from '@mariozechner/pi-ai';
-import { type ArtifactEvent, createArtifactParser } from '@open-codesign/artifacts';
-import type { RetryReason } from '@open-codesign/providers';
+import { type ArtifactEvent, createArtifactParser } from '@ligma/artifacts';
+import type { RetryReason } from '@ligma/providers';
 import {
   claudeCodeIdentityHeaders,
   looksLikeClaudeOAuthToken,
   shouldForceClaudeCodeIdentity,
-} from '@open-codesign/providers';
+} from '@ligma/providers';
 import {
   type Artifact,
   type ChatMessage,
@@ -45,7 +38,14 @@ import {
   type StoredDesignSystem,
   type WireApi,
   canonicalBaseUrl,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
+import {
+  Agent,
+  type AgentEvent,
+  type AgentMessage,
+  type AgentTool,
+} from '@mariozechner/pi-agent-core';
+import type { Message as PiAiMessage, Model as PiAiModel } from '@mariozechner/pi-ai';
 import type { TSchema } from '@sinclair/typebox';
 import { buildTransformContext } from './context-prune.js';
 import { remapProviderError } from './errors.js';
@@ -325,7 +325,7 @@ async function collectSkills(
   const start = Date.now();
   try {
     const { loadBuiltinSkills } = await import('./skills/loader.js');
-    const { filterActive, formatSkillsForPrompt } = await import('@open-codesign/providers');
+    const { filterActive, formatSkillsForPrompt } = await import('@ligma/providers');
     const skills = await loadBuiltinSkills();
     const active = filterActive(skills, providerId);
     const blobs = formatSkillsForPrompt(active);
@@ -824,13 +824,13 @@ export async function generateViaAgent(
       ? async () => {
           try {
             const key = await input.getApiKey?.();
-            return key && key.length > 0 ? key : input.apiKey || 'open-codesign-keyless';
+            return key && key.length > 0 ? key : input.apiKey || 'ligma-keyless';
           } catch (err) {
             capturedGetApiKeyError = err;
             throw err;
           }
         }
-      : () => input.apiKey || 'open-codesign-keyless',
+      : () => input.apiKey || 'ligma-keyless',
   });
 
   if (deps.onEvent) {

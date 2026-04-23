@@ -2,15 +2,15 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitepress';
 import rootPkg from '../../package.json' with { type: 'json' };
 
-const SITE_ORIGIN = 'https://opencoworkai.github.io';
-const SITE_BASE = '/open-codesign/';
+const SITE_ORIGIN = 'https://TODO-MORNING.github.io';
+const SITE_BASE = '/ligma/';
 const SITE_URL = `${SITE_ORIGIN}${SITE_BASE}`;
 const OG_IMAGE = `${SITE_URL}og.svg`;
 const SOFTWARE_VERSION = (rootPkg as { version: string }).version;
 
 export default defineConfig({
-  title: 'Open CoDesign',
-  titleTemplate: ':title — Open CoDesign',
+  title: 'Ligma',
+  titleTemplate: ':title — Ligma',
   description:
     'Open-source desktop AI design tool — the self-hosted alternative to Claude Design. Multi-model BYOK (Anthropic, OpenAI, Gemini, DeepSeek, Ollama), local-first, MIT.',
   lang: 'en-US',
@@ -29,8 +29,8 @@ export default defineConfig({
     ['meta', { name: 'google-site-verification', content: 'c3cbbeaec5437546' }],
     // Open Graph
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:site_name', content: 'Open CoDesign' }],
-    ['meta', { property: 'og:title', content: 'Open CoDesign — Open-Source AI Design Tool' }],
+    ['meta', { property: 'og:site_name', content: 'Ligma' }],
+    ['meta', { property: 'og:title', content: 'Ligma — Open-Source AI Design Tool' }],
     [
       'meta',
       {
@@ -45,8 +45,8 @@ export default defineConfig({
     ['meta', { property: 'og:url', content: SITE_URL }],
     // Twitter / X
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { name: 'twitter:site', content: '@OpenCoworkAI' }],
-    ['meta', { name: 'twitter:title', content: 'Open CoDesign — Open-Source AI Design Tool' }],
+    ['meta', { name: 'twitter:site', content: '@TODO-MORNING' }],
+    ['meta', { name: 'twitter:title', content: 'Ligma — Open-Source AI Design Tool' }],
     [
       'meta',
       {
@@ -61,11 +61,11 @@ export default defineConfig({
       {
         name: 'keywords',
         content:
-          'open source AI design tool, Claude Design alternative, BYOK design app, local-first design generator, AI prototype generator, prompt to HTML, prompt to React component, open-codesign, multi-model design, Electron design app',
+          'open source AI design tool, Claude Design alternative, BYOK design app, local-first design generator, AI prototype generator, prompt to HTML, prompt to React component, ligma, multi-model design, Electron design app',
       },
     ],
     ['meta', { name: 'robots', content: 'index,follow,max-image-preview:large' }],
-    ['meta', { name: 'author', content: 'OpenCoworkAI' }],
+    ['meta', { name: 'author', content: 'TODO-MORNING' }],
     ['link', { rel: 'alternate', hreflang: 'en', href: SITE_URL }],
     ['link', { rel: 'alternate', hreflang: 'zh-CN', href: `${SITE_URL}zh/` }],
     ['link', { rel: 'alternate', hreflang: 'x-default', href: SITE_URL }],
@@ -76,8 +76,8 @@ export default defineConfig({
       JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',
-        name: 'Open CoDesign',
-        alternateName: 'open-codesign',
+        name: 'Ligma',
+        alternateName: 'ligma',
         description:
           'Open-source desktop AI design tool. The open-source alternative to Anthropic Claude Design. Prompt to interactive prototype, slide deck, and marketing assets. Multi-model BYOK, local-first.',
         url: SITE_URL,
@@ -85,7 +85,7 @@ export default defineConfig({
         operatingSystem: 'macOS, Windows, Linux',
         softwareVersion: SOFTWARE_VERSION,
         releaseNotes: `${SITE_URL}#whats-working-today`,
-        downloadUrl: 'https://github.com/OpenCoworkAI/open-codesign/releases',
+        downloadUrl: 'https://github.com/TODO-MORNING/ligma/releases',
         offers: {
           '@type': 'Offer',
           price: '0',
@@ -93,11 +93,11 @@ export default defineConfig({
           description: 'Free and open source. Bring your own API key (token cost only).',
         },
         license: 'https://opensource.org/licenses/MIT',
-        codeRepository: 'https://github.com/OpenCoworkAI/open-codesign',
+        codeRepository: 'https://github.com/TODO-MORNING/ligma',
         author: {
           '@type': 'Organization',
-          name: 'OpenCoworkAI',
-          url: 'https://github.com/OpenCoworkAI',
+          name: 'TODO-MORNING',
+          url: 'https://github.com/TODO-MORNING',
         },
         keywords:
           'Claude Design alternative, open source AI design, BYOK, local-first, Anthropic, Electron desktop app, prompt to prototype, React component generator, AI design tool',
@@ -113,23 +113,23 @@ export default defineConfig({
         mainEntity: [
           {
             '@type': 'Question',
-            name: 'What is Open CoDesign?',
+            name: 'What is Ligma?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Open CoDesign is an open-source desktop AI design tool that turns natural-language prompts into HTML prototypes, JSX/React components, slide decks, and marketing assets. It is the open-source alternative to Anthropic Claude Design and runs entirely on your laptop.',
+              text: 'Ligma is an open-source desktop AI design tool that turns natural-language prompts into HTML prototypes, JSX/React components, slide decks, and marketing assets. It is the open-source alternative to Anthropic Claude Design and runs entirely on your laptop.',
             },
           },
           {
             '@type': 'Question',
-            name: 'Is Open CoDesign free?',
+            name: 'Is Ligma free?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Yes. Open CoDesign is MIT licensed and free to download and use. You bring your own API key for any supported model provider and pay only the token cost to that provider. There is no subscription, no cloud account, and no per-token surcharge from us.',
+              text: 'Yes. Ligma is MIT licensed and free to download and use. You bring your own API key for any supported model provider and pay only the token cost to that provider. There is no subscription, no cloud account, and no per-token surcharge from us.',
             },
           },
           {
             '@type': 'Question',
-            name: 'Which AI models can I use with Open CoDesign?',
+            name: 'Which AI models can I use with Ligma?',
             acceptedAnswer: {
               '@type': 'Answer',
               text: 'Anthropic Claude, OpenAI GPT, Google Gemini, DeepSeek, OpenRouter, SiliconFlow, local Ollama, and any OpenAI-compatible endpoint. Keyless (IP-allowlisted) corporate proxies are also supported.',
@@ -137,7 +137,7 @@ export default defineConfig({
           },
           {
             '@type': 'Question',
-            name: 'Does Open CoDesign send my data to the cloud?',
+            name: 'Does Ligma send my data to the cloud?',
             acceptedAnswer: {
               '@type': 'Answer',
               text: 'No. All designs, prompts, and configuration live on your machine — SQLite for history and encrypted TOML (via Electron safeStorage) for configuration. The only outbound network traffic is to the model provider you configure.',
@@ -145,10 +145,10 @@ export default defineConfig({
           },
           {
             '@type': 'Question',
-            name: 'How is Open CoDesign different from Claude Design?',
+            name: 'How is Ligma different from Claude Design?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Open CoDesign is open source, runs locally, supports any AI model via BYOK, ships twelve built-in design skill modules and fifteen demo prompts, imports your existing Claude Code or Codex config in one click, and exports to HTML, PDF, PPTX, ZIP, and Markdown. Claude Design is closed source, cloud-only, Anthropic-only, subscription-priced, and has limited export.',
+              text: 'Ligma is open source, runs locally, supports any AI model via BYOK, ships twelve built-in design skill modules and fifteen demo prompts, imports your existing Claude Code or Codex config in one click, and exports to HTML, PDF, PPTX, ZIP, and Markdown. Claude Design is closed source, cloud-only, Anthropic-only, subscription-priced, and has limited export.',
             },
           },
           {
@@ -169,10 +169,10 @@ export default defineConfig({
       JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'Organization',
-        name: 'OpenCoworkAI',
-        url: 'https://github.com/OpenCoworkAI',
+        name: 'TODO-MORNING',
+        url: 'https://github.com/TODO-MORNING',
         logo: `${SITE_URL}logo.png`,
-        sameAs: ['https://github.com/OpenCoworkAI', 'https://twitter.com/OpenCoworkAI'],
+        sameAs: ['https://github.com/TODO-MORNING', 'https://twitter.com/TODO-MORNING'],
       }),
     ],
   ],
@@ -187,7 +187,7 @@ export default defineConfig({
   },
 
   themeConfig: {
-    logo: { src: '/logo.png', alt: 'open-codesign' },
+    logo: { src: '/logo.png', alt: 'ligma' },
 
     nav: [
       { text: 'Home', link: '/' },
@@ -207,7 +207,7 @@ export default defineConfig({
       { text: 'Roadmap', link: '/roadmap' },
       {
         text: 'Changelog',
-        link: 'https://github.com/OpenCoworkAI/open-codesign/blob/main/CHANGELOG.md',
+        link: 'https://github.com/TODO-MORNING/ligma/blob/main/CHANGELOG.md',
       },
     ],
 
@@ -236,18 +236,18 @@ export default defineConfig({
           { text: 'Roadmap', link: '/roadmap' },
           {
             text: 'Changelog',
-            link: 'https://github.com/OpenCoworkAI/open-codesign/blob/main/CHANGELOG.md',
+            link: 'https://github.com/TODO-MORNING/ligma/blob/main/CHANGELOG.md',
           },
         ],
       },
     ],
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/OpenCoworkAI/open-codesign' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/TODO-MORNING/ligma' }],
 
     footer: {
       message:
-        'Released under the <a href="https://opensource.org/licenses/MIT">MIT License</a>. · <a href="https://github.com/OpenCoworkAI/open-codesign/blob/main/CONTRIBUTING.md">Contribute</a> · <a href="https://github.com/OpenCoworkAI/open-codesign/issues">Issues</a>',
-      copyright: '© 2026-present OpenCoworkAI',
+        'Released under the <a href="https://opensource.org/licenses/MIT">MIT License</a>. · <a href="https://github.com/TODO-MORNING/ligma/blob/main/CONTRIBUTING.md">Contribute</a> · <a href="https://github.com/TODO-MORNING/ligma/issues">Issues</a>',
+      copyright: '© 2026-present TODO-MORNING',
     },
   },
 
@@ -259,7 +259,7 @@ export default defineConfig({
     zh: {
       label: '中文',
       lang: 'zh-CN',
-      title: 'Open CoDesign',
+      title: 'Ligma',
       description:
         '开源桌面 AI 设计工具——Claude Design 的自托管替代方案。自带 API Key（Anthropic、OpenAI、Gemini、DeepSeek、Ollama），100% 本地运行，MIT。',
       themeConfig: {
@@ -267,7 +267,7 @@ export default defineConfig({
           { text: '首页', link: '/zh/' },
           { text: '快速开始', link: '/zh/quickstart' },
           { text: '对比 Claude Design', link: '/zh/claude-design-alternative' },
-          { text: 'GitHub', link: 'https://github.com/OpenCoworkAI/open-codesign' },
+          { text: 'GitHub', link: 'https://github.com/TODO-MORNING/ligma' },
         ],
         sidebar: [
           {
@@ -281,7 +281,7 @@ export default defineConfig({
         ],
         footer: {
           message: '基于 MIT 协议开源。',
-          copyright: '© 2026-present OpenCoworkAI',
+          copyright: '© 2026-present TODO-MORNING',
         },
       },
     },

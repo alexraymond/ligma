@@ -9,8 +9,8 @@
  * initSnapshotsDb().
  */
 
-import type { Design, DesignSnapshot, SnapshotCreateInput } from '@open-codesign/shared';
-import { CodesignError } from '@open-codesign/shared';
+import type { Design, DesignSnapshot, SnapshotCreateInput } from '@ligma/shared';
+import { CodesignError } from '@ligma/shared';
 import type BetterSqlite3 from 'better-sqlite3';
 import { ipcMain } from './electron-runtime';
 import { getLogger } from './logger';

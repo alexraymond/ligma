@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "open-codesign",
+    "appName": "ligma",
     "send": "Send",
     "cancel": "Cancel",
     "retry": "Retry",
@@ -352,7 +352,7 @@
       "logs": "Logs",
       "data": "Data directory",
       "change": "Change",
-      "restartHint": "Choose where open-codesign stores config, logs, and local design data. Changes are saved permanently and take effect after restarting the app.",
+      "restartHint": "Choose where ligma stores config, logs, and local design data. Changes are saved permanently and take effect after restarting the app.",
       "locationSavedToast": "Storage location saved. Restart the app to apply it.",
       "locationSaveFailed": "Could not save storage location",
       "onboardingTitle": "Onboarding",
@@ -431,7 +431,7 @@
     },
     "paste": {
       "title": "Paste your API key",
-      "description": "Auto-detects your provider. Click Test to verify the key and endpoint before continuing. Your key is stored locally in ~/.config/open-codesign/config.toml (file mode 0600).",
+      "description": "Auto-detects your provider. Click Test to verify the key and endpoint before continuing. Your key is stored locally in ~/.config/ligma/config.toml (file mode 0600).",
       "placeholder": "sk-…",
       "recognized": "Detected provider: {{provider}}",
       "connected_one": "Connected {{count}} model",
@@ -483,7 +483,7 @@
           "404": "Base URL path wrong. Try adding /v1 suffix (e.g. https://your-host/v1).",
           "ECONNREFUSED": "Cannot reach base URL. Check domain/port/network.",
           "NETWORK": "Network error. Check your connection.",
-          "PARSE": "Unexpected response. View logs at ~/Library/Logs/open-codesign/main.log",
+          "PARSE": "Unexpected response. View logs at ~/Library/Logs/ligma/main.log",
           "IPC_BAD_INPUT": "Invalid input sent to connection test. Check provider / API key / base URL fields."
         }
       },
@@ -580,7 +580,7 @@
   "inlineComment": {
     "title": "Comment on",
     "closeComposer": "Close inline comment composer",
-    "description": "Clicked elements stay selected in the canvas. Describe the visual or content change you want, and open-codesign will rewrite the artifact around that target.",
+    "description": "Clicked elements stay selected in the canvas. Describe the visual or content change you want, and ligma will rewrite the artifact around that target.",
     "placeholder": "Make this section more compact, sharpen the headline, and align it with the linked design system…",
     "applying": "Applying…",
     "applyChange": "Apply change"

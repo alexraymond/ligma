@@ -1,10 +1,10 @@
-# CLAUDE.md — Open CoDesign
+# CLAUDE.md — Ligma
 
 Instructions for Claude Code (and any AI coding agent) working in this repository. Read this before making changes.
 
 ## What this project is
 
-open-codesign is an Electron desktop app that turns natural-language prompts into design artifacts (HTML prototypes, PDFs, PPTX decks, marketing assets). It's the open-source counterpart to Anthropic's Claude Design, with multi-provider model support via `pi-ai` and a local-first storage model.
+ligma is an Electron desktop app that turns natural-language prompts into design artifacts (HTML prototypes, PDFs, PPTX decks, marketing assets). It's the open-source counterpart to Anthropic's Claude Design, with multi-provider model support via `pi-ai` and a local-first storage model.
 
 The full vision and locked decisions live in `docs/VISION.md`. Read it before suggesting architectural changes.
 
@@ -15,7 +15,7 @@ The full vision and locked decisions live in `docs/VISION.md`. Read it before su
 These are project-level commitments, not preferences:
 
 1. **No bundled model runtimes.** No Ollama, llama.cpp, Python, or browser binaries shipped in the installer. Use system installs or lazy-download on demand.
-2. **BYOK only.** No proxied API calls, no cloud account, no telemetry by default. User credentials stay in `~/.config/open-codesign/config.toml` (plaintext, file mode 0600 — matching Claude Code / Codex / gh CLI conventions).
+2. **BYOK only.** No proxied API calls, no cloud account, no telemetry by default. User credentials stay in `~/.config/ligma/config.toml` (plaintext, file mode 0600 — matching Claude Code / Codex / gh CLI conventions).
 3. **Local-first storage.** Designs, history, and codebase scans live on disk (SQLite via `better-sqlite3`). No mandatory cloud sync.
 4. **MIT-compatible permissive licenses only.** Reject GPL/AGPL/SSPL/proprietary deps. Check license before adding anything.
 5. **Lazy-load heavy features.** PPTX export, web capture, codebase scan, etc. must dynamic-import on first use, not on app start.
@@ -56,7 +56,7 @@ packages/
   core/              # Generation orchestration (prompt → artifact pipeline)
   providers/         # pi-ai adapter + custom provider extensions
   runtime/           # Sandbox renderer (iframe-based preview)
-  ui/                # Shared design system (aligned with open-cowork tokens)
+  ui/                # Shared design system (aligned with todo-morning tokens)
   artifacts/         # Artifact schema (HTML / React / SVG / PPTX)
   exporters/         # PDF / PPTX / ZIP exporters (lazy-loaded)
   templates/         # Built-in demo prompts and starter templates

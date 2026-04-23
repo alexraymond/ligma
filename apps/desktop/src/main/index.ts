@@ -11,8 +11,8 @@ import {
   generate,
   generateTitle,
   generateViaAgent,
-} from '@open-codesign/core';
-import { detectProviderFromKey, prewarmClaudeExecutable } from '@open-codesign/providers';
+} from '@ligma/core';
+import { detectProviderFromKey, prewarmClaudeExecutable } from '@ligma/providers';
 import {
   ApplyCommentPayload,
   BRAND,
@@ -22,8 +22,8 @@ import {
   GeneratePayload,
   GeneratePayloadV1,
   isFsUpdatedAckV1,
-} from '@open-codesign/shared';
-import { computeFingerprint } from '@open-codesign/shared/fingerprint';
+} from '@ligma/shared';
+import { computeFingerprint } from '@ligma/shared/fingerprint';
 import type BetterSqlite3 from 'better-sqlite3';
 import type { BrowserWindow as ElectronBrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
@@ -1119,7 +1119,7 @@ void app.whenReady().then(async () => {
     // region:boot-init
     // Prewarm the Claude CLI path once per process so provider calls never
     // pay the `which claude` syscall on the hot path. Result is memoised
-    // inside @open-codesign/providers; null return means the CLI isn't
+    // inside @ligma/providers; null return means the CLI isn't
     // installed — the provider call surfaces that as PROVIDER_AUTH_MISSING
     // instead of blowing up on first use.
     const bootLog = getLogger('main:boot');
@@ -1229,7 +1229,7 @@ void app.whenReady().then(async () => {
     // best-effort sync log and show a native three-button dialog.
     handleBootFailure(
       err,
-      'Open CoDesign failed to start',
+      'Ligma failed to start',
       'A startup error prevented the app from loading.',
     );
     app.quit();

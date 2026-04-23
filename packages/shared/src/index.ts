@@ -186,7 +186,7 @@ export const IframeErrorEvent = z.object({
 export type IframeErrorEvent = z.infer<typeof IframeErrorEvent>;
 
 export const BRAND = {
-  appName: 'Open CoDesign',
+  appName: 'Ligma',
   backgroundColor: '#faf8f3',
 } as const;
 
@@ -342,7 +342,7 @@ export { FS_UPDATED_ACK_SCHEMA_VERSION, isFsUpdatedAckV1 } from './ipc-ack';
 export type { FsUpdatedAckV1, FsUpdatedV1 } from './ipc-ack';
 // NOTE: fingerprint.ts imports node:crypto and is intentionally NOT re-exported
 // from this barrel — it's main-process only. Import from
-// '@open-codesign/shared/fingerprint' directly.
+// '@ligma/shared/fingerprint' directly.
 export type { FingerprintInput } from './fingerprint';
 
 // ---------------------------------------------------------------------------

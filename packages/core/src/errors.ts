@@ -15,8 +15,8 @@
  * layer logs them with `reason`.
  */
 
-import type { ProviderId } from '@open-codesign/shared';
-import { CodesignError, ERROR_CODES } from '@open-codesign/shared';
+import type { ProviderId } from '@ligma/shared';
+import { CodesignError, ERROR_CODES } from '@ligma/shared';
 
 export const PROVIDER_KEY_HELP_URL: Partial<Record<ProviderId, string>> = {
   openai: 'https://platform.openai.com/account/api-keys',

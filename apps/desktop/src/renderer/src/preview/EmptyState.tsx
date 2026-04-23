@@ -1,4 +1,4 @@
-import { useT } from '@open-codesign/i18n';
+import { useT } from '@ligma/i18n';
 import { ArrowUpRight } from 'lucide-react';
 import logoWithText from '../assets/logo-with-text.png';
 
@@ -74,7 +74,7 @@ export function EmptyState({ onPickStarter }: EmptyStateProps) {
         <div className="flex flex-col items-center mb-[12px]">
           <img
             src={logoWithText}
-            alt="Open CoDesign"
+            alt="Ligma"
             className="h-auto"
             style={{ width: 'clamp(280px, 26vw, 400px)' }}
             draggable={false}

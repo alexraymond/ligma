@@ -1,4 +1,4 @@
-import { useT } from '@open-codesign/i18n';
+import { useT } from '@ligma/i18n';
 import { FileCode2 } from 'lucide-react';
 import { formatAbsoluteTime, formatRelativeTime, useDesignFiles } from '../hooks/useDesignFiles';
 import { useCodesignStore } from '../store';

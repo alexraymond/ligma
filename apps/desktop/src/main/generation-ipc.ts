@@ -1,4 +1,4 @@
-import { CodesignError, ERROR_CODES } from '@open-codesign/shared';
+import { CodesignError, ERROR_CODES } from '@ligma/shared';
 
 export interface CancellationLogger {
   info: (event: string, payload: { id: string }) => void;

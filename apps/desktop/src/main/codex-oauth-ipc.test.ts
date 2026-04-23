@@ -75,10 +75,9 @@ const startCallbackServerMock = vi.fn(async () => ({
 }));
 const exchangeCodeMock = vi.fn();
 
-vi.mock('@open-codesign/providers/codex', async () => {
-  const actual = await vi.importActual<typeof import('@open-codesign/providers/codex')>(
-    '@open-codesign/providers/codex',
-  );
+vi.mock('@ligma/providers/codex', async () => {
+  const actual =
+    await vi.importActual<typeof import('@ligma/providers/codex')>('@ligma/providers/codex');
   return {
     ...actual,
     startCallbackServer: startCallbackServerMock,

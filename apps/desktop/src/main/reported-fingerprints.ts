@@ -5,7 +5,7 @@
  * the last 24h" before they open a duplicate GitHub issue. All entries older
  * than 24h are pruned on write.
  *
- * File shape: JSON at `~/.config/open-codesign/reported-fingerprints.json`
+ * File shape: JSON at `~/.config/ligma/reported-fingerprints.json`
  * with `schemaVersion: 1`. Synchronous I/O is fine — the file is small and
  * only touched from the diagnostics IPC handlers.
  */

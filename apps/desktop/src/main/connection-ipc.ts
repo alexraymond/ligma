@@ -9,7 +9,7 @@ import {
   ensureVersionedBase,
   isSupportedOnboardingProvider,
   stripInferenceEndpointSuffix,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 import { buildAuthHeaders, buildAuthHeadersForWire } from './auth-headers';
 import { getCodexTokenStore } from './codex-oauth-ipc';
 import { ipcMain } from './electron-runtime';
@@ -227,7 +227,7 @@ function classifyNetworkError(err: unknown): { code: ConnectionTestError['code']
   }
   return {
     code: 'NETWORK',
-    hint: `网络错误：${message}。查看日志：~/Library/Logs/open-codesign/main.log`,
+    hint: `网络错误：${message}。查看日志：~/Library/Logs/ligma/main.log`,
   };
 }
 

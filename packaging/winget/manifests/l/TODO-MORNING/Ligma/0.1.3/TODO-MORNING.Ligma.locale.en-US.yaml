@@ -1,0 +1,27 @@
+PackageIdentifier: TODO-MORNING.Ligma
+PackageVersion: 0.1.3
+PackageLocale: en-US
+Publisher: TODO-MORNING
+PublisherUrl: https://github.com/TODO-MORNING
+PublisherSupportUrl: https://github.com/TODO-MORNING/ligma/issues
+PackageName: Ligma
+PackageUrl: https://github.com/TODO-MORNING/ligma
+License: MIT
+LicenseUrl: https://github.com/TODO-MORNING/ligma/blob/main/LICENSE
+ShortDescription: Open-source desktop AI design tool — prompt to prototype, BYOK, local-first
+Description: |
+  Ligma turns natural-language prompts into HTML/JSX prototypes,
+  slide decks, and marketing assets. It runs entirely on your laptop with
+  whichever AI provider you already pay for (Anthropic, OpenAI, Gemini,
+  DeepSeek, or any OpenAI-compatible relay — including keyless
+  IP-allowlisted proxies).
+Moniker: ligma
+Tags:
+  - ai
+  - design
+  - electron
+  - open-source
+  - prototyping
+ReleaseNotesUrl: https://github.com/TODO-MORNING/ligma/releases/tag/v0.1.3
+ManifestType: defaultLocale
+ManifestVersion: 1.6.0

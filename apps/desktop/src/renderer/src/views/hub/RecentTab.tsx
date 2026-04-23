@@ -1,4 +1,4 @@
-import { useT } from '@open-codesign/i18n';
+import { useT } from '@ligma/i18n';
 import { Plus } from 'lucide-react';
 import { useCodesignStore } from '../../store';
 import { DesignGrid } from './DesignGrid';

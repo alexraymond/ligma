@@ -1,9 +1,4 @@
-import {
-  BUILTIN_PROVIDERS,
-  CodesignError,
-  type Config,
-  hydrateConfig,
-} from '@open-codesign/shared';
+import { BUILTIN_PROVIDERS, CodesignError, type Config, hydrateConfig } from '@ligma/shared';
 import { describe, expect, it } from 'vitest';
 import {
   assertProviderHasStoredSecret,
@@ -19,9 +14,9 @@ function makeCfg(input: {
   modelPrimary: string;
   secrets?: Record<string, { ciphertext: string }>;
   baseUrls?: Record<string, string>;
-  providers?: Record<string, import('@open-codesign/shared').ProviderEntry>;
+  providers?: Record<string, import('@ligma/shared').ProviderEntry>;
 }): Config {
-  const providers: Record<string, import('@open-codesign/shared').ProviderEntry> = {
+  const providers: Record<string, import('@ligma/shared').ProviderEntry> = {
     anthropic: {
       id: 'anthropic',
       name: 'Anthropic Claude',

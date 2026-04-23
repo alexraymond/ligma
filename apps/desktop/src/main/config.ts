@@ -8,15 +8,15 @@ import {
   ERROR_CODES,
   parseConfigFlexible,
   toPersistedV3,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 import { parse as parseToml, stringify as stringifyToml } from 'smol-toml';
 import { getActiveStorageLocations } from './storage-settings';
 
-const XDG_DEFAULT = join(homedir(), '.config', 'open-codesign');
+const XDG_DEFAULT = join(homedir(), '.config', 'ligma');
 
 export function defaultConfigDir(): string {
   const xdg = process.env['XDG_CONFIG_HOME'];
-  if (xdg && xdg.length > 0) return join(xdg, 'open-codesign');
+  if (xdg && xdg.length > 0) return join(xdg, 'ligma');
   return XDG_DEFAULT;
 }
 

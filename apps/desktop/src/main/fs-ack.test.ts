@@ -3,7 +3,7 @@
  * main and renderer for `fs_updated` IPC events. Pure logic, no Electron.
  */
 
-import type { CoreLogger } from '@open-codesign/core';
+import type { CoreLogger } from '@ligma/core';
 import { describe, expect, it, vi } from 'vitest';
 import { createFsAckTracker } from './fs-ack';
 

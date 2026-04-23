@@ -8,7 +8,7 @@
  */
 
 import { spawn } from 'node:child_process';
-import { prewarmClaudeExecutable } from '@open-codesign/providers';
+import { prewarmClaudeExecutable } from '@ligma/providers';
 import {
   CLAUDE_CLI_PROVIDER_ID,
   CodesignError,
@@ -16,7 +16,7 @@ import {
   ERROR_CODES,
   type ProviderEntry,
   hydrateConfig,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 import { writeConfig } from './config';
 import { ipcMain } from './electron-runtime';
 import { getLogger } from './logger';

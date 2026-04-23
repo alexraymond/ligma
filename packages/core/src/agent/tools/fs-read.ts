@@ -12,7 +12,7 @@
  */
 
 // TODO(w1-integration): when W1 lands, replace this stub import with
-//   `import type { FsViewAckV1 } from '@open-codesign/shared';`
+//   `import type { FsViewAckV1 } from '@ligma/shared';`
 // and delete packages/core/src/agent/_stub-ipc-types.ts.
 import type { FsViewAckV1 } from '../_stub-ipc-types.js';
 import type { Tool, ToolRunContext, ToolRunResult } from './index.js';

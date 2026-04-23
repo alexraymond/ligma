@@ -1,4 +1,4 @@
-import { i18n } from '@open-codesign/i18n';
+import { i18n } from '@ligma/i18n';
 import type {
   ChatAppendInput,
   ChatMessage,
@@ -17,8 +17,8 @@ import type {
   ReportEventResult,
   ReportableError,
   SelectedElement,
-} from '@open-codesign/shared';
-import { computeFingerprint } from '@open-codesign/shared/fingerprint';
+} from '@ligma/shared';
+import { computeFingerprint } from '@ligma/shared/fingerprint';
 import { create } from 'zustand';
 import type { StoreApi } from 'zustand';
 import type { CodesignApi, ExportFormat } from '../../preload/index';
@@ -464,7 +464,7 @@ export interface CommentBubbleAnchor {
   initialScope?: CommentScope;
 }
 
-const THEME_STORAGE_KEY = 'open-codesign:theme';
+const THEME_STORAGE_KEY = 'ligma:theme';
 
 // PreviewPane keeps an iframe per recently-visited design alive so switching
 // back is instant. Bound the pool so memory stays small for users with lots
@@ -929,7 +929,7 @@ function applyGenerateSuccess(
     }
     if (rejectedUsageFields.length > 0) {
       const detail = rejectedUsageFields.join(', ');
-      console.warn('[open-codesign] dropped non-finite usage values from provider:', detail);
+      console.warn('[ligma] dropped non-finite usage values from provider:', detail);
     }
   }
 }
@@ -1476,7 +1476,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
             }
           }
         } catch (err) {
-          console.warn('[open-codesign] markApplied failed:', err);
+          console.warn('[ligma] markApplied failed:', err);
         }
       }
     } catch (err) {
@@ -1613,7 +1613,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
       }
       if (rejectedUsageFields.length > 0) {
         const detail = rejectedUsageFields.join(', ');
-        console.warn('[open-codesign] dropped non-finite usage values from provider:', detail);
+        console.warn('[ligma] dropped non-finite usage values from provider:', detail);
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : tr('errors.unknown');
@@ -2123,7 +2123,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
       set({ chatMessages: rows, chatLoaded: true });
     } catch (err) {
       const msg = err instanceof Error ? err.message : tr('errors.unknown');
-      console.warn('[open-codesign] loadChatForCurrentDesign failed:', msg);
+      console.warn('[ligma] loadChatForCurrentDesign failed:', msg);
       set({ chatLoaded: true });
     }
   },
@@ -2140,7 +2140,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
       return row;
     } catch (err) {
       const msg = err instanceof Error ? err.message : tr('errors.unknown');
-      console.warn('[open-codesign] appendChatMessage failed:', msg);
+      console.warn('[ligma] appendChatMessage failed:', msg);
       return null;
     }
   },
@@ -2196,7 +2196,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
       });
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'unknown';
-      console.warn('[open-codesign] updateChatToolStatus failed:', msg);
+      console.warn('[ligma] updateChatToolStatus failed:', msg);
       return;
     }
     // Mirror the patch into local chatMessages so WorkingCard re-renders
@@ -2344,7 +2344,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
       });
     } catch (err) {
       const msg = err instanceof Error ? err.message : tr('errors.unknown');
-      console.warn('[open-codesign] loadCommentsForCurrentDesign failed:', msg);
+      console.warn('[ligma] loadCommentsForCurrentDesign failed:', msg);
       set({ commentsLoaded: true });
     }
   },
@@ -2385,7 +2385,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
         snapshotId = snaps[0]?.id ?? null;
         if (snapshotId) set({ currentSnapshotId: snapshotId });
       } catch (err) {
-        console.warn('[open-codesign] addComment: failed to look up latest snapshot', err);
+        console.warn('[ligma] addComment: failed to look up latest snapshot', err);
       }
     }
     if (!snapshotId) {

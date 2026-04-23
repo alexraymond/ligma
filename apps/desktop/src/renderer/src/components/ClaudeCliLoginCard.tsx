@@ -1,4 +1,4 @@
-import { Button } from '@open-codesign/ui';
+import { Button } from '@ligma/ui';
 import { CheckCircle, Loader2, Sparkles, Terminal } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import type { ClaudeCliStatus } from '../../../preload/index';
