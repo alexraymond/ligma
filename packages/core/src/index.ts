@@ -35,6 +35,12 @@ export type { LoadAllSkillsOptions } from './skills/index.js';
 
 export { generateViaAgent } from './agent.js';
 export type { AgentEvent, GenerateViaAgentDeps } from './agent.js';
+export { generateViaNewLoop } from './generate-via-new-loop.js';
+export type {
+  GenerateViaNewLoopDeps,
+  NewLoopStreamEvent,
+  SendAgentEvent,
+} from './generate-via-new-loop.js';
 export { FRAME_TEMPLATES, type FrameName } from './frames/index.js';
 export { DESIGN_SKILLS, type DesignSkillName } from './design-skills/index.js';
 export {
@@ -110,6 +116,20 @@ export interface GenerateInput {
   signal?: AbortSignal | undefined;
   onRetry?: ((info: RetryReason) => void) | undefined;
   logger?: CoreLogger | undefined;
+  /**
+   * Opt-in to the W2 async-generator agent loop (golden-path beta). When
+   * true AND `wire === 'claude-cli'`, the desktop dispatcher routes the
+   * request through `generateViaNewLoop` instead of the legacy flat
+   * `generate()` path. Default undefined / false keeps every existing
+   * caller on the legacy path bit-for-bit.
+   *
+   * Mirrors `GenerateInputExtensions.useNewLoop` from
+   * `./agent/index.ts` so the UI doesn't have to spread-merge a second
+   * type just to pass one flag. Kept as the only non-negotiable
+   * addition to the monolith `GenerateInput` — every other new field
+   * belongs on the sidecar extension interface.
+   */
+  useNewLoop?: boolean | undefined;
 }
 
 export interface ApplyCommentInput {
