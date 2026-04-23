@@ -462,7 +462,7 @@ describe('diagnostics:v1:reportEvent', () => {
       }),
     );
 
-    const recomputed = (await import('@open-codesign/shared/fingerprint')).computeFingerprint({
+    const recomputed = (await import('@ligma/shared/fingerprint')).computeFingerprint({
       errorCode: 'FP_CODE',
       stack: 'Error: fp\n    at foo (a.ts:1:1)',
       message: 'fp check',

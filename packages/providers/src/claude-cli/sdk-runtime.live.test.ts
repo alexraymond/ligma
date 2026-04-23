@@ -4,7 +4,7 @@
  * against the user's local subscription (~7s, real tokens/cost).
  *
  * Run with:
- *   LIVE_CLAUDE_CLI=1 pnpm --filter @open-codesign/providers test sdk-runtime.live
+ *   LIVE_CLAUDE_CLI=1 pnpm --filter @ligma/providers test sdk-runtime.live
  */
 
 import { describe, expect, it } from 'vitest';

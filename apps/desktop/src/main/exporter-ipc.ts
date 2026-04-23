@@ -1,5 +1,5 @@
-import { type ExporterFormat, exportArtifact } from '@open-codesign/exporters';
-import { CodesignError, ERROR_CODES } from '@open-codesign/shared';
+import { type ExporterFormat, exportArtifact } from '@ligma/exporters';
+import { CodesignError, ERROR_CODES } from '@ligma/shared';
 import type { BrowserWindow } from 'electron';
 import { dialog, ipcMain } from './electron-runtime';
 

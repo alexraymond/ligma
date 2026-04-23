@@ -1,4 +1,4 @@
-import { CancelGenerationPayloadV1, CodesignError } from '@open-codesign/shared';
+import { CancelGenerationPayloadV1, CodesignError } from '@ligma/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { armGenerationTimeout, cancelGenerationRequest } from './generation-ipc';
 

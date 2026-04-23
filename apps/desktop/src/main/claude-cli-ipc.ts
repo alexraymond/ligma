@@ -15,7 +15,7 @@ import {
   ERROR_CODES,
   type ProviderEntry,
   hydrateConfig,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 import { writeConfig } from './config';
 import { ipcMain } from './electron-runtime';
 import { getLogger } from './logger';

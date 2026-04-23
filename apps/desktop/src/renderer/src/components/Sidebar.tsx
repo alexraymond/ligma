@@ -1,5 +1,5 @@
-import { useT } from '@open-codesign/i18n';
-import type { LocalInputFile, OnboardingState } from '@open-codesign/shared';
+import { useT } from '@ligma/i18n';
+import type { LocalInputFile, OnboardingState } from '@ligma/shared';
 import { FolderOpen, Link2, Paperclip, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useAgentStream } from '../hooks/useAgentStream';

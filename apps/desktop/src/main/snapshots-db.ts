@@ -29,7 +29,7 @@ import type {
   DiagnosticEventRow,
   DiagnosticLevel,
   SnapshotCreateInput,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 import type BetterSqlite3 from 'better-sqlite3';
 
 // better-sqlite3 is a native module — require() instead of import.

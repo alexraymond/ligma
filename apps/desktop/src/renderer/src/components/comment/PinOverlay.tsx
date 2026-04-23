@@ -1,5 +1,5 @@
-import { useT } from '@open-codesign/i18n';
-import type { CommentRect, CommentRow } from '@open-codesign/shared';
+import { useT } from '@ligma/i18n';
+import type { CommentRect, CommentRow } from '@ligma/shared';
 
 export interface PinOverlayProps {
   /** Comments filtered to the currently-viewed snapshot. */

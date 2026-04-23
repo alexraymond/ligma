@@ -9,7 +9,7 @@ import {
   ensureVersionedBase,
   isSupportedOnboardingProvider,
   stripInferenceEndpointSuffix,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 import { buildAuthHeaders, buildAuthHeadersForWire } from './auth-headers';
 import { getCodexTokenStore } from './codex-oauth-ipc';
 import { ipcMain } from './electron-runtime';

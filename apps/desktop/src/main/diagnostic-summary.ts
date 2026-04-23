@@ -5,8 +5,8 @@
  * process-level state (no Date.now, no app.getPath, etc.).
  */
 
-import type { ActionTimelineEntry, ReportableError } from '@open-codesign/shared';
-import { normalizeFrame } from '@open-codesign/shared/fingerprint';
+import type { ActionTimelineEntry, ReportableError } from '@ligma/shared';
+import { normalizeFrame } from '@ligma/shared/fingerprint';
 
 export interface SummaryInput {
   /** The canonical in-memory error record. Since the Report flow no longer

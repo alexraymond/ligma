@@ -165,7 +165,7 @@ jobs:
 
       # Build all workspace packages (turborepo respects dep graph)
       - name: Build workspace
-        run: pnpm --filter '!@open-codesign/desktop' -r build
+        run: pnpm --filter '!@ligma/desktop' -r build
 
       # Package the Electron app.
       # CSC_IDENTITY_AUTO_DISCOVERY=false: skip ad-hoc Mac signing prompt.
@@ -174,7 +174,7 @@ jobs:
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm --filter @open-codesign/desktop release
+        run: pnpm --filter @ligma/desktop release
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -227,7 +227,7 @@ jobs:
           sudo lxd init --auto
 
       - name: Build workspace
-        run: pnpm --filter '!@open-codesign/desktop' -r build
+        run: pnpm --filter '!@ligma/desktop' -r build
 
       - name: Package snap
         working-directory: apps/desktop

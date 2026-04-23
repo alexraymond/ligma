@@ -2,7 +2,7 @@
  * Hidden BrowserWindow runtime verifier for the agent's `done` tool.
  *
  * The agent emits a JSX module (TWEAK_DEFAULTS + App + ReactDOM.createRoot).
- * We wrap it via `@open-codesign/runtime`'s `buildSrcdoc` (same path the
+ * We wrap it via `@ligma/runtime`'s `buildSrcdoc` (same path the
  * preview iframe uses), load it into an off-screen sandboxed BrowserWindow,
  * and capture every `console-message` (warn/error) plus `did-fail-load`
  * for ~3 s. The collected errors flow back through the `done` tool so the
@@ -14,8 +14,8 @@
  * confirm the next `done` tool result lists the error.
  */
 
-import type { DoneError, DoneRuntimeVerifier } from '@open-codesign/core';
-import { buildSrcdoc } from '@open-codesign/runtime';
+import type { DoneError, DoneRuntimeVerifier } from '@ligma/core';
+import { buildSrcdoc } from '@ligma/runtime';
 import { BrowserWindow } from './electron-runtime';
 
 const VERIFY_TIMEOUT_MS = 3000;

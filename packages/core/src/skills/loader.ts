@@ -1,7 +1,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { basename, extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CodesignError, ERROR_CODES } from '@open-codesign/shared';
+import { CodesignError, ERROR_CODES } from '@ligma/shared';
 import { type LoadedSkill, SkillFrontmatterV1 } from './types.js';
 
 // ---------------------------------------------------------------------------

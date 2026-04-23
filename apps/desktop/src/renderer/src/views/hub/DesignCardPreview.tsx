@@ -1,5 +1,5 @@
-import { buildSrcdoc } from '@open-codesign/runtime';
-import type { Design } from '@open-codesign/shared';
+import { buildSrcdoc } from '@ligma/runtime';
+import type { Design } from '@ligma/shared';
 import { Plus } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 

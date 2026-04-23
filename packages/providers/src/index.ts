@@ -12,7 +12,7 @@ import {
   ERROR_CODES,
   type ModelRef,
   type WireApi,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 import {
   claudeCodeIdentityHeaders,
   looksLikeClaudeOAuthToken,

@@ -1,4 +1,4 @@
-import { useT } from '@open-codesign/i18n';
+import { useT } from '@ligma/i18n';
 
 export function DesignSystemsTab() {
   const t = useT();

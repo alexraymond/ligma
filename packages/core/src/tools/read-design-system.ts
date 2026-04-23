@@ -6,7 +6,7 @@
  */
 
 import type { AgentTool, AgentToolResult } from '@mariozechner/pi-agent-core';
-import type { StoredDesignSystem } from '@open-codesign/shared';
+import type { StoredDesignSystem } from '@ligma/shared';
 import { Type } from '@sinclair/typebox';
 
 const ReadDesignSystemParams = Type.Object({});

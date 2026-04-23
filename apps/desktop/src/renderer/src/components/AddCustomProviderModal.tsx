@@ -1,5 +1,5 @@
-import { useT } from '@open-codesign/i18n';
-import { type WireApi, canonicalBaseUrl, detectWireFromBaseUrl } from '@open-codesign/shared';
+import { useT } from '@ligma/i18n';
+import { type WireApi, canonicalBaseUrl, detectWireFromBaseUrl } from '@ligma/shared';
 
 /**
  * AddCustomProviderModal is an HTTP-only onboarding flow. claude-cli has no
@@ -16,7 +16,7 @@ function assertHttpWire(wire: WireApi): Exclude<WireApi, 'claude-cli'> {
   }
   return wire;
 }
-import { Button } from '@open-codesign/ui';
+import { Button } from '@ligma/ui';
 import { AlertCircle, Check, CheckCircle, Loader2, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 

@@ -1,4 +1,4 @@
-import type { ChatToolCallPayload } from '@open-codesign/shared';
+import type { ChatToolCallPayload } from '@ligma/shared';
 import {
   BookOpen,
   Check,

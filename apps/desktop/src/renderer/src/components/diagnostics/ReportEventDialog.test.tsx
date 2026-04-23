@@ -1,4 +1,4 @@
-import type { ReportableError } from '@open-codesign/shared';
+import type { ReportableError } from '@ligma/shared';
 import { describe, expect, it } from 'vitest';
 import {
   type PreviewLabels,
@@ -140,11 +140,11 @@ describe('parseIssueNumber', () => {
 
 describe('confirm-step translation', () => {
   it('interpolates the seconds placeholder in both locales', async () => {
-    const en = (await import('@open-codesign/i18n/locales/en')).default as unknown as Record<
+    const en = (await import('@ligma/i18n/locales/en')).default as unknown as Record<
       string,
       Record<string, unknown>
     >;
-    const zh = (await import('@open-codesign/i18n/locales/zh-CN')).default as unknown as Record<
+    const zh = (await import('@ligma/i18n/locales/zh-CN')).default as unknown as Record<
       string,
       Record<string, unknown>
     >;

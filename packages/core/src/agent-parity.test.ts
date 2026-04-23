@@ -14,14 +14,14 @@
  */
 
 import type { AgentEvent, AgentMessage, AgentOptions } from '@mariozechner/pi-agent-core';
-import type { ModelRef } from '@open-codesign/shared';
+import type { ModelRef } from '@ligma/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const completeMock = vi.fn();
 
-vi.mock('@open-codesign/providers', async () => {
-  const actual = await vi.importActual<typeof import('@open-codesign/providers')>(
-    '@open-codesign/providers',
+vi.mock('@ligma/providers', async () => {
+  const actual = await vi.importActual<typeof import('@ligma/providers')>(
+    '@ligma/providers',
   );
   return {
     ...actual,

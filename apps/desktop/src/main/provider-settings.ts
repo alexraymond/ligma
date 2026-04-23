@@ -11,7 +11,7 @@ import {
   type ReasoningLevel,
   type WireApi,
   isSupportedOnboardingProvider,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 import { maskSecret } from './keychain';
 
 export interface ProviderRow {

@@ -1,4 +1,4 @@
-import { i18n } from '@open-codesign/i18n';
+import { i18n } from '@ligma/i18n';
 import type {
   ChatAppendInput,
   ChatMessage,
@@ -17,8 +17,8 @@ import type {
   ReportEventResult,
   ReportableError,
   SelectedElement,
-} from '@open-codesign/shared';
-import { computeFingerprint } from '@open-codesign/shared/fingerprint';
+} from '@ligma/shared';
+import { computeFingerprint } from '@ligma/shared/fingerprint';
 import { create } from 'zustand';
 import type { StoreApi } from 'zustand';
 import type { CodesignApi, ExportFormat } from '../../preload/index';

@@ -11,8 +11,8 @@ import {
   generate,
   generateTitle,
   generateViaAgent,
-} from '@open-codesign/core';
-import { detectProviderFromKey } from '@open-codesign/providers';
+} from '@ligma/core';
+import { detectProviderFromKey } from '@ligma/providers';
 import {
   ApplyCommentPayload,
   BRAND,
@@ -20,8 +20,8 @@ import {
   CodesignError,
   GeneratePayload,
   GeneratePayloadV1,
-} from '@open-codesign/shared';
-import { computeFingerprint } from '@open-codesign/shared/fingerprint';
+} from '@ligma/shared';
+import { computeFingerprint } from '@ligma/shared/fingerprint';
 import type BetterSqlite3 from 'better-sqlite3';
 import type { BrowserWindow as ElectronBrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';

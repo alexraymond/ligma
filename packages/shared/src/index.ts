@@ -339,7 +339,7 @@ export { ERROR_CODES, ERROR_CODE_DESCRIPTIONS } from './error-codes';
 export type { CodesignErrorCode } from './error-codes';
 // NOTE: fingerprint.ts imports node:crypto and is intentionally NOT re-exported
 // from this barrel — it's main-process only. Import from
-// '@open-codesign/shared/fingerprint' directly.
+// '@ligma/shared/fingerprint' directly.
 export type { FingerprintInput } from './fingerprint';
 
 // ---------------------------------------------------------------------------

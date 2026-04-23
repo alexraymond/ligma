@@ -1,4 +1,4 @@
-import type { ActionTimelineEntry, ReportableError } from '@open-codesign/shared';
+import type { ActionTimelineEntry, ReportableError } from '@ligma/shared';
 import { describe, expect, it } from 'vitest';
 import {
   type SummaryInput,

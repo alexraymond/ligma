@@ -1,5 +1,5 @@
 {
-  "name": "@open-codesign/core",
+  "name": "@ligma/core",
   "version": "0.1.3",
   "private": true,
   "type": "module",
@@ -15,9 +15,9 @@
   "dependencies": {
     "@mariozechner/pi-agent-core": "^0.67.68",
     "@mariozechner/pi-ai": "^0.67.68",
-    "@open-codesign/artifacts": "workspace:*",
-    "@open-codesign/providers": "workspace:*",
-    "@open-codesign/shared": "workspace:*",
+    "@ligma/artifacts": "workspace:*",
+    "@ligma/providers": "workspace:*",
+    "@ligma/shared": "workspace:*",
     "@sinclair/typebox": "^0.34.49"
   },
   "devDependencies": {

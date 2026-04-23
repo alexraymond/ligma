@@ -1,4 +1,4 @@
-import { CodesignError, ERROR_CODES } from '@open-codesign/shared';
+import { CodesignError, ERROR_CODES } from '@ligma/shared';
 import type { ExportResult } from './index';
 
 export interface ExportPdfOptions {

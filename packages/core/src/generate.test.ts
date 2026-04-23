@@ -1,17 +1,17 @@
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { ChatMessage, LoadedSkill, ModelRef, StoredDesignSystem } from '@open-codesign/shared';
-import { CodesignError, STORED_DESIGN_SYSTEM_SCHEMA_VERSION } from '@open-codesign/shared';
+import type { ChatMessage, LoadedSkill, ModelRef, StoredDesignSystem } from '@ligma/shared';
+import { CodesignError, STORED_DESIGN_SYSTEM_SCHEMA_VERSION } from '@ligma/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PROMPT_SECTIONS, PROMPT_SECTION_FILES, composeSystemPrompt } from './prompts/index.js';
 
 const completeMock = vi.fn();
 const loadBuiltinSkillsMock = vi.fn(async (): Promise<LoadedSkill[]> => []);
 
-vi.mock('@open-codesign/providers', async () => {
-  const actual = await vi.importActual<typeof import('@open-codesign/providers')>(
-    '@open-codesign/providers',
+vi.mock('@ligma/providers', async () => {
+  const actual = await vi.importActual<typeof import('@ligma/providers')>(
+    '@ligma/providers',
   );
   return {
     ...actual,

@@ -24,7 +24,7 @@ import type {
   SnapshotCreateInput,
   SupportedOnboardingProvider,
   WireApi,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 import { contextBridge, ipcRenderer } from 'electron';
 import type { ClaudeCliStatus } from '../main/claude-cli-ipc';
 import type { CodexOAuthStatus } from '../main/codex-oauth-ipc';

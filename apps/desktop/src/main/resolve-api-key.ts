@@ -3,7 +3,7 @@ import {
   CLAUDE_CLI_PROVIDER_ID,
   CodesignError,
   ERROR_CODES,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 
 /**
  * Abstract dependencies of `resolveActiveApiKey` so unit tests can stub the

@@ -29,13 +29,13 @@ import {
   type AgentTool,
 } from '@mariozechner/pi-agent-core';
 import type { Message as PiAiMessage, Model as PiAiModel } from '@mariozechner/pi-ai';
-import { type ArtifactEvent, createArtifactParser } from '@open-codesign/artifacts';
-import type { RetryReason } from '@open-codesign/providers';
+import { type ArtifactEvent, createArtifactParser } from '@ligma/artifacts';
+import type { RetryReason } from '@ligma/providers';
 import {
   claudeCodeIdentityHeaders,
   looksLikeClaudeOAuthToken,
   shouldForceClaudeCodeIdentity,
-} from '@open-codesign/providers';
+} from '@ligma/providers';
 import {
   type Artifact,
   type ChatMessage,
@@ -45,7 +45,7 @@ import {
   type StoredDesignSystem,
   type WireApi,
   canonicalBaseUrl,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 import type { TSchema } from '@sinclair/typebox';
 import { buildTransformContext } from './context-prune.js';
 import { remapProviderError } from './errors.js';
@@ -325,7 +325,7 @@ async function collectSkills(
   const start = Date.now();
   try {
     const { loadBuiltinSkills } = await import('./skills/loader.js');
-    const { filterActive, formatSkillsForPrompt } = await import('@open-codesign/providers');
+    const { filterActive, formatSkillsForPrompt } = await import('@ligma/providers');
     const skills = await loadBuiltinSkills();
     const active = filterActive(skills, providerId);
     const blobs = formatSkillsForPrompt(active);

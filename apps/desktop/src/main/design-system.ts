@@ -4,7 +4,7 @@ import { basename, extname, join, relative } from 'node:path';
 import {
   STORED_DESIGN_SYSTEM_SCHEMA_VERSION,
   type StoredDesignSystem,
-} from '@open-codesign/shared';
+} from '@ligma/shared';
 
 const IGNORED_DIRS = new Set([
   '.git',

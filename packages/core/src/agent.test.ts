@@ -1,6 +1,6 @@
 import type { AgentEvent, AgentMessage, AgentOptions } from '@mariozechner/pi-agent-core';
-import type { LoadedSkill, ModelRef } from '@open-codesign/shared';
-import { CodesignError, ERROR_CODES } from '@open-codesign/shared';
+import type { LoadedSkill, ModelRef } from '@ligma/shared';
+import { CodesignError, ERROR_CODES } from '@ligma/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const loadBuiltinSkillsMock = vi.fn(async (): Promise<LoadedSkill[]> => []);

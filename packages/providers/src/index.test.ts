@@ -1,4 +1,4 @@
-import type { ChatMessage, ModelRef } from '@open-codesign/shared';
+import type { ChatMessage, ModelRef } from '@ligma/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const getModelMock = vi.fn();

@@ -1,5 +1,5 @@
-import { useT } from '@open-codesign/i18n';
-import { Button } from '@open-codesign/ui';
+import { useT } from '@ligma/i18n';
+import { Button } from '@ligma/ui';
 import { Loader2, LogOut, Sparkles } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { CodexOAuthStatus } from '../../../preload/index';

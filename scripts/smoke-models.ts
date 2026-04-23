@@ -19,7 +19,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { isAbsolute, relative, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import * as TOML from '@iarna/toml';
-import { generate } from '@open-codesign/core';
+import { generate } from '@ligma/core';
 import { Parser } from 'acorn';
 
 interface SmokeModel {

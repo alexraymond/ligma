@@ -1,4 +1,4 @@
-import { useT } from '@open-codesign/i18n';
+import { useT } from '@ligma/i18n';
 import { ArrowUpRight } from 'lucide-react';
 
 interface StarterCard {

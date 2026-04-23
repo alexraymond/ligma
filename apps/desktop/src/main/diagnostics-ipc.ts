@@ -26,8 +26,8 @@ import {
   type ReportEventInput,
   type ReportEventResult,
   type ReportableError,
-} from '@open-codesign/shared';
-import { computeFingerprint } from '@open-codesign/shared/fingerprint';
+} from '@ligma/shared';
+import { computeFingerprint } from '@ligma/shared/fingerprint';
 import type BetterSqlite3 from 'better-sqlite3';
 import { configDir, configPath } from './config';
 import {

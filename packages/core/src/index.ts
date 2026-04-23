@@ -1,12 +1,12 @@
-import { type ArtifactEvent, createArtifactParser } from '@open-codesign/artifacts';
-import type { GenerateResult, ReasoningLevel } from '@open-codesign/providers';
+import { type ArtifactEvent, createArtifactParser } from '@ligma/artifacts';
+import type { GenerateResult, ReasoningLevel } from '@ligma/providers';
 import {
   type RetryReason,
   complete,
   completeWithRetry,
   filterActive,
   formatSkillsForPrompt,
-} from '@open-codesign/providers';
+} from '@ligma/providers';
 import type {
   Artifact,
   ChatMessage,
@@ -15,8 +15,8 @@ import type {
   SelectedElement,
   StoredDesignSystem,
   WireApi,
-} from '@open-codesign/shared';
-import { CodesignError, ERROR_CODES } from '@open-codesign/shared';
+} from '@ligma/shared';
+import { CodesignError, ERROR_CODES } from '@ligma/shared';
 import { remapProviderError } from './errors.js';
 import { type CoreLogger, NOOP_LOGGER } from './logger.js';
 import { type PromptComposeOptions, composeSystemPrompt } from './prompts/index.js';

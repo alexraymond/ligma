@@ -1,10 +1,10 @@
-import { setLocale as applyLocale, getCurrentLocale, useT } from '@open-codesign/i18n';
-import type { OnboardingState, ReasoningLevel, WireApi } from '@open-codesign/shared';
+import { setLocale as applyLocale, getCurrentLocale, useT } from '@ligma/i18n';
+import type { OnboardingState, ReasoningLevel, WireApi } from '@ligma/shared';
 import {
   PROVIDER_SHORTLIST as SHORTLIST,
   isSupportedOnboardingProvider,
-} from '@open-codesign/shared';
-import { Button } from '@open-codesign/ui';
+} from '@ligma/shared';
+import { Button } from '@ligma/ui';
 import {
   AlertCircle,
   AlertTriangle,
