@@ -23,6 +23,12 @@ export interface WriterOptions {
   sessionId: string;
   logger: CoreLogger;
   paths?: PathsOverride;
+  /** TESTING ONLY — invoked after every fsync call on the transcript so
+   *  tests can assert the turn-boundary policy (fsync fires on TurnDone +
+   *  CustomTitle; nothing else). Receives the entry's `type` so the test can
+   *  verify WHICH entry triggered the sync. Not part of the public API; the
+   *  IPC layer never sets this. */
+  onFsync?: (entryType: SessionEntry['type']) => void;
 }
 
 export interface AppendOptions {
@@ -44,6 +50,7 @@ export class SessionWriter {
   private readonly sessionId: string;
   private readonly logger: CoreLogger;
   private readonly paths: SessionPaths;
+  private readonly onFsync: ((entryType: SessionEntry['type']) => void) | undefined;
   private chain: Promise<unknown> = Promise.resolve();
   private initialized = false;
 
@@ -51,6 +58,7 @@ export class SessionWriter {
     this.sessionId = options.sessionId;
     this.logger = options.logger;
     this.paths = resolveSessionPaths(options.paths);
+    this.onFsync = options.onFsync;
   }
 
   async append(input: SessionEntryInput, options: AppendOptions = {}): Promise<AppendResult> {
@@ -68,6 +76,7 @@ export class SessionWriter {
 
       if (isTurnBoundary(entry.type)) {
         await this.fsyncTranscript();
+        this.onFsync?.(entry.type);
       }
 
       return {

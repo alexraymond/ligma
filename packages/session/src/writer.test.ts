@@ -148,14 +148,59 @@ describe('SessionWriter', () => {
     expect(b.fingerprint).toMatch(/^[0-9a-f]{64}$/);
   });
 
-  it('fsyncs on turn_done and custom_title (turn boundary commit)', async () => {
-    // We can't observe fsync directly in a cross-platform test without
-    // instrumenting the syscall; instead assert the writer doesn't crash
-    // when the fsync path runs, and that the file reflects the append.
-    const writer = makeWriter();
-    await writer.append({ type: 'custom_title', title: 'boundary' });
-    await writer.append({ type: 'turn_done', turnId: 't', outcome: 'ok' });
-    expect(readLines()).toHaveLength(2);
+  it('fsyncs ONLY on turn_done and custom_title (turn boundary policy)', async () => {
+    // Inject the onFsync test hook so we can observe which entry types
+    // trigger a kernel-flush and which batch. The real invariant isn't "did
+    // the line land" (every append lands) — it's "did we fsync at exactly
+    // the right boundaries". A regression where fsync fires on every entry
+    // would silently tank perf; a regression where it never fires would
+    // silently lose turns on crash. Both must be caught here.
+    const observed: Array<string> = [];
+    const writer = new SessionWriter({
+      sessionId,
+      logger: NOOP_LOGGER,
+      paths: { rootDir },
+      onFsync: (type) => observed.push(type),
+    });
+
+    await writer.append({ type: 'transcript', role: 'user', payload: { text: 'a' } });
+    await writer.append({ type: 'transcript', role: 'assistant', payload: { text: 'b' } });
+    await writer.append({ type: 'turn_done', turnId: 't1', outcome: 'ok' });
+    await writer.append({
+      type: 'tool_use_summary',
+      toolName: 'fs-write',
+      toolCallId: 'tc-1',
+      inputPreview: '{}',
+      outcome: 'ok',
+      durationMs: 3,
+    });
+    await writer.append({ type: 'custom_title', title: 'renamed' });
+
+    // Exactly two fsyncs — one per boundary entry. The two transcripts and
+    // the tool_use_summary batched (no fsync).
+    expect(observed).toEqual(['turn_done', 'custom_title']);
+    // Sanity: all 5 lines still on disk.
+    expect(readLines()).toHaveLength(5);
+  });
+
+  it('does not fsync on transcript-only sequences (batching)', async () => {
+    const observed: Array<string> = [];
+    const writer = new SessionWriter({
+      sessionId,
+      logger: NOOP_LOGGER,
+      paths: { rootDir },
+      onFsync: (type) => observed.push(type),
+    });
+
+    for (let i = 0; i < 10; i += 1) {
+      await writer.append({
+        type: 'transcript',
+        role: 'assistant',
+        payload: { text: `chunk-${i}` },
+      });
+    }
+    expect(observed).toEqual([]);
+    expect(readLines()).toHaveLength(10);
   });
 
   it('logs a warning and keeps going if fsync fails', async () => {
