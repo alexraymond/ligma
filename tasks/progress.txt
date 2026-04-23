@@ -1,0 +1,9 @@
+# Progress for: Ligma overnight transformation
+
+> Source plan: /Users/alexraymond/.claude/plans/snappy-snacking-sutton.md
+> Source design: (single-file plan — architecture is in the Decisions Locked + per-workstream sections)
+> Generated: 2026-04-23
+
+## Iteration Log
+
+<!-- Swarm-execute / Ralph appends timestamped entries below this line -->
