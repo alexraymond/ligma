@@ -1033,6 +1033,7 @@
     "PROVIDER_UPSTREAM_ERROR": "The provider returned an unexpected error. Details are in the log.",
     "PROVIDER_ABORTED": "Generation was cancelled.",
     "PROVIDER_RETRY_EXHAUSTED": "The provider failed after several retries. Check your connection and try again.",
+    "PROVIDER_STREAM_TRUNCATED": "The provider stream ended before any output arrived. This is usually a transient network issue — try again.",
     "CLAUDE_CODE_OAUTH_ONLY": "Your Claude Code login uses an Anthropic subscription (Pro/Max). Third-party apps cannot reuse the subscription quota — generate an API key at console.anthropic.com and use it here.",
     "CODEX_TOKEN_PARSE_FAILED": "Local ChatGPT login is corrupted. Please re-login in Settings.",
     "CODEX_TOKEN_NOT_LOGGED_IN": "ChatGPT subscription is not signed in. Please log in via Settings.",

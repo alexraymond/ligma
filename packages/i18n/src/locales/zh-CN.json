@@ -1029,6 +1029,7 @@
     "PROVIDER_UPSTREAM_ERROR": "provider 返回未知错误，详情见日志。",
     "PROVIDER_ABORTED": "生成已取消。",
     "PROVIDER_RETRY_EXHAUSTED": "多次重试后 provider 仍然失败，请检查网络后重试。",
+    "PROVIDER_STREAM_TRUNCATED": "provider 数据流提前结束、没有任何输出，通常是临时性网络问题，请重试。",
     "CLAUDE_CODE_OAUTH_ONLY": "你的 Claude Code 使用的是 Anthropic 订阅（Pro/Max），第三方应用无法复用订阅额度——请到 console.anthropic.com 生成 API key 后填入。",
     "CODEX_TOKEN_PARSE_FAILED": "本地 ChatGPT 登录凭证已损坏，请到设置中重新登录。",
     "CODEX_TOKEN_NOT_LOGGED_IN": "ChatGPT 订阅未登录，请到设置中登录。",

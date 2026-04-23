@@ -337,6 +337,9 @@ export type {
 
 export { ERROR_CODES, ERROR_CODE_DESCRIPTIONS } from './error-codes';
 export type { CodesignErrorCode } from './error-codes';
+
+export { FS_UPDATED_ACK_SCHEMA_VERSION, isFsUpdatedAckV1 } from './ipc-ack';
+export type { FsUpdatedAckV1, FsUpdatedV1 } from './ipc-ack';
 // NOTE: fingerprint.ts imports node:crypto and is intentionally NOT re-exported
 // from this barrel — it's main-process only. Import from
 // '@open-codesign/shared/fingerprint' directly.
