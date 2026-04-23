@@ -357,3 +357,153 @@ function isAssistantEvent(event: SdkEvent): event is SdkAssistantEvent {
 function isResultEvent(event: SdkEvent): event is SdkResultEvent {
   return event.type === 'result';
 }
+
+// ---------------------------------------------------------------------------
+// Raw-stream helper — the W2 agent loop consumes the SDK's async iterable
+// directly via `adaptSdkStreamToProviderTurn`, so it needs the unparsed
+// stream (not the flattened text+usage shape `completeViaClaudeCli`
+// returns). Keep the prewarm / signal / heartbeat / error-code
+// discipline from the single-turn completion path so the two codepaths
+// behave identically at boundaries.
+// ---------------------------------------------------------------------------
+
+/** Minimal shape of one SDK stream message — re-declared here to avoid a
+ *  circular re-export with the sdk-to-agent-events adapter. The adapter
+ *  narrows this further. */
+export interface SdkStreamMessage {
+  type: string;
+  [key: string]: unknown;
+}
+
+export interface ClaudeCliStreamOptions {
+  modelId: string;
+  messages: ChatMessage[];
+  userImages?: GenerateOptions['userImages'];
+  signal?: AbortSignal;
+  /**
+   * Absolute path to the `claude` CLI — same semantics as
+   * `ClaudeCliCompleteOptions.claudePath`.
+   */
+  claudePath?: string | null;
+  /**
+   * Tool allow-list forwarded to the SDK. W2 v1 runs text-only, so
+   * callers typically pass `[]` — no SDK-side tool invocation, text
+   * streaming only. v2 (MCP bridge) populates this.
+   */
+  allowedTools?: string[];
+  /** Same heartbeat contract as `completeViaClaudeCli`. */
+  logger?: ClaudeCliLogger;
+  /** Heartbeat window (ms). Defaults to 5000. */
+  heartbeatMs?: number;
+}
+
+/**
+ * Stream Claude Agent SDK messages as an `AsyncIterable<SdkStreamMessage>`
+ * suitable for the W2 agent loop's `adaptSdkStreamToProviderTurn`
+ * adapter. Coexists with `completeViaClaudeCli` — the completion path is
+ * still used when the caller just needs a single non-streaming result.
+ *
+ * The caller owns the iteration; this function only prepares the
+ * underlying query + wires heartbeat / abort.
+ */
+export async function streamViaClaudeCli(
+  opts: ClaudeCliStreamOptions,
+): Promise<AsyncIterable<SdkStreamMessage>> {
+  const { systemPrompt, userPrompt } = splitSystemAndTurns(opts.messages);
+  if (userPrompt.length === 0) {
+    throw new CodesignError(
+      'Claude CLI provider requires at least one non-empty user message.',
+      ERROR_CODES.PROVIDER_ERROR,
+    );
+  }
+
+  const sdk = (await import('@anthropic-ai/claude-agent-sdk')) as unknown as {
+    query: (args: {
+      prompt: string | AsyncIterable<SdkUserMessage>;
+      options: {
+        model?: string;
+        systemPrompt?: string | { type: 'preset'; preset: 'claude_code' };
+        settingSources?: Array<'user' | 'project' | 'local'>;
+        allowedTools?: string[];
+        disallowedTools?: string[];
+        maxTurns?: number;
+        abortController?: AbortController;
+        cwd?: string;
+        pathToClaudeCodeExecutable?: string;
+      };
+    }) => AsyncIterable<SdkStreamMessage>;
+  };
+
+  const claudePath = opts.claudePath !== undefined ? opts.claudePath : prewarmClaudeExecutable();
+  if (claudePath === null) {
+    throw new CodesignError(
+      'Claude Code CLI not found on PATH. Install with `npm i -g @anthropic-ai/claude-code` and run `claude` once to sign in.',
+      ERROR_CODES.PROVIDER_AUTH_MISSING,
+    );
+  }
+
+  const controller = new AbortController();
+  const onAbort = () => controller.abort();
+  if (opts.signal) {
+    if (opts.signal.aborted) controller.abort();
+    else opts.signal.addEventListener('abort', onAbort, { once: true });
+  }
+
+  const heartbeatMs = opts.heartbeatMs ?? DEFAULT_HEARTBEAT_MS;
+
+  const raw = sdk.query({
+    prompt: buildPromptStream(userPrompt, opts.userImages),
+    options: {
+      model: opts.modelId,
+      systemPrompt: systemPrompt.length > 0 ? systemPrompt : '',
+      settingSources: [],
+      allowedTools: opts.allowedTools ?? [],
+      maxTurns: 100,
+      abortController: controller,
+      pathToClaudeCodeExecutable: claudePath,
+    },
+  });
+
+  // Wrap the SDK iterable so we can stamp `lastEventAt`, run the
+  // heartbeat interval, and clean up the abort listener on completion
+  // without leaking them into the caller.
+  return {
+    [Symbol.asyncIterator](): AsyncIterator<SdkStreamMessage> {
+      const inner = raw[Symbol.asyncIterator]();
+      let lastEventAt = Date.now();
+      const heartbeat = setInterval(() => {
+        const sinceLastEventMs = Date.now() - lastEventAt;
+        if (sinceLastEventMs < heartbeatMs) return;
+        opts.logger?.warn('claude-cli.stream.heartbeat', {
+          sinceLastEventMs,
+          modelId: opts.modelId,
+        });
+      }, heartbeatMs);
+      if (typeof heartbeat === 'object' && 'unref' in heartbeat) {
+        (heartbeat as { unref?: () => void }).unref?.();
+      }
+      const cleanup = () => {
+        clearInterval(heartbeat);
+        if (opts.signal) opts.signal.removeEventListener('abort', onAbort);
+      };
+      return {
+        async next(): Promise<IteratorResult<SdkStreamMessage>> {
+          try {
+            const result = await inner.next();
+            lastEventAt = Date.now();
+            if (result.done === true) cleanup();
+            return result;
+          } catch (err) {
+            cleanup();
+            throw err;
+          }
+        },
+        async return(value?: SdkStreamMessage): Promise<IteratorResult<SdkStreamMessage>> {
+          cleanup();
+          if (typeof inner.return === 'function') return inner.return(value);
+          return { done: true, value: undefined as unknown as SdkStreamMessage };
+        },
+      };
+    },
+  };
+}
