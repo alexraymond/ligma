@@ -486,6 +486,47 @@ describe('duplicateDesign', () => {
     // different design row.
     expect(listSnapshots(db, cloned?.id ?? '')).toHaveLength(1);
   });
+
+  it('preserves file_path and design_system_id on cloned snapshots', () => {
+    const db = makeDb();
+    // Seed a design system row + a design linked to it.
+    db.prepare(
+      `INSERT INTO design_systems (id, schema_version, name, root_path, summary, extracted_at,
+        source_files, colors, fonts, spacing, radius, shadows, created_at, updated_at)
+       VALUES ('ds1', 1, 'DS', '/abs/path', 'sum', '2026-01-01T00:00:00Z',
+        '[]', '[]', '[]', '[]', '[]', '[]', '2026-01-01T00:00:00Z', '2026-01-01T00:00:00Z')`,
+    ).run();
+    const source = createDesign(db, 'multi-file source');
+    db.prepare('UPDATE designs SET design_system_id = ? WHERE id = ?').run('ds1', source.id);
+    createSnapshot(db, {
+      designId: source.id,
+      parentId: null,
+      type: 'initial',
+      prompt: null,
+      artifactType: 'html',
+      artifactSource: '<html>index</html>',
+      filePath: 'index.html',
+    });
+    createSnapshot(db, {
+      designId: source.id,
+      parentId: null,
+      type: 'initial',
+      prompt: null,
+      artifactType: 'html',
+      artifactSource: '<html>about</html>',
+      filePath: 'about.html',
+    });
+
+    const cloned = duplicateDesign(db, source.id, 'multi-file copy');
+    expect(cloned).not.toBeNull();
+    // The DS link is preserved on the duplicated design row.
+    expect(cloned?.designSystemId).toBe('ds1');
+
+    // Both file_path values round-trip — no flattening to index.html.
+    const clonedSnaps = listSnapshots(db, cloned?.id ?? '');
+    const filePaths = clonedSnaps.map((s) => s.filePath).sort();
+    expect(filePaths).toEqual(['about.html', 'index.html']);
+  });
 });
 
 describe('migration is idempotent', () => {

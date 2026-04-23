@@ -45,15 +45,14 @@ describe('design_systems table', () => {
   it('renameDesignSystem updates name and touches updated_at', () => {
     const db = initInMemoryDb();
     const row = seedDs(db);
-    const originalUpdatedAt = row.updatedAt;
-    // Busy-wait enough for the ISO string to tick forward reliably.
-    const until = Date.now() + 5;
-    while (Date.now() < until) {
-      /* spin */
-    }
+    // Backdate updated_at deterministically so the post-rename ISO string is
+    // guaranteed to be strictly newer without the previous busy-wait spinner.
+    db.prepare(
+      "UPDATE design_systems SET updated_at = '2020-01-01T00:00:00.000Z' WHERE id = ?",
+    ).run(row.id);
     const renamed = renameDesignSystem(db, row.id, 'Indigo');
     expect(renamed.name).toBe('Indigo');
-    expect(renamed.updatedAt).not.toBe(originalUpdatedAt);
+    expect(renamed.updatedAt).not.toBe('2020-01-01T00:00:00.000Z');
   });
 
   it('deleteDesignSystem nulls linked designs via ON DELETE SET NULL', () => {
