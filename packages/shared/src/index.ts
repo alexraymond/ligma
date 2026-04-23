@@ -148,6 +148,12 @@ export const GeneratePayloadV1 = z.object({
    *  virtual FS as `index.html` so the text_editor tool can view/edit
    *  incrementally instead of always rewriting from scratch. */
   previousHtml: z.string().optional(),
+  /** W2 golden-path beta — when true AND the active provider's wire is
+   *  `claude-cli`, main routes the request through `generateViaNewLoop`
+   *  (the async-generator agent loop) instead of the legacy flat
+   *  generate() path. Default undefined / false preserves every
+   *  existing caller. */
+  useNewLoop: z.boolean().optional(),
 });
 export type GeneratePayloadV1 = z.infer<typeof GeneratePayloadV1>;
 

@@ -11,6 +11,7 @@ import {
   generate,
   generateTitle,
   generateViaAgent,
+  generateViaNewLoop,
 } from '@ligma/core';
 import { detectProviderFromKey, prewarmClaudeExecutable } from '@ligma/providers';
 import {
@@ -317,6 +318,44 @@ function registerIpcHandlers(db: Database | null): void {
     designId: string | null,
     previousHtml: string | null,
   ): ReturnType<typeof generate> => {
+    // W2 golden-path: when the UI opts in via `useNewLoop` AND the active
+    // provider is the Claude Max subscription, route through the new
+    // async-generator loop instead of the legacy flat generate(). v1 is
+    // text-only (allowedTools: []); v2 bridges SDK tools via MCP. The
+    // branch lives BEFORE the claude-cli->generate() fallback so it
+    // takes precedence for explicit opt-ins.
+    if (input.wire === 'claude-cli' && input.useNewLoop === true) {
+      const sendEvent = (event: AgentStreamEvent) => {
+        mainWindow?.webContents.send('agent:event:v1', event);
+      };
+      const runCoreLogger = coreLoggerFor(id);
+      const ackTracker = createFsAckTracker({
+        logger: runCoreLogger,
+        timeoutMs: 2000,
+        generationId: id,
+      });
+      fsAckTrackersByGeneration.set(id, ackTracker);
+      const baseCtx = { designId: designId ?? '', generationId: id } as const;
+      const deps: Parameters<typeof generateViaNewLoop>[1] = {
+        sendAgentEvent: (event) => {
+          // generateViaNewLoop emits NewLoopStreamEvent; AgentStreamEvent is
+          // a superset so this cast is safe-by-construction. Stamping the
+          // designId / generationId here keeps routing consistent with the
+          // legacy runGenerate path.
+          sendEvent({ ...event, ...baseCtx } as AgentStreamEvent);
+        },
+        logger: runCoreLogger,
+        ackTracker,
+        designId: baseCtx.designId,
+        generationId: baseCtx.generationId,
+      };
+      // Drop the tracker when the run finishes so stale entries don't
+      // accumulate across sessions. Mirror the legacy cleanup in the
+      // pi-agent-core branch below.
+      return generateViaNewLoop(input, deps).finally(() => {
+        fsAckTrackersByGeneration.delete(id);
+      });
+    }
     // claude-cli wire doesn't support the pi-agent-core loop yet (SDK owns
     // its own agent loop; MCP tool bridge pending), so force the single-turn
     // generate() path for this wire regardless of USE_AGENT_RUNTIME. Without
@@ -762,6 +801,7 @@ function registerIpcHandlers(db: Database | null): void {
             wire: active.wire,
             ...(active.httpHeaders !== undefined ? { httpHeaders: active.httpHeaders } : {}),
             ...(allowKeyless ? { allowKeyless: true } : {}),
+            ...(payload.useNewLoop === true ? { useNewLoop: true } : {}),
             signal: controller.signal,
             logger: coreLogger,
           },
