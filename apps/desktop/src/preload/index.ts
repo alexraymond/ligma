@@ -10,6 +10,7 @@ import type {
   Design,
   DesignFile,
   DesignSnapshot,
+  DesignSystemRow,
   ExternalConfigsDetection,
   GeneratePayloadV1,
   ListEventsInput,
@@ -455,6 +456,35 @@ const api = {
       }) as Promise<DesignSnapshot>,
     delete: (id: string) =>
       ipcRenderer.invoke('snapshots:v1:delete', { schemaVersion: 1, id }) as Promise<void>,
+  },
+  designSystems: {
+    list: () =>
+      ipcRenderer.invoke('designSystems:v1:list', { schemaVersion: 1 }) as Promise<
+        DesignSystemRow[]
+      >,
+    scan: (rootPath: string, name?: string) =>
+      ipcRenderer.invoke('designSystems:v1:scan', {
+        schemaVersion: 1,
+        rootPath,
+        ...(name !== undefined ? { name } : {}),
+      }) as Promise<DesignSystemRow>,
+    rename: (id: string, name: string) =>
+      ipcRenderer.invoke('designSystems:v1:rename', {
+        schemaVersion: 1,
+        id,
+        name,
+      }) as Promise<DesignSystemRow>,
+    delete: (id: string) =>
+      ipcRenderer.invoke('designSystems:v1:delete', {
+        schemaVersion: 1,
+        id,
+      }) as Promise<void>,
+    linkToDesign: (designId: string, designSystemId: string | null) =>
+      ipcRenderer.invoke('designSystems:v1:link-to-design', {
+        schemaVersion: 1,
+        designId,
+        designSystemId,
+      }) as Promise<Design>,
   },
   files: {
     list: (designId: string) =>
