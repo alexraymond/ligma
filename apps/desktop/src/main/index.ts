@@ -70,6 +70,13 @@ import { withRun } from './runContext';
 import { pruneDiagnosticEvents, recordDiagnosticEvent, safeInitSnapshotsDb } from './snapshots-db';
 import { registerSnapshotsIpc, registerSnapshotsUnavailableIpc } from './snapshots-ipc';
 import { initStorageSettings } from './storage-settings';
+// region:window-chrome
+import {
+  LIGMA_WINDOW_TITLE,
+  applyLigmaWindowChrome,
+  registerLigmaAboutPanel,
+} from './window-chrome';
+// endregion:window-chrome
 
 // ESM shim: package.json "type": "module" means the built bundle is ESM and
 // __dirname/__filename don't exist. Derive them from import.meta.url so the
@@ -139,7 +146,10 @@ function createWindow(): void {
     autoHideMenuBar: process.platform !== 'darwin',
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     backgroundColor: BRAND.backgroundColor,
-    icon: join(__dirname, '../../resources/icon.png'),
+    // region:window-chrome
+    title: LIGMA_WINDOW_TITLE,
+    icon: join(__dirname, '../../resources/icons/ligma-512.png'),
+    // endregion:window-chrome
     show: false,
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs'),
@@ -148,6 +158,10 @@ function createWindow(): void {
       nodeIntegration: false,
     },
   });
+
+  // region:window-chrome
+  applyLigmaWindowChrome(mainWindow);
+  // endregion:window-chrome
 
   mainWindow.on('ready-to-show', () => mainWindow?.show());
   // Null the reference on close so stale IPC sends from async emitters
@@ -1209,6 +1223,9 @@ void app.whenReady().then(async () => {
     registerExporterIpc(() => mainWindow);
     registerDiagnosticsIpc(diagnosticsDb);
     setupAutoUpdater();
+    // region:window-chrome
+    registerLigmaAboutPanel();
+    // endregion:window-chrome
     registerAppMenu();
     createWindow();
     void scheduleStartupUpdateCheck();
