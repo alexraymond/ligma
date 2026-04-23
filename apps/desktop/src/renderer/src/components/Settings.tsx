@@ -2002,6 +2002,8 @@ function StorageTab() {
 function AdvancedTab() {
   const t = useT();
   const pushToast = useCodesignStore((s) => s.pushToast);
+  const useNewLoop = useCodesignStore((s) => s.useNewLoop);
+  const setUseNewLoop = useCodesignStore((s) => s.setUseNewLoop);
   const [prefs, setPrefs] = useState<Preferences>({
     updateChannel: 'stable',
     generationTimeoutSec: 1200,
@@ -2089,6 +2091,19 @@ function AdvancedTab() {
             { value: '180', label: t('settings.advanced.timeoutSeconds', { value: 180 }) },
             { value: '300', label: t('settings.advanced.timeoutSeconds', { value: 300 }) },
           ]}
+        />
+      </Row>
+
+      <Row
+        label={t('settings.advanced.useNewLoop')}
+        hint={t('settings.advanced.useNewLoopHint')}
+      >
+        <input
+          type="checkbox"
+          checked={useNewLoop}
+          onChange={(e) => setUseNewLoop(e.target.checked)}
+          className="h-4 w-4 accent-[var(--color-accent)]"
+          aria-label={t('settings.advanced.useNewLoop')}
         />
       </Row>
 

@@ -185,6 +185,8 @@ const api = {
     generationId: string;
     designId?: string;
     previousHtml?: string;
+    /** W2 golden-path beta — see GeneratePayloadV1.useNewLoop. */
+    useNewLoop?: boolean;
   }) =>
     ipcRenderer.invoke('codesign:v1:generate', {
       schemaVersion: 1,

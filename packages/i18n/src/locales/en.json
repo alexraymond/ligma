@@ -403,7 +403,9 @@
       "toggleDevtools": "Toggle DevTools",
       "prefsLoadFailed": "Failed to load preferences",
       "prefsSaveFailed": "Failed to save preference",
-      "devtoolsFailed": "Could not toggle DevTools"
+      "devtoolsFailed": "Could not toggle DevTools",
+      "useNewLoop": "Use new loop (beta)",
+      "useNewLoopHint": "Route Claude Max subscription requests through the new async-generator agent loop. Text streaming only in this preview; tools come in a later build."
     }
   },
   "updates": {

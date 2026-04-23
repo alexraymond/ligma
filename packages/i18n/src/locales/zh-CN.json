@@ -403,7 +403,9 @@
       "toggleDevtools": "切换 DevTools",
       "prefsLoadFailed": "加载偏好设置失败",
       "prefsSaveFailed": "保存偏好失败",
-      "devtoolsFailed": "无法切换 DevTools"
+      "devtoolsFailed": "无法切换 DevTools",
+      "useNewLoop": "使用新循环（测试版）",
+      "useNewLoopHint": "将 Claude Max 订阅请求路由到新的异步生成器代理循环。此预览仅支持文本流式传输；工具将在后续版本中提供。"
     }
   },
   "updates": {

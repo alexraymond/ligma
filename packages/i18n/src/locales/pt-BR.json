@@ -403,7 +403,9 @@
       "toggleDevtools": "Alternar DevTools",
       "prefsLoadFailed": "Falha ao carregar preferências",
       "prefsSaveFailed": "Falha ao salvar preferência",
-      "devtoolsFailed": "Não foi possível alternar o DevTools"
+      "devtoolsFailed": "Não foi possível alternar o DevTools",
+      "useNewLoop": "Usar novo loop (beta)",
+      "useNewLoopHint": "Encaminha requisições da assinatura Claude Max pelo novo loop de agente com async generator. Nesta prévia, apenas streaming de texto; ferramentas chegam em uma versão futura."
     }
   },
   "updates": {

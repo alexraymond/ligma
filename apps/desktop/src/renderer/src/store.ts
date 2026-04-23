@@ -334,6 +334,11 @@ interface CodesignState {
 
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
+  /** W2 golden-path beta flag. When true, sendPrompt attaches
+   *  `useNewLoop: true` to the GeneratePayloadV1 so main routes
+   *  through generateViaNewLoop for the claude-cli provider. */
+  useNewLoop: boolean;
+  setUseNewLoop: (value: boolean) => void;
   setView: (view: AppView) => void;
   /** Open Settings and select a specific tab. Used by the topbar unread-error
    *  badge to jump straight to the Diagnostics panel. Setting to null clears
@@ -465,6 +470,29 @@ export interface CommentBubbleAnchor {
 }
 
 const THEME_STORAGE_KEY = 'ligma:theme';
+const USE_NEW_LOOP_STORAGE_KEY = 'ligma:useNewLoop';
+
+/** Read the W2 "Run with new loop (beta)" toggle preference. Defaults
+ *  to `false` so existing users see no behavior change; only an
+ *  explicit opt-in (checkbox in Settings) flips it on. Exported for
+ *  tests — the default is an acceptance-criterion behavior. */
+export function readInitialUseNewLoop(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    return window.localStorage.getItem(USE_NEW_LOOP_STORAGE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function persistUseNewLoop(value: boolean): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(USE_NEW_LOOP_STORAGE_KEY, value ? '1' : '0');
+  } catch {
+    // localStorage unavailable
+  }
+}
 
 // PreviewPane keeps an iframe per recently-visited design alive so switching
 // back is instant. Bound the pool so memory stays small for users with lots
@@ -1212,6 +1240,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
   },
 
   theme: readInitialTheme(),
+  useNewLoop: readInitialUseNewLoop(),
   view: 'hub' as AppView,
   previousView: 'hub' as AppView,
   settingsTab: null as SettingsTab | null,
@@ -1465,6 +1494,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
           generationId,
           ...(designIdAtStart ? { designId: designIdAtStart } : {}),
           ...(get().previewHtml ? { previousHtml: get().previewHtml as string } : {}),
+          ...(get().useNewLoop ? { useNewLoop: true } : {}),
         },
         designIdAtStart,
       );
@@ -1719,6 +1749,11 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
   toggleTheme() {
     const next: Theme = get().theme === 'dark' ? 'light' : 'dark';
     get().setTheme(next);
+  },
+
+  setUseNewLoop(value) {
+    persistUseNewLoop(value);
+    set({ useNewLoop: value });
   },
 
   setView(view) {
