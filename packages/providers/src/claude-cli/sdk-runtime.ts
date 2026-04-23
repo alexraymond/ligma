@@ -12,9 +12,54 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import type { ChatMessage } from '@ligma/shared';
+import { randomUUID } from 'node:crypto';
+import type { ChatMessage, PermissionCallback } from '@ligma/shared';
 import { CodesignError, ERROR_CODES } from '@ligma/shared';
 import type { GenerateOptions, GenerateResult } from '../index';
+
+/**
+ * Shape the SDK's `canUseTool` callback expects. Mirrored inline (not
+ * imported) to keep this file's pattern of declaring SDK types locally.
+ */
+type SdkPermissionResult =
+  | { behavior: 'allow'; updatedInput?: Record<string, unknown> }
+  | { behavior: 'deny'; message: string; interrupt?: boolean };
+
+type SdkCanUseTool = (
+  toolName: string,
+  input: Record<string, unknown>,
+  options: {
+    signal: AbortSignal;
+    blockedPath?: string;
+    decisionReason?: string;
+    toolUseID: string;
+    agentID?: string;
+  },
+) => Promise<SdkPermissionResult>;
+
+/**
+ * Adapt Ligma's host-shaped `PermissionCallback` to the SDK's `canUseTool`
+ * signature. Mints a stable requestId per tool-call so the host's
+ * IPC bridge can correlate responses. A `'deny'` decision is reported back
+ * as a tool error (no `interrupt`), so Claude reads the denial and may
+ * pivot or report the blockage rather than aborting the turn.
+ */
+function buildSdkCanUseTool(callback?: PermissionCallback): SdkCanUseTool | undefined {
+  if (!callback) return undefined;
+  return async (toolName, input, options) => {
+    const decision = await callback({
+      requestId: randomUUID(),
+      toolName,
+      input,
+      ...(options.blockedPath !== undefined && { blockedPath: options.blockedPath }),
+      ...(options.decisionReason !== undefined && { decisionReason: options.decisionReason }),
+    });
+    if (decision.behavior === 'allow') {
+      return { behavior: 'allow', updatedInput: decision.updatedInput ?? input };
+    }
+    return { behavior: 'deny', message: decision.message ?? 'User denied this tool call.' };
+  };
+}
 
 /**
  * Minimal logger shape used for heartbeat / truncation diagnostics. Matches
@@ -137,6 +182,23 @@ export interface ClaudeCliCompleteOptions {
    */
   allowedTools?: string[];
   /**
+   * Working directory passed to the SDK. When set, Claude's filesystem
+   * tools (Read / Glob / Bash) are rooted here. When omitted, the SDK
+   * inherits the host process cwd — `apps/desktop` in dev, the install
+   * root in a packaged build — neither of which is what users expect.
+   */
+  cwd?: string;
+  /**
+   * Extra absolute paths Claude may read outside `cwd`. Maps to the SDK
+   * option of the same name (CLI equivalent: `--add-dir`).
+   */
+  additionalDirectories?: string[];
+  /**
+   * Host permission hook. When supplied, every tool call routes through
+   * this callback before execution; the host returns allow/deny.
+   */
+  canUseTool?: PermissionCallback;
+  /**
    * Injected for heartbeat + truncation diagnostics. Matches the
    * `CoreLogger.warn` shape; omit in tests that don't care about logs.
    */
@@ -228,6 +290,8 @@ export async function completeViaClaudeCli(
         maxTurns?: number;
         abortController?: AbortController;
         cwd?: string;
+        additionalDirectories?: string[];
+        canUseTool?: SdkCanUseTool;
         pathToClaudeCodeExecutable?: string;
       };
     }) => AsyncIterable<SdkEvent>;
@@ -251,6 +315,8 @@ export async function completeViaClaudeCli(
     if (opts.signal.aborted) controller.abort();
     else opts.signal.addEventListener('abort', onAbort, { once: true });
   }
+
+  const sdkCanUseTool = buildSdkCanUseTool(opts.canUseTool);
 
   const textChunks: string[] = [];
   let inputTokens = 0;
@@ -293,6 +359,11 @@ export async function completeViaClaudeCli(
         // time via the caller's AbortSignal — not turn count. Set high.
         maxTurns: 100,
         abortController: controller,
+        ...(opts.cwd !== undefined && { cwd: opts.cwd }),
+        ...(opts.additionalDirectories !== undefined && {
+          additionalDirectories: opts.additionalDirectories,
+        }),
+        ...(sdkCanUseTool !== undefined && { canUseTool: sdkCanUseTool }),
         pathToClaudeCodeExecutable: claudePath,
       },
     })) {
@@ -391,6 +462,12 @@ export interface ClaudeCliStreamOptions {
    * streaming only. v2 (MCP bridge) populates this.
    */
   allowedTools?: string[];
+  /** Same semantics as `ClaudeCliCompleteOptions.cwd`. */
+  cwd?: string;
+  /** Same semantics as `ClaudeCliCompleteOptions.additionalDirectories`. */
+  additionalDirectories?: string[];
+  /** Same semantics as `ClaudeCliCompleteOptions.canUseTool`. */
+  canUseTool?: PermissionCallback;
   /** Same heartbeat contract as `completeViaClaudeCli`. */
   logger?: ClaudeCliLogger;
   /** Heartbeat window (ms). Defaults to 5000. */
@@ -429,6 +506,8 @@ export async function streamViaClaudeCli(
         maxTurns?: number;
         abortController?: AbortController;
         cwd?: string;
+        additionalDirectories?: string[];
+        canUseTool?: SdkCanUseTool;
         pathToClaudeCodeExecutable?: string;
       };
     }) => AsyncIterable<SdkStreamMessage>;
@@ -451,6 +530,8 @@ export async function streamViaClaudeCli(
 
   const heartbeatMs = opts.heartbeatMs ?? DEFAULT_HEARTBEAT_MS;
 
+  const sdkCanUseTool = buildSdkCanUseTool(opts.canUseTool);
+
   const raw = sdk.query({
     prompt: buildPromptStream(userPrompt, opts.userImages),
     options: {
@@ -460,6 +541,11 @@ export async function streamViaClaudeCli(
       allowedTools: opts.allowedTools ?? [],
       maxTurns: 100,
       abortController: controller,
+      ...(opts.cwd !== undefined && { cwd: opts.cwd }),
+      ...(opts.additionalDirectories !== undefined && {
+        additionalDirectories: opts.additionalDirectories,
+      }),
+      ...(sdkCanUseTool !== undefined && { canUseTool: sdkCanUseTool }),
       pathToClaudeCodeExecutable: claudePath,
     },
   });

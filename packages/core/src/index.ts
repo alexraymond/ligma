@@ -12,9 +12,11 @@ import type {
   ChatMessage,
   LoadedSkill,
   ModelRef,
+  PermissionCallback,
   SelectedElement,
   StoredDesignSystem,
   WireApi,
+  WorkspaceContext,
 } from '@ligma/shared';
 import { CodesignError, ERROR_CODES } from '@ligma/shared';
 import { remapProviderError } from './errors.js';
@@ -130,6 +132,17 @@ export interface GenerateInput {
    * belongs on the sidecar extension interface.
    */
   useNewLoop?: boolean | undefined;
+  /**
+   * Workspace scoping for SDK-driven providers (currently `claude-cli`).
+   * Sets the agent's filesystem cwd + extra read-allowed dirs so Claude's
+   * `Read`/`Glob`/`Bash` tools see the user's project, not Ligma's launch dir.
+   */
+  workspace?: WorkspaceContext | undefined;
+  /**
+   * Per-request permission hook invoked by SDK providers before each tool
+   * call. Allows the host UI to async-prompt the user for allow/deny.
+   */
+  canUseTool?: PermissionCallback | undefined;
 }
 
 export interface ApplyCommentInput {
@@ -186,6 +199,8 @@ interface ModelRunInput {
   logger?: CoreLogger | undefined;
   /** Log step namespace, e.g. 'generate' or 'apply_comment'. Defaults to 'generate'. */
   logScope?: string | undefined;
+  workspace?: WorkspaceContext | undefined;
+  canUseTool?: PermissionCallback | undefined;
 }
 
 function attachmentToImageInput(
@@ -383,6 +398,8 @@ async function runModel(input: ModelRunInput): Promise<GenerateOutput> {
           ...(input.signal !== undefined ? { signal: input.signal } : {}),
           maxTokens: MAX_OUTPUT_TOKENS,
           ...(reasoning !== undefined ? { reasoning } : {}),
+          ...(input.workspace !== undefined ? { workspace: input.workspace } : {}),
+          ...(input.canUseTool !== undefined ? { canUseTool: input.canUseTool } : {}),
         },
         {
           ...(input.onRetry !== undefined ? { onRetry: input.onRetry } : {}),
@@ -693,6 +710,8 @@ export async function generate(input: GenerateInput): Promise<GenerateOutput> {
     messages,
     userImages: imageInputsForWire(input.attachments, input.wire),
     logger: input.logger,
+    workspace: input.workspace,
+    canUseTool: input.canUseTool,
   });
   return skillResult.warnings.length > 0
     ? { ...output, warnings: [...(output.warnings ?? []), ...skillResult.warnings] }

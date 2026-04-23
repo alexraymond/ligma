@@ -10,6 +10,7 @@ import { ChatMessageList } from './chat/ChatMessageList';
 import { CommentChipBar } from './chat/CommentChipBar';
 import { EmptyState } from './chat/EmptyState';
 import { PromptInput, type PromptInputHandle } from './chat/PromptInput';
+import { WorkspaceChip } from './chat/WorkspaceChip';
 
 export interface SidebarProps {
   prompt: string;
@@ -154,6 +155,9 @@ export function Sidebar({ prompt, setPrompt, onSubmit }: SidebarProps) {
         {/* Skill chips + prompt input + model/tokens line */}
         <div className="border-t border-[var(--color-border-subtle)] px-[var(--space-4)] pt-[var(--space-3)] pb-[var(--space-3)] space-y-[10px] bg-[var(--color-background-secondary)]">
           <CommentChipBar />
+          <div className="flex flex-wrap gap-[8px]">
+            <WorkspaceChip />
+          </div>
           <PromptInput
             ref={promptInputRef}
             prompt={prompt}

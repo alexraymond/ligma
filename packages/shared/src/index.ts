@@ -154,6 +154,15 @@ export const GeneratePayloadV1 = z.object({
    *  generate() path. Default undefined / false preserves every
    *  existing caller. */
   useNewLoop: z.boolean().optional(),
+  /** Workspace scoping for SDK-driven providers (`claude-cli`). When set,
+   *  Claude's filesystem tools are rooted at `cwd` and may read from
+   *  `additionalDirectories`. Ignored for HTTP wires. */
+  workspace: z
+    .object({
+      cwd: z.string().min(1).optional(),
+      additionalDirectories: z.array(z.string().min(1)).max(32).optional(),
+    })
+    .optional(),
 });
 export type GeneratePayloadV1 = z.infer<typeof GeneratePayloadV1>;
 
@@ -505,6 +514,45 @@ export interface RecordRendererErrorResult {
   eventId: number | null;
   fingerprint: string | null;
 }
+
+/**
+ * Workspace scoping for an agent invocation. When set, Claude's filesystem
+ * tools (Read / Glob / Bash) are rooted at `cwd`; `additionalDirectories`
+ * extends read access to extra absolute paths outside cwd.
+ *
+ * When unset, the agent inherits the main process cwd — which in dev is
+ * `apps/desktop` and in a packaged app is the install root, neither of
+ * which is what users want to scan against.
+ */
+export interface WorkspaceContext {
+  cwd?: string | undefined;
+  additionalDirectories?: string[] | undefined;
+}
+
+export interface PermissionRequest {
+  requestId: string;
+  toolName: string;
+  input: Record<string, unknown>;
+  blockedPath?: string;
+  decisionReason?: string;
+}
+
+export interface PermissionDecision {
+  requestId: string;
+  behavior: 'allow' | 'deny';
+  message?: string;
+  updatedInput?: Record<string, unknown>;
+  /** When `'session'`, host should auto-allow future calls to the same tool
+   *  for the rest of the chat session without re-prompting. */
+  remember?: 'session';
+}
+
+/**
+ * Adapter contract between the SDK's `canUseTool` callback and Ligma's
+ * permission UI. Implementations resolve when the user has answered the
+ * prompt (allow / deny) or when an auto-rule fires.
+ */
+export type PermissionCallback = (req: PermissionRequest) => Promise<PermissionDecision>;
 
 export {
   ensureEditmodeMarkers,

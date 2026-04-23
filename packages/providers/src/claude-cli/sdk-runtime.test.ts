@@ -125,6 +125,110 @@ describe('completeViaClaudeCli — parameterised path', () => {
     };
     expect(callArgs.options.allowedTools).toEqual(['str_replace_editor', 'bash']);
   });
+
+  it('forwards cwd and additionalDirectories when supplied', async () => {
+    queryMock.mockReturnValue(stream([assistantEvent('ok'), resultEvent()]));
+    await completeViaClaudeCli({
+      modelId: 'claude-haiku-4-5',
+      messages: [{ role: 'user', content: 'hi' }],
+      claudePath: '/custom/bin/claude',
+      cwd: '/Users/alice/project',
+      additionalDirectories: ['/etc/config', '/var/shared'],
+    });
+    const callArgs = queryMock.mock.calls[0]?.[0] as {
+      options: { cwd?: string; additionalDirectories?: string[] };
+    };
+    expect(callArgs.options.cwd).toBe('/Users/alice/project');
+    expect(callArgs.options.additionalDirectories).toEqual(['/etc/config', '/var/shared']);
+  });
+
+  it('omits cwd / additionalDirectories from options when not supplied', async () => {
+    queryMock.mockReturnValue(stream([assistantEvent('ok'), resultEvent()]));
+    await completeViaClaudeCli({
+      modelId: 'claude-haiku-4-5',
+      messages: [{ role: 'user', content: 'hi' }],
+      claudePath: '/custom/bin/claude',
+    });
+    const callArgs = queryMock.mock.calls[0]?.[0] as {
+      options: Record<string, unknown>;
+    };
+    expect('cwd' in callArgs.options).toBe(false);
+    expect('additionalDirectories' in callArgs.options).toBe(false);
+    expect('canUseTool' in callArgs.options).toBe(false);
+  });
+
+  it('adapts canUseTool: forwards tool name + input to host callback, returns SDK allow shape', async () => {
+    queryMock.mockReturnValue(stream([assistantEvent('ok'), resultEvent()]));
+    const hostCallback = vi.fn().mockResolvedValue({
+      requestId: 'ignored-by-sdk',
+      behavior: 'allow',
+    });
+    await completeViaClaudeCli({
+      modelId: 'claude-haiku-4-5',
+      messages: [{ role: 'user', content: 'hi' }],
+      claudePath: '/custom/bin/claude',
+      canUseTool: hostCallback,
+    });
+    const callArgs = queryMock.mock.calls[0]?.[0] as {
+      options: {
+        canUseTool: (
+          toolName: string,
+          input: Record<string, unknown>,
+          options: { signal: AbortSignal; toolUseID: string },
+        ) => Promise<{ behavior: 'allow' | 'deny'; updatedInput?: Record<string, unknown> }>;
+      };
+    };
+    expect(typeof callArgs.options.canUseTool).toBe('function');
+    const result = await callArgs.options.canUseTool(
+      'Read',
+      { path: '/some/file' },
+      { signal: new AbortController().signal, toolUseID: 'tu_1' },
+    );
+    expect(hostCallback).toHaveBeenCalledTimes(1);
+    const hostArg = hostCallback.mock.calls[0]?.[0] as {
+      toolName: string;
+      input: { path: string };
+      requestId: string;
+    };
+    expect(hostArg.toolName).toBe('Read');
+    expect(hostArg.input).toEqual({ path: '/some/file' });
+    expect(typeof hostArg.requestId).toBe('string');
+    expect(hostArg.requestId.length).toBeGreaterThan(0);
+    expect(result).toEqual({ behavior: 'allow', updatedInput: { path: '/some/file' } });
+  });
+
+  it('adapts canUseTool: deny decision becomes SDK deny with message', async () => {
+    queryMock.mockReturnValue(stream([assistantEvent('ok'), resultEvent()]));
+    const hostCallback = vi.fn().mockResolvedValue({
+      requestId: 'r1',
+      behavior: 'deny',
+      message: 'User declined to grant /etc/shadow access.',
+    });
+    await completeViaClaudeCli({
+      modelId: 'claude-haiku-4-5',
+      messages: [{ role: 'user', content: 'hi' }],
+      claudePath: '/custom/bin/claude',
+      canUseTool: hostCallback,
+    });
+    const callArgs = queryMock.mock.calls[0]?.[0] as {
+      options: {
+        canUseTool: (
+          toolName: string,
+          input: Record<string, unknown>,
+          options: { signal: AbortSignal; toolUseID: string },
+        ) => Promise<{ behavior: 'allow' | 'deny'; message?: string }>;
+      };
+    };
+    const result = await callArgs.options.canUseTool(
+      'Bash',
+      { command: 'cat /etc/shadow' },
+      { signal: new AbortController().signal, toolUseID: 'tu_2' },
+    );
+    expect(result).toEqual({
+      behavior: 'deny',
+      message: 'User declined to grant /etc/shadow access.',
+    });
+  });
 });
 
 describe('completeViaClaudeCli — stream validation', () => {

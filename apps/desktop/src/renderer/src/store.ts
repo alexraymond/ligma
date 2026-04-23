@@ -13,10 +13,13 @@ import type {
   LocalInputFile,
   ModelRef,
   OnboardingState,
+  PermissionDecision,
+  PermissionRequest,
   ReportEventInput,
   ReportEventResult,
   ReportableError,
   SelectedElement,
+  WorkspaceContext,
 } from '@ligma/shared';
 import { computeFingerprint } from '@ligma/shared/fingerprint';
 import { create } from 'zustand';
@@ -454,6 +457,24 @@ interface CodesignState {
   closeCanvasTab: (index: number) => void;
   setActiveCanvasTab: (index: number) => void;
   resetCanvasTabs: () => void;
+
+  // Workspace + permissions (Claude Agent SDK scope + tool prompts)
+  /** Per-design workspace settings cached in memory. Hydrated from main
+   *  via `workspace:v1:get` when a design opens. `null` means "no
+   *  workspace configured" — Claude inherits the app launch cwd. */
+  workspaceByDesign: Record<string, WorkspaceContext | null>;
+  /** FIFO queue of permission requests from main. Head is shown by the
+   *  PermissionRequestModal; `resolvePermission` pops once the user
+   *  picks allow/deny. */
+  pendingPermissions: PermissionRequest[];
+  loadWorkspaceForDesign: (designId: string) => Promise<void>;
+  setWorkspaceForDesign: (
+    designId: string,
+    workspace: WorkspaceContext | null,
+  ) => Promise<void>;
+  pickWorkspaceDirectory: (designId: string) => Promise<string | null>;
+  receivePermissionRequest: (req: PermissionRequest) => void;
+  resolvePermission: (decision: PermissionDecision) => void;
 }
 
 export interface CommentBubbleAnchor {
@@ -1481,6 +1502,9 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     });
 
     try {
+      const workspace = designIdAtStart
+        ? get().workspaceByDesign[designIdAtStart] ?? null
+        : null;
       await runGenerate(
         get,
         set,
@@ -1495,6 +1519,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
           ...(designIdAtStart ? { designId: designIdAtStart } : {}),
           ...(get().previewHtml ? { previousHtml: get().previewHtml as string } : {}),
           ...(get().useNewLoop ? { useNewLoop: true } : {}),
+          ...(workspace !== null ? { workspace } : {}),
         },
         designIdAtStart,
       );
@@ -2557,6 +2582,64 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
 
   resetCanvasTabs() {
     set({ canvasTabs: [FILES_TAB], activeCanvasTab: 0 });
+  },
+
+  workspaceByDesign: {},
+  pendingPermissions: [],
+
+  async loadWorkspaceForDesign(designId: string) {
+    const api = window.codesign?.workspace;
+    if (!api) return;
+    try {
+      const workspace = await api.get(designId);
+      set((state) => ({
+        workspaceByDesign: { ...state.workspaceByDesign, [designId]: workspace },
+      }));
+    } catch (err) {
+      rendererLogger.warn('store', '[workspace] load failed', {
+        designId,
+        message: err instanceof Error ? err.message : String(err),
+      });
+    }
+  },
+
+  async setWorkspaceForDesign(designId: string, workspace: WorkspaceContext | null) {
+    const api = window.codesign?.workspace;
+    set((state) => ({
+      workspaceByDesign: { ...state.workspaceByDesign, [designId]: workspace },
+    }));
+    if (!api) return;
+    try {
+      await api.set(designId, workspace);
+    } catch (err) {
+      rendererLogger.warn('store', '[workspace] set failed', {
+        designId,
+        message: err instanceof Error ? err.message : String(err),
+      });
+    }
+  },
+
+  async pickWorkspaceDirectory(designId: string) {
+    const api = window.codesign?.workspace;
+    if (!api) return null;
+    const picked = await api.pickDirectory();
+    if (picked === null) return null;
+    await get().setWorkspaceForDesign(designId, { cwd: picked });
+    return picked;
+  },
+
+  receivePermissionRequest(req: PermissionRequest) {
+    set((state) => ({ pendingPermissions: [...state.pendingPermissions, req] }));
+  },
+
+  resolvePermission(decision: PermissionDecision) {
+    const api = window.codesign?.permissions;
+    api?.respond(decision);
+    set((state) => ({
+      pendingPermissions: state.pendingPermissions.filter(
+        (req) => req.requestId !== decision.requestId,
+      ),
+    }));
   },
 
   async refreshDiagnosticEvents() {

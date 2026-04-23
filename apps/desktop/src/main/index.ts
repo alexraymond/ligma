@@ -22,6 +22,7 @@ import {
   type FsUpdatedV1,
   GeneratePayload,
   GeneratePayloadV1,
+  type PermissionRequest,
   isFsUpdatedAckV1,
 } from '@ligma/shared';
 import { computeFingerprint } from '@ligma/shared/fingerprint';
@@ -62,6 +63,8 @@ import {
 } from './onboarding-ipc';
 import { isAllowedExternalUrl } from './open-external';
 import { readPersisted as readPreferences, registerPreferencesIpc } from './preferences-ipc';
+import { registerPermissionsIpc, requestPermission } from './permissions-ipc';
+import { registerWorkspaceIpc } from './workspace-ipc';
 import { preparePromptContext } from './prompt-context';
 import { createProviderContextStore } from './provider-context';
 import { resolveActiveModel } from './provider-settings';
@@ -682,6 +685,12 @@ function registerIpcHandlers(db: Database | null): void {
   ipcMain.handle('codesign:v1:generate', async (_e, raw: unknown) => {
     const payload = GeneratePayloadV1.parse(raw);
     const id = payload.generationId;
+    // Resolve the sender window so the canUseTool bridge can forward
+    // permission prompts back to the right renderer. `_e.sender` is the
+    // WebContents that invoked us; in single-window dev/prod that's the
+    // mainWindow, but the lookup keeps it correct if a future build adds
+    // detached windows.
+    const senderWindow = BrowserWindow.fromWebContents(_e.sender);
     // `withRun` binds `id` as the AsyncLocalStorage runId so every log line
     // emitted through `getLogger()` inside this handler (and every awaited
     // call it transitively makes, including `armTimeout`'s setTimeout) carries
@@ -785,6 +794,14 @@ function registerIpcHandlers(db: Database | null): void {
       try {
         clearTimeoutGuard = await armTimeout(id, controller);
         const isCodex = active.model.provider === CHATGPT_CODEX_PROVIDER_ID;
+        // Build the permission bridge only when (a) a window exists to host
+        // the modal, and (b) the wire is `claude-cli` — other providers
+        // have no SDK tool loop here, so the callback would never fire.
+        const canUseTool =
+          senderWindow !== null && active.wire === 'claude-cli'
+            ? (req: PermissionRequest) =>
+                requestPermission(req, { window: senderWindow })
+            : undefined;
         const result = await runGenerate(
           {
             prompt: payload.prompt,
@@ -802,6 +819,8 @@ function registerIpcHandlers(db: Database | null): void {
             ...(active.httpHeaders !== undefined ? { httpHeaders: active.httpHeaders } : {}),
             ...(allowKeyless ? { allowKeyless: true } : {}),
             ...(payload.useNewLoop === true ? { useNewLoop: true } : {}),
+            ...(payload.workspace !== undefined ? { workspace: payload.workspace } : {}),
+            ...(canUseTool !== undefined ? { canUseTool } : {}),
             signal: controller.signal,
             logger: coreLogger,
           },
@@ -1262,6 +1281,8 @@ void app.whenReady().then(async () => {
     registerCodexOAuthIpc();
     registerClaudeCliIpc();
     registerPreferencesIpc();
+    registerPermissionsIpc();
+    registerWorkspaceIpc();
     registerExporterIpc(() => mainWindow);
     registerDiagnosticsIpc(diagnosticsDb);
     setupAutoUpdater();

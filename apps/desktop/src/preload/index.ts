@@ -16,6 +16,8 @@ import type {
   LocalInputFile,
   ModelRef,
   OnboardingState,
+  PermissionDecision,
+  PermissionRequest,
   ProviderEntry,
   ReasoningLevel,
   ReportEventInput,
@@ -24,6 +26,7 @@ import type {
   SnapshotCreateInput,
   SupportedOnboardingProvider,
   WireApi,
+  WorkspaceContext,
 } from '@ligma/shared';
 import { contextBridge, ipcRenderer } from 'electron';
 import type { ClaudeCliStatus } from '../main/claude-cli-ipc';
@@ -187,6 +190,9 @@ const api = {
     previousHtml?: string;
     /** W2 golden-path beta — see GeneratePayloadV1.useNewLoop. */
     useNewLoop?: boolean;
+    /** Scopes Claude Agent SDK filesystem tools to the user's project dir.
+     *  Ignored for non-claude-cli wires. */
+    workspace?: WorkspaceContext;
   }) =>
     ipcRenderer.invoke('codesign:v1:generate', {
       schemaVersion: 1,
@@ -552,6 +558,43 @@ const api = {
   },
   openExternal: (url: string) =>
     ipcRenderer.invoke('codesign:v1:open-external', url) as Promise<void>,
+  permissions: {
+    /** Subscribe to permission requests from the main process. The handler
+     *  fires once per pending tool call; resolve via `respond()`. Returns
+     *  an unsubscribe fn — call it when the listener should be torn down
+     *  (e.g., on component unmount). */
+    onRequest: (cb: (req: PermissionRequest) => void): (() => void) => {
+      const listener = (_e: unknown, req: PermissionRequest) => cb(req);
+      ipcRenderer.on('permissions:v1:request', listener);
+      return () => {
+        ipcRenderer.removeListener('permissions:v1:request', listener);
+      };
+    },
+    /** Resolve a pending permission request. Must include the original
+     *  `requestId` from the matching `onRequest` event. */
+    respond: (decision: PermissionDecision) =>
+      ipcRenderer.send('permissions:v1:respond', decision),
+  },
+  workspace: {
+    /** Returns the persisted workspace cwd / additional dirs for a design,
+     *  or `null` if none has been set. */
+    get: (designId: string) =>
+      ipcRenderer.invoke('workspace:v1:get', {
+        schemaVersion: 1,
+        designId,
+      }) as Promise<WorkspaceContext | null>,
+    /** Persist the workspace for a design. Pass `null` to clear. */
+    set: (designId: string, workspace: WorkspaceContext | null) =>
+      ipcRenderer.invoke('workspace:v1:set', {
+        schemaVersion: 1,
+        designId,
+        workspace,
+      }) as Promise<{ ok: true }>,
+    /** Open the native folder picker; resolves to the chosen absolute path
+     *  or `null` on cancel. */
+    pickDirectory: () =>
+      ipcRenderer.invoke('workspace:v1:pickDirectory') as Promise<string | null>,
+  },
 };
 
 contextBridge.exposeInMainWorld('codesign', api);

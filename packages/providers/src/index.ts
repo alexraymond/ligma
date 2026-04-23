@@ -11,7 +11,9 @@ import {
   CodesignError,
   ERROR_CODES,
   type ModelRef,
+  type PermissionCallback,
   type WireApi,
+  type WorkspaceContext,
 } from '@ligma/shared';
 import {
   claudeCodeIdentityHeaders,
@@ -54,6 +56,18 @@ export interface GenerateOptions {
    * placeholder while auth is supplied by `httpHeaders` or by the gateway.
    */
   allowKeyless?: boolean;
+  /**
+   * Workspace scoping for SDK-driven providers (currently `claude-cli` only).
+   * Threaded into the Agent SDK's `cwd` + `additionalDirectories`. Ignored
+   * for HTTP wires.
+   */
+  workspace?: WorkspaceContext;
+  /**
+   * Permission hook for SDK-driven providers. When supplied, every tool call
+   * is gated by this callback so the host can show an allow/deny UI. Ignored
+   * for HTTP wires (which have no tool loop here).
+   */
+  canUseTool?: PermissionCallback;
 }
 
 export interface GenerateResult {
@@ -227,6 +241,11 @@ export async function complete(
     if (opts.userImages !== undefined) cliOpts.userImages = opts.userImages;
     if (opts.signal !== undefined) cliOpts.signal = opts.signal;
     if (opts.maxTokens !== undefined) cliOpts.maxTokens = opts.maxTokens;
+    if (opts.workspace?.cwd !== undefined) cliOpts.cwd = opts.workspace.cwd;
+    if (opts.workspace?.additionalDirectories !== undefined) {
+      cliOpts.additionalDirectories = opts.workspace.additionalDirectories;
+    }
+    if (opts.canUseTool !== undefined) cliOpts.canUseTool = opts.canUseTool;
     return completeViaClaudeCli(cliOpts);
   }
 

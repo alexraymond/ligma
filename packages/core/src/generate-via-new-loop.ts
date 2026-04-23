@@ -143,6 +143,11 @@ export async function generateViaNewLoop(
     allowedTools: [],
   };
   if (input.signal !== undefined) streamOpts.signal = input.signal;
+  if (input.workspace?.cwd !== undefined) streamOpts.cwd = input.workspace.cwd;
+  if (input.workspace?.additionalDirectories !== undefined) {
+    streamOpts.additionalDirectories = input.workspace.additionalDirectories;
+  }
+  if (input.canUseTool !== undefined) streamOpts.canUseTool = input.canUseTool;
 
   let sdkStream: Awaited<ReturnType<typeof streamViaClaudeCli>>;
   try {

@@ -3,6 +3,7 @@ import { ChevronLeft } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DeleteDesignDialog } from './components/DeleteDesignDialog';
 import { DesignsView } from './components/DesignsView';
+import { PermissionRequestModal } from './components/PermissionRequestModal';
 import { PreviewPane } from './components/PreviewPane';
 import { RenameDesignDialog } from './components/RenameDesignDialog';
 import { Settings } from './components/Settings';
@@ -117,6 +118,25 @@ export function App() {
     }
     void bootstrap();
   }, [loadConfig, loadDesigns, switchDesign]);
+
+  // Bridge for permission prompts: main dispatches per-tool requests via
+  // `permissions.onRequest`; the store pushes them onto a FIFO queue that
+  // PermissionRequestModal drains. Without this subscription the main-side
+  // `canUseTool` callback would time out and auto-deny every tool call.
+  useEffect(() => {
+    const api = window.codesign?.permissions;
+    if (!api) return;
+    const unsubscribe = api.onRequest((req) => {
+      useCodesignStore.getState().receivePermissionRequest(req);
+    });
+    return unsubscribe;
+  }, []);
+
+  const currentDesignId = useCodesignStore((s) => s.currentDesignId);
+  const loadWorkspaceForDesign = useCodesignStore((s) => s.loadWorkspaceForDesign);
+  useEffect(() => {
+    if (currentDesignId !== null) void loadWorkspaceForDesign(currentDesignId);
+  }, [currentDesignId, loadWorkspaceForDesign]);
 
   function submit(): void {
     const trimmed = prompt.trim();
@@ -256,6 +276,7 @@ export function App() {
       <DesignsView />
       <RenameDesignDialog />
       <DeleteDesignDialog />
+      <PermissionRequestModal />
       <ToastViewport />
       <CommentsPanel />
       <ReportEventDialog localId={activeReportLocalId} onClose={closeReportDialog} />
