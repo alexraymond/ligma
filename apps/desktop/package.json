@@ -24,6 +24,7 @@
     "@ligma/i18n": "workspace:*",
     "@ligma/providers": "workspace:*",
     "@ligma/runtime": "workspace:*",
+    "@ligma/session": "workspace:*",
     "@ligma/shared": "workspace:*",
     "@ligma/templates": "workspace:*",
     "@ligma/ui": "workspace:*",
