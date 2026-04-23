@@ -6,17 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <title>Open CoDesign</title>
+    <title>Ligma</title>
   </head>
   <body>
     <div id="root"></div>
     <script>
       (function () {
+        // Dark is the default Ligma theme. Apply `.light` only if the user
+        // explicitly opted into light in a previous session.
         try {
           var t = localStorage.getItem('open-codesign:theme');
-          if (t === 'dark') document.documentElement.classList.add('dark');
+          if (t === 'light') document.documentElement.classList.add('light');
+          else document.documentElement.classList.add('dark');
         } catch (e) {
-          /* localStorage unavailable; default light theme */
+          document.documentElement.classList.add('dark');
         }
       })();
     </script>

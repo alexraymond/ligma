@@ -517,21 +517,28 @@ export function coerceUsageSnapshot(result: {
 }
 
 function readInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'light';
+  if (typeof window === 'undefined') return 'dark';
   try {
     const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
     if (stored === 'light' || stored === 'dark') return stored;
   } catch {
     // localStorage unavailable
   }
-  return 'light';
+  return 'dark';
 }
 
 function applyThemeClass(theme: Theme): void {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
-  if (theme === 'dark') root.classList.add('dark');
-  else root.classList.remove('dark');
+  // Dark is the default (:root tokens). Light is opt-in via `.light`.
+  // Keep `.dark` too for any third-party selectors that may target it.
+  if (theme === 'light') {
+    root.classList.add('light');
+    root.classList.remove('dark');
+  } else {
+    root.classList.remove('light');
+    root.classList.add('dark');
+  }
 }
 
 function persistTheme(theme: Theme): void {
