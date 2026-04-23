@@ -17,9 +17,15 @@ export function FilesTabView() {
   const currentDesignId = useCodesignStore((s) => s.currentDesignId);
   const previewHtml = useCodesignStore((s) => s.previewHtml);
   const openFileTab = useCodesignStore((s) => s.openCanvasFileTab);
+  const setCurrentFilePath = useCodesignStore((s) => s.setCurrentFilePath);
   const interactionMode = useCodesignStore((s) => s.interactionMode);
   const pushIframeError = useCodesignStore((s) => s.pushIframeError);
   const { files } = useDesignFiles(currentDesignId);
+
+  const openAndTarget = (path: string) => {
+    openFileTab(path);
+    if (currentDesignId) setCurrentFilePath(currentDesignId, path);
+  };
 
   const defaultPath = useMemo(() => {
     if (files.find((f) => f.path === 'index.html')) return 'index.html';
@@ -84,7 +90,7 @@ export function FilesTabView() {
                   <button
                     type="button"
                     onClick={() => setSelectedPath(f.path)}
-                    onDoubleClick={() => openFileTab(f.path)}
+                    onDoubleClick={() => openAndTarget(f.path)}
                     title={f.path}
                     className={`group w-full flex items-center gap-[var(--space-3)] h-[44px] pl-[var(--space-4)] pr-[var(--space-3)] text-left rounded-[var(--radius-md)] transition-colors duration-[var(--duration-faster)] ${
                       isActive
@@ -133,7 +139,7 @@ export function FilesTabView() {
           </span>
           <button
             type="button"
-            onClick={() => selectedPath && openFileTab(selectedPath)}
+            onClick={() => selectedPath && openAndTarget(selectedPath)}
             className="text-[11px] uppercase tracking-[var(--tracking-label)] text-[var(--color-text-muted)] hover:text-[var(--color-accent)] transition-colors"
           >
             {t('canvas.openInTab')}

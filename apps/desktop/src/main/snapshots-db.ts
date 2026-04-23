@@ -233,6 +233,20 @@ function applyAdditiveMigrations(db: Database): void {
     db.exec('ALTER TABLE diagnostic_events ADD COLUMN context_json TEXT');
   }
 
+  // design_snapshots v2 — snapshots become scoped to a virtual FS path so
+  // a single design can host multiple files (Claude-Design style tabs).
+  // Existing rows belong to the implicit 'index.html' document.
+  const snapshotCols = (
+    db.prepare('PRAGMA table_info(design_snapshots)').all() as ColumnInfo[]
+  ).map((c) => c.name);
+  if (!snapshotCols.includes('file_path')) {
+    db.exec('ALTER TABLE design_snapshots ADD COLUMN file_path TEXT');
+    db.exec("UPDATE design_snapshots SET file_path = 'index.html' WHERE file_path IS NULL");
+    db.exec(
+      'CREATE INDEX IF NOT EXISTS idx_snapshots_design_file_created ON design_snapshots(design_id, file_path, created_at DESC)',
+    );
+  }
+
   // One-shot cleanup: chat_messages rows written before the designId race
   // fixes (commits 2a316b7 / f41d1f8) may carry the wrong design_id and
   // cross-contaminate the Sidebar history. Clear the table once; the next
@@ -363,6 +377,7 @@ interface SnapshotRow {
   artifact_source: string;
   created_at: string;
   message: string | null;
+  file_path: string | null;
 }
 
 interface MessageRow {
@@ -400,6 +415,7 @@ function rowToSnapshot(row: SnapshotRow): DesignSnapshot {
     artifactType: row.artifact_type as DesignSnapshot['artifactType'],
     artifactSource: row.artifact_source,
     createdAt: row.created_at,
+    filePath: row.file_path ?? 'index.html',
     ...(row.message !== null ? { message: row.message } : {}),
   };
 }
@@ -538,10 +554,11 @@ export function duplicateDesign(db: Database, sourceId: string, newName: string)
 export function createSnapshot(db: Database, input: SnapshotCreateInput): DesignSnapshot {
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
+  const filePath = input.filePath ?? 'index.html';
   db.prepare(
     `INSERT INTO design_snapshots
-       (id, schema_version, design_id, parent_id, type, prompt, artifact_type, artifact_source, created_at, message)
-     VALUES (?, 1, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       (id, schema_version, design_id, parent_id, type, prompt, artifact_type, artifact_source, created_at, message, file_path)
+     VALUES (?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   ).run(
     id,
     input.designId,
@@ -552,6 +569,7 @@ export function createSnapshot(db: Database, input: SnapshotCreateInput): Design
     input.artifactSource,
     now,
     input.message ?? null,
+    filePath,
   );
   // Bump the parent design's updated_at so clients can sort designs by activity.
   db.prepare('UPDATE designs SET updated_at = ? WHERE id = ?').run(now, input.designId);
@@ -560,7 +578,23 @@ export function createSnapshot(db: Database, input: SnapshotCreateInput): Design
   );
 }
 
-export function listSnapshots(db: Database, designId: string): DesignSnapshot[] {
+/** Lists every snapshot of a design across all files. Optional `filePath`
+ *  narrows the result to a single file's history — used by the per-tab
+ *  snapshot timeline in the renderer. */
+export function listSnapshots(
+  db: Database,
+  designId: string,
+  filePath?: string,
+): DesignSnapshot[] {
+  if (filePath !== undefined) {
+    return (
+      db
+        .prepare(
+          'SELECT * FROM design_snapshots WHERE design_id = ? AND file_path = ? ORDER BY created_at DESC',
+        )
+        .all(designId, filePath) as SnapshotRow[]
+    ).map(rowToSnapshot);
+  }
   return (
     db
       .prepare('SELECT * FROM design_snapshots WHERE design_id = ? ORDER BY created_at DESC')
@@ -1041,6 +1075,94 @@ export function insertInDesignFile(
     row.id,
   );
   return rowToDesignFile({ ...row, content: next, updated_at: now });
+}
+
+/** Upsert (path, content). Used by the renderer after a successful
+ *  generation so the Files panel has a live mirror of whatever the agent
+ *  just emitted, without the caller having to branch on "does this file
+ *  already exist". Returns the final row. */
+export function upsertDesignFile(
+  db: Database,
+  designId: string,
+  path: string,
+  content: string,
+): DesignFile {
+  const p = normalizeDesignFilePath(path);
+  const now = new Date().toISOString();
+  const existing = db
+    .prepare('SELECT * FROM design_files WHERE design_id = ? AND path = ?')
+    .get(designId, p) as DesignFileRowDb | undefined;
+  if (existing) {
+    db.prepare('UPDATE design_files SET content = ?, updated_at = ? WHERE id = ?').run(
+      content,
+      now,
+      existing.id,
+    );
+    return rowToDesignFile({ ...existing, content, updated_at: now });
+  }
+  const id = crypto.randomUUID();
+  db.prepare(
+    'INSERT INTO design_files (id, design_id, path, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)',
+  ).run(id, designId, p, content, now, now);
+  return rowToDesignFile({
+    id,
+    design_id: designId,
+    path: p,
+    content,
+    created_at: now,
+    updated_at: now,
+  });
+}
+
+/** Move a file to a new path, preserving its content, id, and snapshot
+ *  history. Throws when the destination already exists or the source is
+ *  missing. Atomic via a single transaction so the snapshots' file_path
+ *  column is rewritten in lockstep. */
+export function renameDesignFile(
+  db: Database,
+  designId: string,
+  fromPath: string,
+  toPath: string,
+): DesignFile {
+  const from = normalizeDesignFilePath(fromPath);
+  const to = normalizeDesignFilePath(toPath);
+  if (from === to) {
+    const row = db
+      .prepare('SELECT * FROM design_files WHERE design_id = ? AND path = ?')
+      .get(designId, from) as DesignFileRowDb | undefined;
+    if (!row) throw new Error(`File not found: ${from}`);
+    return rowToDesignFile(row);
+  }
+  const run = db.transaction(() => {
+    const row = db
+      .prepare('SELECT * FROM design_files WHERE design_id = ? AND path = ?')
+      .get(designId, from) as DesignFileRowDb | undefined;
+    if (!row) throw new Error(`File not found: ${from}`);
+    const existing = db
+      .prepare('SELECT 1 FROM design_files WHERE design_id = ? AND path = ?')
+      .get(designId, to);
+    if (existing) throw new Error(`File already exists: ${to}`);
+    const now = new Date().toISOString();
+    db.prepare('UPDATE design_files SET path = ?, updated_at = ? WHERE id = ?').run(
+      to,
+      now,
+      row.id,
+    );
+    db.prepare(
+      'UPDATE design_snapshots SET file_path = ? WHERE design_id = ? AND file_path = ?',
+    ).run(to, designId, from);
+    return rowToDesignFile({ ...row, path: to, updated_at: now });
+  });
+  return run();
+}
+
+/** Permanently delete a file from a design's virtual FS. Snapshots keep their
+ *  `file_path` column pointing at the removed path — history is preserved
+ *  so the user can still see what was there — but the file no longer
+ *  appears in list/read results. */
+export function deleteDesignFile(db: Database, designId: string, path: string): void {
+  const p = normalizeDesignFilePath(path);
+  db.prepare('DELETE FROM design_files WHERE design_id = ? AND path = ?').run(designId, p);
 }
 
 // ---------------------------------------------------------------------------

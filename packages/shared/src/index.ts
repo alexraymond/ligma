@@ -148,6 +148,12 @@ export const GeneratePayloadV1 = z.object({
    *  virtual FS as `index.html` so the text_editor tool can view/edit
    *  incrementally instead of always rewriting from scratch. */
   previousHtml: z.string().optional(),
+  /** POSIX-relative path of the design file this generation should write
+   *  into. Defaults to 'index.html' when omitted. When multiple files
+   *  exist on a design, the renderer sends the active canvas tab's path
+   *  here so the resulting artifact lands in the correct file without
+   *  clobbering siblings. */
+  targetFilePath: z.string().min(1).optional(),
   /** W2 golden-path beta — when true AND the active provider's wire is
    *  `claude-cli`, main routes the request through `generateViaNewLoop`
    *  (the async-generator agent loop) instead of the legacy flat
@@ -315,6 +321,7 @@ export {
   CommentRect,
   CommentRowV1,
   CommentStatus,
+  DEFAULT_DESIGN_FILE_PATH,
   DesignFileV1,
   DesignMessageV1,
   DesignSnapshotV1,

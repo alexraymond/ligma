@@ -41,6 +41,7 @@ import {
   registerCodexOAuthIpc,
 } from './codex-oauth-ipc';
 import { registerCommentsIpc, registerCommentsUnavailableIpc } from './comments-ipc';
+import { registerDesignFilesIpc } from './design-files-ipc';
 import { configDir } from './config';
 import { registerConnectionIpc } from './connection-ipc';
 import { scanDesignSystem } from './design-system';
@@ -1249,6 +1250,7 @@ void app.whenReady().then(async () => {
       registerSnapshotsIpc(dbResult.db);
       registerChatMessagesIpc(dbResult.db);
       registerCommentsIpc(dbResult.db);
+      registerDesignFilesIpc(dbResult.db);
       try {
         pruneDiagnosticEvents(dbResult.db, 500);
       } catch (err) {

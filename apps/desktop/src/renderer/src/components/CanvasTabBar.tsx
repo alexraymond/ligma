@@ -1,10 +1,20 @@
 import { useT } from '@ligma/i18n';
-import { FolderOpen, X } from 'lucide-react';
+import { FolderOpen, Plus, X } from 'lucide-react';
+import { useState } from 'react';
 import { useCodesignStore } from '../store';
 
 function fileTabLabel(path: string): string {
   const segments = path.split('/');
   return segments[segments.length - 1] ?? path;
+}
+
+function nextUntitledName(existing: string[]): string {
+  const taken = new Set(existing);
+  for (let n = 1; n < 1000; n++) {
+    const candidate = `untitled-${n}.html`;
+    if (!taken.has(candidate)) return candidate;
+  }
+  return `untitled-${Date.now()}.html`;
 }
 
 export function CanvasTabBar() {
@@ -13,8 +23,16 @@ export function CanvasTabBar() {
   const active = useCodesignStore((s) => s.activeCanvasTab);
   const setActive = useCodesignStore((s) => s.setActiveCanvasTab);
   const close = useCodesignStore((s) => s.closeCanvasTab);
+  const createFile = useCodesignStore((s) => s.createCanvasFile);
+  const designId = useCodesignStore((s) => s.currentDesignId);
+  const setCurrentFilePath = useCodesignStore((s) => s.setCurrentFilePath);
+  const [busy, setBusy] = useState(false);
 
   if (tabs.length === 0) return null;
+
+  const existingPaths = tabs
+    .filter((x): x is { kind: 'file'; path: string } => x.kind === 'file')
+    .map((x) => x.path);
 
   return (
     <div
@@ -25,9 +43,10 @@ export function CanvasTabBar() {
       {tabs.map((tab, index) => {
         const isActive = index === active;
         const isFiles = tab.kind === 'files';
-        const label = isFiles ? t('canvas.filesTab') : fileTabLabel((tab as { path: string }).path);
-        const title = isFiles ? t('canvas.filesTab') : (tab as { path: string }).path;
-        const key: string = isFiles ? 'files' : `file:${(tab as { path: string }).path}`;
+        const path = isFiles ? null : (tab as { path: string }).path;
+        const label = isFiles ? t('canvas.filesTab') : fileTabLabel(path as string);
+        const title = isFiles ? t('canvas.filesTab') : (path as string);
+        const key: string = isFiles ? 'files' : `file:${path as string}`;
         return (
           <div
             key={key}
@@ -41,7 +60,10 @@ export function CanvasTabBar() {
           >
             <button
               type="button"
-              onClick={() => setActive(index)}
+              onClick={() => {
+                setActive(index);
+                if (path && designId) setCurrentFilePath(designId, path);
+              }}
               title={title}
               className="flex items-center gap-[var(--space-1_5)] focus:outline-none"
             >
@@ -72,6 +94,25 @@ export function CanvasTabBar() {
           </div>
         );
       })}
+      <button
+        type="button"
+        disabled={!designId || busy}
+        onClick={async () => {
+          setBusy(true);
+          try {
+            const name = window.prompt('New file name', nextUntitledName(existingPaths));
+            if (!name || name.trim().length === 0) return;
+            await createFile(name.trim(), '');
+          } finally {
+            setBusy(false);
+          }
+        }}
+        title="New file"
+        aria-label="New file"
+        className="flex items-center justify-center px-[var(--space-2)] py-[7px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] disabled:opacity-40 disabled:pointer-events-none transition-colors"
+      >
+        <Plus className="w-3.5 h-3.5" aria-hidden />
+      </button>
     </div>
   );
 }

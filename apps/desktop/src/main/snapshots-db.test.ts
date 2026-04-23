@@ -166,6 +166,59 @@ describe('createSnapshot + listSnapshots', () => {
 });
 
 // ---------------------------------------------------------------------------
+// snapshots scoped by file_path (Phase 1 — files-as-tabs)
+// ---------------------------------------------------------------------------
+
+describe('createSnapshot + listSnapshots — filePath scoping', () => {
+  it('defaults filePath to index.html when the caller does not specify one', () => {
+    const db = makeDb();
+    const design = createDesign(db);
+    const snap = createSnapshot(db, {
+      designId: design.id,
+      parentId: null,
+      type: 'initial',
+      prompt: null,
+      artifactType: 'html',
+      artifactSource: '<html/>',
+    });
+    expect(snap.filePath).toBe('index.html');
+  });
+
+  it('persists filePath and narrows listSnapshots by it', () => {
+    const db = makeDb();
+    const design = createDesign(db);
+    const a = createSnapshot(db, {
+      designId: design.id,
+      parentId: null,
+      type: 'initial',
+      prompt: null,
+      artifactType: 'html',
+      artifactSource: '<html>index</html>',
+      filePath: 'index.html',
+    });
+    const b = createSnapshot(db, {
+      designId: design.id,
+      parentId: null,
+      type: 'initial',
+      prompt: null,
+      artifactType: 'html',
+      artifactSource: '<html>styleguide</html>',
+      filePath: 'styleguide.html',
+    });
+    expect(a.filePath).toBe('index.html');
+    expect(b.filePath).toBe('styleguide.html');
+
+    expect(listSnapshots(db, design.id)).toHaveLength(2);
+    const onlyIndex = listSnapshots(db, design.id, 'index.html');
+    expect(onlyIndex).toHaveLength(1);
+    expect(onlyIndex[0]?.id).toBe(a.id);
+    const onlyStyle = listSnapshots(db, design.id, 'styleguide.html');
+    expect(onlyStyle).toHaveLength(1);
+    expect(onlyStyle[0]?.id).toBe(b.id);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // getSnapshot
 // ---------------------------------------------------------------------------
 

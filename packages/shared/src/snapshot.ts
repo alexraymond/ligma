@@ -11,8 +11,18 @@ export const DesignSnapshotV1 = z.object({
   artifactSource: z.string(),
   createdAt: z.string(),
   message: z.string().optional(),
+  /** POSIX-relative path inside the design's virtual FS that this snapshot
+   *  captures. Defaults to 'index.html' for rows written before Phase 1 of
+   *  the files-as-tabs pipeline — those rows are retro-backfilled on
+   *  migration so the column is always populated at read time. */
+  filePath: z.string().default('index.html'),
 });
 export type DesignSnapshot = z.infer<typeof DesignSnapshotV1>;
+
+/** Default file path for designs that have not yet been forked into multiple
+ *  files. The generation pipeline falls back to this when the caller does
+ *  not specify `targetFilePath` on a GeneratePayloadV1. */
+export const DEFAULT_DESIGN_FILE_PATH = 'index.html' as const;
 
 export const DesignV1 = z.object({
   schemaVersion: z.literal(1).default(1),
@@ -190,4 +200,7 @@ export interface SnapshotCreateInput {
   artifactType: 'html' | 'react' | 'svg';
   artifactSource: string;
   message?: string;
+  /** POSIX-relative path of the design file this snapshot captures. When
+   *  omitted, the persistence layer uses DEFAULT_DESIGN_FILE_PATH. */
+  filePath?: string;
 }

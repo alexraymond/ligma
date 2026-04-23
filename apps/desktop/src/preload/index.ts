@@ -8,6 +8,7 @@ import type {
   CommentRow,
   CommentStatus,
   Design,
+  DesignFile,
   DesignSnapshot,
   ExternalConfigsDetection,
   GeneratePayloadV1,
@@ -193,6 +194,9 @@ const api = {
     /** Scopes Claude Agent SDK filesystem tools to the user's project dir.
      *  Ignored for non-claude-cli wires. */
     workspace?: WorkspaceContext;
+    /** Virtual-FS path the generated artifact should write into.
+     *  Defaults to 'index.html' in main when omitted. */
+    targetFilePath?: string;
   }) =>
     ipcRenderer.invoke('codesign:v1:generate', {
       schemaVersion: 1,
@@ -431,10 +435,12 @@ const api = {
         id,
         name,
       }) as Promise<Design>,
-    list: (designId: string) =>
-      ipcRenderer.invoke('snapshots:v1:list', { schemaVersion: 1, designId }) as Promise<
-        DesignSnapshot[]
-      >,
+    list: (designId: string, filePath?: string) =>
+      ipcRenderer.invoke('snapshots:v1:list', {
+        schemaVersion: 1,
+        designId,
+        ...(filePath !== undefined ? { filePath } : {}),
+      }) as Promise<DesignSnapshot[]>,
     get: (id: string) =>
       ipcRenderer.invoke('snapshots:v1:get', {
         schemaVersion: 1,
@@ -447,6 +453,36 @@ const api = {
       }) as Promise<DesignSnapshot>,
     delete: (id: string) =>
       ipcRenderer.invoke('snapshots:v1:delete', { schemaVersion: 1, id }) as Promise<void>,
+  },
+  files: {
+    list: (designId: string) =>
+      ipcRenderer.invoke('files:v1:list', { schemaVersion: 1, designId }) as Promise<DesignFile[]>,
+    read: (designId: string, path: string) =>
+      ipcRenderer.invoke('files:v1:read', {
+        schemaVersion: 1,
+        designId,
+        path,
+      }) as Promise<DesignFile | null>,
+    create: (designId: string, path: string, content = '') =>
+      ipcRenderer.invoke('files:v1:create', {
+        schemaVersion: 1,
+        designId,
+        path,
+        content,
+      }) as Promise<DesignFile>,
+    rename: (designId: string, fromPath: string, toPath: string) =>
+      ipcRenderer.invoke('files:v1:rename', {
+        schemaVersion: 1,
+        designId,
+        fromPath,
+        toPath,
+      }) as Promise<DesignFile>,
+    delete: (designId: string, path: string) =>
+      ipcRenderer.invoke('files:v1:delete', {
+        schemaVersion: 1,
+        designId,
+        path,
+      }) as Promise<void>,
   },
   chat: {
     list: (designId: string) =>

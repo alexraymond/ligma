@@ -8,12 +8,17 @@ import { describe, expect, it } from 'vitest';
 import {
   createDesign,
   createDesignFile,
+  createSnapshot,
+  deleteDesignFile,
   initInMemoryDb,
   insertInDesignFile,
   listDesignFiles,
   listDesignFilesInDir,
+  listSnapshots,
   normalizeDesignFilePath,
+  renameDesignFile,
   strReplaceInDesignFile,
+  upsertDesignFile,
   viewDesignFile,
 } from './snapshots-db';
 
@@ -115,5 +120,79 @@ describe('list', () => {
     createDesignFile(db, designId, 'index.html', '');
     expect(listDesignFilesInDir(db, designId, 'assets')).toEqual(['a.png', 'b.png']);
     expect(listDesignFilesInDir(db, designId, '')).toEqual(['assets', 'index.html']);
+  });
+});
+
+describe('upsertDesignFile', () => {
+  it('creates the row when absent', () => {
+    const { db, designId } = seed();
+    const row = upsertDesignFile(db, designId, 'x.html', 'v1');
+    expect(row.path).toBe('x.html');
+    expect(row.content).toBe('v1');
+  });
+
+  it('overwrites content when the row exists', () => {
+    const { db, designId } = seed();
+    upsertDesignFile(db, designId, 'x.html', 'v1');
+    const after = upsertDesignFile(db, designId, 'x.html', 'v2');
+    expect(after.content).toBe('v2');
+    const view = viewDesignFile(db, designId, 'x.html');
+    expect(view?.content).toBe('v2');
+  });
+});
+
+describe('renameDesignFile', () => {
+  it('moves the file row and rewrites snapshot file_paths in lockstep', () => {
+    const { db, designId } = seed();
+    createDesignFile(db, designId, 'styleguide.html', '<html>s1</html>');
+    createSnapshot(db, {
+      designId,
+      parentId: null,
+      type: 'initial',
+      prompt: null,
+      artifactType: 'html',
+      artifactSource: '<html>s1</html>',
+      filePath: 'styleguide.html',
+    });
+
+    renameDesignFile(db, designId, 'styleguide.html', 'marketing.html');
+
+    expect(viewDesignFile(db, designId, 'styleguide.html')).toBeNull();
+    expect(viewDesignFile(db, designId, 'marketing.html')?.content).toBe('<html>s1</html>');
+    const snaps = listSnapshots(db, designId, 'marketing.html');
+    expect(snaps).toHaveLength(1);
+    expect(listSnapshots(db, designId, 'styleguide.html')).toHaveLength(0);
+  });
+
+  it('rejects rename when the destination exists', () => {
+    const { db, designId } = seed();
+    createDesignFile(db, designId, 'a.html', '');
+    createDesignFile(db, designId, 'b.html', '');
+    expect(() => renameDesignFile(db, designId, 'a.html', 'b.html')).toThrow(/already exists/);
+  });
+
+  it('rejects rename when the source is missing', () => {
+    const { db, designId } = seed();
+    expect(() => renameDesignFile(db, designId, 'a.html', 'b.html')).toThrow(/not found/);
+  });
+});
+
+describe('deleteDesignFile', () => {
+  it('removes the row without touching snapshot history', () => {
+    const { db, designId } = seed();
+    createDesignFile(db, designId, 'x.html', 'v1');
+    createSnapshot(db, {
+      designId,
+      parentId: null,
+      type: 'initial',
+      prompt: null,
+      artifactType: 'html',
+      artifactSource: 'v1',
+      filePath: 'x.html',
+    });
+    deleteDesignFile(db, designId, 'x.html');
+    expect(viewDesignFile(db, designId, 'x.html')).toBeNull();
+    // snapshot history is preserved
+    expect(listSnapshots(db, designId, 'x.html')).toHaveLength(1);
   });
 });
