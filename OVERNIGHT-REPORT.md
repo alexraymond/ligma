@@ -85,7 +85,7 @@ See `TODO-MORNING.md` for the full accumulated notes from W3 and W6. Highlights:
 1. **Create the GitHub repo** for Ligma and replace every `TODO-MORNING/ligma` placeholder in `package.json` URLs, packaging manifests (homebrew, scoop, flatpak, winget), and `.github/`. `git remote add origin` + `git push -u origin main` from the fresh repo.
 2. **Replace placeholder emails** (`conduct@todo-morning.local`, `maintainers@todo-morning.local`).
 3. **Final palette decision** — replace the placeholder muted-teal `#2EB5A8` in `packages/ui/src/tokens.css` (marked with `TODO-MORNING` comments next to both `:root` and `.light` blocks). Also pick real icon artwork to replace the two-circle placeholder.
-4. **Wire `useNewLoop: true` dispatch** — W2 declared the seam; the UI "Run with new loop (beta)" button needs the dispatcher to actually route through `runTurn`. Today only legacy `generate()` runs. This is the last mile for the morning golden-path demo.
+4. ~~**Wire `useNewLoop: true` dispatch**~~ — **DONE** (morning commit series `refactor(core,shared)` → `feat(providers)` → `feat(core)` → `feat(desktop)` → `feat(ui)` → `test(core)`). The "Use new loop (beta)" checkbox in Settings → Advanced now routes through `generateViaNewLoop` → `runTurn` for the Claude Max subscription provider. v1 is text-streaming only (`allowedTools: []`); tool bridging is v2.
 5. **Merge `overnight` into `main`** once you've validated the golden path (see below). Tag `v0.1.0`.
 
 ## Golden-path smoke test (for you, in the morning)
@@ -97,12 +97,25 @@ pnpm i
 pnpm dev
 ```
 
-Expected:
+Base expected:
 - Window titled **Ligma** opens (dark theme, two-circle icon in the dock).
 - Type a prompt → streamed response visible.
-- If the UI exposes "Run with new loop (beta)", at least one `ToolStart`/`ToolEnd` fires end-to-end (note: dispatcher wiring is item #4 above; without it, the button is a no-op).
 - `~/.config/ligma/sessions/<id>/transcript.jsonl` gets appended entries.
 - Grep: `rg -i 'open.codesign|opencoworkai' ~/ligma` returns hits ONLY in LICENSE and the meta-reference in TODO-MORNING.md.
+
+### New-loop (beta) opt-in
+
+1. In Settings, switch the active provider to the Claude Max subscription (`claude-cli` wire) via the login card. Sign in if prompted.
+2. Settings → **Advanced** → tick **“Use new loop (beta)”**. The setting is persisted in `localStorage` under `ligma:useNewLoop`.
+3. Return to a design and send any prompt.
+
+Expected vs. legacy path:
+- Main-log lines prefix with `[generate-new-loop]` (look for `step=start`, `step=done.ok`) — the legacy pi-agent-core path uses `[generate]`.
+- Renderer still shows streaming text in the chat bubble the same way (the new loop emits `turn_start` / `text_delta` / `turn_end` / `agent_end` into `agent:event:v1`).
+- No `tool_call_start` / `tool_call_result` events — v1 runs with `allowedTools: []`, so the SDK loop never invokes its built-in Read/Write/Edit/Bash and never surfaces `tool_use` blocks. v2 (MCP bridge) will light those up.
+- Falls back silently to the legacy path whenever the active provider is NOT `claude-cli` — the flag is a no-op for every other wire.
+
+Hard-off escape hatch: uncheck the box (the store persists the change immediately) or run `localStorage.removeItem('ligma:useNewLoop')` in DevTools.
 
 ## Deferred (follow-up specs)
 
@@ -116,4 +129,4 @@ Per the plan's "Deferred to Morning Human Review" section:
 ## Known deliberate trade-offs (not bugs)
 
 - W4's `packages/session/package.json` dependency-declares `@open-codesign/shared` at the source commits; the post-merge rename sweep fixed it to `@ligma/shared`. This asymmetry is recorded in the commit messages for the conductor-session merge commits.
-- W2 introduced `packages/core/src/agent/_stub-ipc-types.ts` as a temporary shadow of W1's IPC-ACK types (W1 hadn't merged yet when W2 worked). Post-merge, both W1's real types AND W2's stub are on `overnight`. The 2-line swap (replace stub import with real import, delete the stub file) is a clean follow-up commit — queued as a morning task.
+- ~~W2 introduced `packages/core/src/agent/_stub-ipc-types.ts` as a temporary shadow of W1's IPC-ACK types~~ — **done** in the morning `refactor(core,shared)` commit. `packages/shared/src/ipc-ack.ts` now carries the extended shapes (optional `ok` / `error` / `path` / `content` on `FsUpdatedV1`/`FsUpdatedAckV1`, plus a new `FsViewAckV1`); fs-read / fs-write import from `@ligma/shared`, the stub file is deleted.
