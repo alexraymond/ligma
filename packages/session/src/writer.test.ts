@@ -113,7 +113,13 @@ describe('SessionWriter', () => {
       { type: 'file_history_snapshot', path: 'index.html', byteSize: body.length },
       { fileBody: body },
     );
+    // SHA-256 hex digest: 64 lowercase hex chars. We intentionally do NOT
+    // reuse `computeFingerprint` (FNV-1a 32-bit) for content addressing
+    // because its 50%-birthday-collision threshold is ~65K versions, which
+    // a busy session can hit — and on collision `wx` + EEXIST would silently
+    // serve the wrong body under a later snapshot's path entry.
     expect(result.fingerprint).toBeDefined();
+    expect(result.fingerprint).toMatch(/^[0-9a-f]{64}$/);
     const blobPath = join(rootDir, 'sessions', sessionId, 'files', result.fingerprint ?? '');
     expect(existsSync(blobPath)).toBe(true);
     expect(readFileSync(blobPath, 'utf8')).toBe(body);
@@ -125,6 +131,21 @@ describe('SessionWriter', () => {
     );
     const files = readdirSync(join(rootDir, 'sessions', sessionId, 'files'));
     expect(files).toHaveLength(1);
+  });
+
+  it('different bodies produce different fingerprints (sha256)', async () => {
+    const writer = makeWriter();
+    const a = await writer.append(
+      { type: 'file_history_snapshot', path: 'a.html' },
+      { fileBody: 'alpha' },
+    );
+    const b = await writer.append(
+      { type: 'file_history_snapshot', path: 'b.html' },
+      { fileBody: 'beta' },
+    );
+    expect(a.fingerprint).not.toBe(b.fingerprint);
+    expect(a.fingerprint).toMatch(/^[0-9a-f]{64}$/);
+    expect(b.fingerprint).toMatch(/^[0-9a-f]{64}$/);
   });
 
   it('fsyncs on turn_done and custom_title (turn boundary commit)', async () => {

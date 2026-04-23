@@ -1,6 +1,5 @@
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { appendFile, mkdir, open, writeFile } from 'node:fs/promises';
-import { computeFingerprint } from '@open-codesign/shared/fingerprint';
 import type { CoreLogger } from './logger.js';
 import { type PathsOverride, type SessionPaths, resolveSessionPaths } from './paths.js';
 import { SCHEMA_VERSION, SessionEntry, type SessionEntryInput } from './schema.js';
@@ -101,11 +100,7 @@ export class SessionWriter {
         );
       }
       const body = options.fileBody;
-      const fingerprint = computeFingerprint({
-        errorCode: 'file',
-        stack: undefined,
-        message: typeof body === 'string' ? body : body.toString('utf8'),
-      });
+      const fingerprint = contentFingerprint(body);
       await this.writeBlobIfNew(fingerprint, body);
 
       const entry: SessionEntry = {
@@ -185,6 +180,16 @@ function isTurnBoundary(type: SessionEntry['type']): boolean {
   // Per story spec: TurnDone is the primary boundary; CustomTitle is also a
   // boundary because users treat "I renamed this session" as a commit point.
   return type === 'turn_done' || type === 'custom_title';
+}
+
+/** SHA-256 hex digest of the file body. 64 hex chars, cryptographically
+ *  collision-resistant — the shared package's `computeFingerprint` is FNV-1a
+ *  (8 hex chars) and designed for error-stack bucketing, NOT content-addressed
+ *  storage: at ~65K versions it hits 50% birthday-collision probability, which
+ *  would make `wx` + `EEXIST` silently serve the wrong body. SHA-256 gives us
+ *  collision resistance well beyond any realistic session size. */
+function contentFingerprint(body: Buffer | string): string {
+  return createHash('sha256').update(body).digest('hex');
 }
 
 /** Convenience helper: many callers want a pre-seeded blob dir without
