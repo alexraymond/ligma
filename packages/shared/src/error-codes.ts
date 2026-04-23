@@ -28,6 +28,7 @@ export const ERROR_CODES = {
   PROVIDER_UPSTREAM_ERROR: 'PROVIDER_UPSTREAM_ERROR',
   PROVIDER_ABORTED: 'PROVIDER_ABORTED',
   PROVIDER_RETRY_EXHAUSTED: 'PROVIDER_RETRY_EXHAUSTED',
+  PROVIDER_STREAM_TRUNCATED: 'PROVIDER_STREAM_TRUNCATED',
   CLAUDE_CODE_OAUTH_ONLY: 'CLAUDE_CODE_OAUTH_ONLY',
 
   // Generation / input
@@ -170,6 +171,12 @@ export const ERROR_CODE_DESCRIPTIONS: Record<CodesignErrorCode, ErrorCodeDescrip
     userFacing: 'The provider failed after several retries. Check your connection and try again.',
     userFacingKey: 'err.PROVIDER_RETRY_EXHAUSTED',
     category: 'connection',
+  },
+  PROVIDER_STREAM_TRUNCATED: {
+    userFacing:
+      'The provider stream ended before any output arrived. This is usually a transient network issue — try again.',
+    userFacingKey: 'err.PROVIDER_STREAM_TRUNCATED',
+    category: 'provider',
   },
   CLAUDE_CODE_OAUTH_ONLY: {
     userFacing:

@@ -8,6 +8,7 @@
  */
 
 import { spawn } from 'node:child_process';
+import { prewarmClaudeExecutable } from '@open-codesign/providers';
 import {
   CLAUDE_CLI_PROVIDER_ID,
   CodesignError,
@@ -52,11 +53,23 @@ const CLAUDE_CLI_PROVIDER: ProviderEntry = {
   // No reasoning default — the SDK picks thinking levels per model.
 };
 
-function resolveClaudeBinary(): Promise<{ installed: boolean; version: string | null }> {
+/**
+ * Probe `claude --version`. When `claudePath` is supplied (typically from
+ * the boot-time prewarm), we spawn the absolute path so a PATH change
+ * mid-session can't shadow the CLI under our feet. A null `claudePath`
+ * means "prewarm said not found" — short-circuit without spawning.
+ */
+function resolveClaudeBinary(
+  claudePath: string | null,
+): Promise<{ installed: boolean; version: string | null }> {
   return new Promise((resolve) => {
+    if (claudePath === null) {
+      resolve({ installed: false, version: null });
+      return;
+    }
     let stdout = '';
     let stderr = '';
-    const child = spawn('claude', ['--version'], { stdio: ['ignore', 'pipe', 'pipe'] });
+    const child = spawn(claudePath, ['--version'], { stdio: ['ignore', 'pipe', 'pipe'] });
     child.stdout?.on('data', (chunk) => {
       stdout += chunk.toString();
     });
@@ -77,7 +90,10 @@ function resolveClaudeBinary(): Promise<{ installed: boolean; version: string | 
 }
 
 async function runStatus(): Promise<ClaudeCliStatus> {
-  const { installed, version } = await resolveClaudeBinary();
+  // Reuses the boot-time prewarm result — never shells out to `which` from
+  // the IPC hot path. A null here means prewarm didn't find the CLI, which
+  // is just reported back to the renderer as installed: false.
+  const { installed, version } = await resolveClaudeBinary(prewarmClaudeExecutable());
   const cfg = getCachedConfig();
   const entry = cfg?.providers[CLAUDE_CLI_PROVIDER_ID];
   const configured = entry !== undefined;
@@ -110,7 +126,7 @@ async function persistProviderMutation(
 }
 
 async function runAdd(): Promise<ClaudeCliStatus> {
-  const { installed, version } = await resolveClaudeBinary();
+  const { installed, version } = await resolveClaudeBinary(prewarmClaudeExecutable());
   if (!installed) {
     throw new CodesignError(
       'Claude Code CLI not found on PATH. Install it first, then run `claude` to sign in.',

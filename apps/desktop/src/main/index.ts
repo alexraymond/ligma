@@ -12,14 +12,16 @@ import {
   generateTitle,
   generateViaAgent,
 } from '@open-codesign/core';
-import { detectProviderFromKey } from '@open-codesign/providers';
+import { detectProviderFromKey, prewarmClaudeExecutable } from '@open-codesign/providers';
 import {
   ApplyCommentPayload,
   BRAND,
   CancelGenerationPayloadV1,
   CodesignError,
+  type FsUpdatedV1,
   GeneratePayload,
   GeneratePayloadV1,
+  isFsUpdatedAckV1,
 } from '@open-codesign/shared';
 import { computeFingerprint } from '@open-codesign/shared/fingerprint';
 import type BetterSqlite3 from 'better-sqlite3';
@@ -44,6 +46,7 @@ import { registerDiagnosticsIpc } from './diagnostics-ipc';
 import { makeRuntimeVerifier } from './done-verify';
 import { BrowserWindow, app, clipboard, dialog, ipcMain, shell } from './electron-runtime';
 import { registerExporterIpc } from './exporter-ipc';
+import { type FsAckTracker, createFsAckTracker } from './fs-ack';
 import { armGenerationTimeout, cancelGenerationRequest } from './generation-ipc';
 import { maybeAbortIfRunningFromDmg } from './install-check';
 import { registerLocaleIpc } from './locale-ipc';
@@ -79,6 +82,28 @@ let mainWindow: ElectronBrowserWindow | null = null;
 // shows the banner. Cleared only on app quit (matching the one-shot nature
 // of autoUpdater — a new check will re-emit if still applicable).
 let pendingUpdateAvailable: unknown = null;
+
+// region:fsmap-callbacks — FS-ACK tracker registry
+/**
+ * Generation-scoped FS-ACK trackers. The renderer posts
+ * `codesign:v1:fs_updated_ack` with `{ generationId, seq }`; we look up the
+ * tracker and resolve the matching waiter. Entries are removed when the
+ * generation's run ends (emitting `agent_end` or aborting).
+ */
+const fsAckTrackersByGeneration = new Map<string, FsAckTracker>();
+
+/** Idempotent: registers the IPC handler that routes renderer ACKs back to
+ *  the right per-generation tracker. Called once at boot. */
+function registerFsAckIpc(): void {
+  ipcMain.on('codesign:v1:fs_updated_ack', (_event, payload: unknown, generationIdRaw: unknown) => {
+    if (!isFsUpdatedAckV1(payload)) return;
+    if (typeof generationIdRaw !== 'string' || generationIdRaw.length === 0) return;
+    const tracker = fsAckTrackersByGeneration.get(generationIdRaw);
+    if (tracker === undefined) return;
+    tracker.ack(payload.seq);
+  });
+}
+// endregion:fsmap-callbacks
 
 const defaultUserDataDir = app.getPath('userData');
 const storageLocations = initStorageSettings(defaultUserDataDir);
@@ -290,6 +315,24 @@ function registerIpcHandlers(db: Database | null): void {
     const toolStartedAt = new Map<string, number>();
     const runtimeVerify = makeRuntimeVerifier();
 
+    // region:fsmap-callbacks — per-run FS-ACK tracker + instrumented fsMap
+    //
+    // The renderer acknowledges each `fs_updated` event by `seq` so main
+    // can flag dropped updates. Per W1: NO silent fallback — a timeout is
+    // logged via CoreLogger.warn and the run continues (the user will see
+    // the warning in the log and know the preview is out of sync).
+    const runCoreLogger = coreLoggerFor(id);
+    const ackTracker = createFsAckTracker({
+      logger: runCoreLogger,
+      timeoutMs: 2000,
+      generationId: id,
+    });
+    fsAckTrackersByGeneration.set(id, ackTracker);
+    // Collects in-flight ACK waiters so we can drain before the run's
+    // `agent_end` emits — keeps the timeout warns correlated to the run
+    // they belong to instead of leaking past it.
+    const pendingAcks: Array<Promise<void>> = [];
+
     // In-memory virtual FS for the text_editor tool. Scoped to this
     // generation — fresh Map per run. Seeded with the design's current
     // HTML under index.html so the agent can view/edit incrementally.
@@ -312,7 +355,17 @@ function registerIpcHandlers(db: Database | null): void {
     const fs = {
       view(path: string) {
         const content = fsMap.get(path);
-        if (content === undefined) return null;
+        if (content === undefined) {
+          // Surface the miss explicitly — silent null returns were masking
+          // agent bugs (wrong path, missing seed). Include the known paths
+          // so the log is diagnostic, not just "something was missing".
+          runCoreLogger.warn('agent.fs.view.unknown_path', {
+            generationId: id,
+            path,
+            knownPaths: [...fsMap.keys()].sort(),
+          });
+          return null;
+        }
         return { content, numLines: content.split('\n').length };
       },
       create(path: string, content: string) {
@@ -361,10 +414,20 @@ function registerIpcHandlers(db: Database | null): void {
     // channel as a `fs_updated` variant — single-channel keeps ordering with
     // tool_call_start/end. Skip emission when the run isn't tied to a design
     // (no preview pane to update).
+    //
+    // Each emission carries a monotonic `seq` (V1 ACK contract). We kick off
+    // an ACK-wait synchronously and collect the promise; pending waits are
+    // drained just before emitting `agent_end` so a timeout warn lands in
+    // the correct run's log context instead of leaking past it. Sync return
+    // is load-bearing — TextEditorFsCallbacks is a synchronous interface.
     function emitFsUpdated(path: string, content: string): void {
       if (designId === null) return;
-      sendEvent({ ...baseCtx, type: 'fs_updated', path, content });
+      const seq = ackTracker.nextSeq();
+      const fsUpdated: FsUpdatedV1 = { schemaVersion: 1, seq };
+      sendEvent({ ...baseCtx, type: 'fs_updated', path, content, seq: fsUpdated.seq });
+      pendingAcks.push(ackTracker.wait(seq));
     }
+    // endregion:fsmap-callbacks
 
     // Per-turn counters so we can emit a single summary line at turn_end
     // instead of a log per token delta.
@@ -462,6 +525,13 @@ function registerIpcHandlers(db: Database | null): void {
           // survives an app restart. Without this the next switchDesign() at
           // boot finds no snapshot and falls back to the empty welcome state.
           sendEvent({ ...baseCtx, type: 'agent_end' });
+          // Drain remaining FS-ACK waiters so a timeout warn still attaches
+          // to the run it belonged to. We don't block `agent_end` itself on
+          // this — the renderer is allowed to finalize its preview without
+          // waiting for the last ACK round-trip.
+          void Promise.allSettled(pendingAcks).finally(() => {
+            fsAckTrackersByGeneration.delete(id);
+          });
           return;
         }
       },
@@ -814,6 +884,17 @@ function registerIpcHandlers(db: Database | null): void {
       } finally {
         clearTimeoutGuard();
         inFlight.delete(id);
+        // region:fsmap-callbacks — teardown
+        // The agent_end branch of runGenerate's onEvent callback already
+        // drains + deletes on the happy path. This is a belt-and-braces
+        // cleanup for error / abort paths that never reach agent_end so
+        // we don't leak per-generation trackers.
+        const leakedTracker = fsAckTrackersByGeneration.get(id);
+        if (leakedTracker !== undefined) {
+          leakedTracker.abort();
+          fsAckTrackersByGeneration.delete(id);
+        }
+        // endregion:fsmap-callbacks
       }
     });
   });
@@ -1035,6 +1116,22 @@ void app.whenReady().then(async () => {
 
   try {
     initLogger();
+    // region:boot-init
+    // Prewarm the Claude CLI path once per process so provider calls never
+    // pay the `which claude` syscall on the hot path. Result is memoised
+    // inside @open-codesign/providers; null return means the CLI isn't
+    // installed — the provider call surfaces that as PROVIDER_AUTH_MISSING
+    // instead of blowing up on first use.
+    const bootLog = getLogger('main:boot');
+    const resolvedClaudePath = prewarmClaudeExecutable();
+    bootLog.info('claude-cli.prewarm', {
+      resolved: resolvedClaudePath !== null,
+      path: resolvedClaudePath ?? '<not-found>',
+    });
+    // Register the renderer→main FS-ACK channel so the per-generation
+    // trackers in runGenerate can resolve their bounded waits.
+    registerFsAckIpc();
+    // endregion:boot-init
     // Single-instance lock. Two simultaneous Electron instances would race
     // `cleanupStaleTmps` vs `writeAtomic` (B's cleanup unlinks A's in-flight
     // tmp → ENOENT rename) and collide on the SQLite WAL. macOS usually
