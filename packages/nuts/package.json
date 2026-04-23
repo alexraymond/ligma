@@ -1,0 +1,11 @@
+{
+  "name": "@ligma/nuts",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Network Utility Tool Set. Reserved for future provider diagnostics.",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit || true"
+  }
+}

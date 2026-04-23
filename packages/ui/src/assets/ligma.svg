@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Ligma placeholder logomark — two overlapping filled circles, right one dropped.
+
+  Canvas: 1024x1024. Maskable safe zone = circle of radius 410 (40% of 1024)
+  centered at (512, 512). Both circles fit entirely inside that safe zone so
+  the mark survives OS-level icon masking on iOS / Android / Windows.
+
+  Placeholder accent: muted teal #2EB5A8 (see packages/ui/src/tokens.css).
+  Real Ligma palette + mark arrives with the first human-led design pass.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-label="Ligma logo">
+  <title>Ligma</title>
+  <!-- Background: transparent so the OS can mask cleanly. -->
+  <!-- Left circle -->
+  <circle cx="422" cy="502" r="220" fill="#2EB5A8" />
+  <!-- Right circle, partially overlapping and dropped ~40px for subtle asymmetry -->
+  <circle cx="602" cy="552" r="220" fill="#2EB5A8" fill-opacity="0.72" />
+</svg>

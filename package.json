@@ -1,0 +1,55 @@
+{
+  "name": "ligma",
+  "version": "0.1.3",
+  "private": true,
+  "description": "Local-first AI design tool powered by Claude. Prompt to interactive prototype, slide deck, and marketing assets.",
+  "license": "MIT",
+  "homepage": "https://github.com/alexraymond/ligma",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexraymond/ligma.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alexraymond/ligma/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "prepare": "husky",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "test": "turbo run test",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "typecheck": "turbo run typecheck",
+    "format": "biome format --write .",
+    "docs:dev": "pnpm --filter ligma-website dev",
+    "docs:build": "pnpm --filter ligma-website build",
+    "docs:preview": "pnpm --filter ligma-website preview",
+    "smoke": "tsx scripts/smoke-models.ts",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build && changeset publish",
+    "ligma:pull": "git pull --rebase --autostash",
+    "ligma:push": "git push",
+    "ligma:release": "turbo run build && changeset publish"
+  },
+  "pnpm": {
+    "neverBuiltDependencies": ["better-sqlite3"]
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^2.27.11",
+    "@iarna/toml": "^2.2.5",
+    "@ligma/core": "workspace:*",
+    "@ligma/shared": "workspace:*",
+    "@types/node": "^22.10.2",
+    "acorn": "^8.14.0",
+    "husky": "^9.1.7",
+    "tsx": "^4.19.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  }
+}

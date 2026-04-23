@@ -1,0 +1,11 @@
+{
+  "name": "@ligma/deez",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Design Execution Environment Zones. Reserved for future sandbox topology work.",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit || true"
+  }
+}

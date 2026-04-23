@@ -1,0 +1,27 @@
+PackageIdentifier: alexraymond.Ligma
+PackageVersion: 0.1.2
+PackageLocale: en-US
+Publisher: alexraymond
+PublisherUrl: https://github.com/alexraymond
+PublisherSupportUrl: https://github.com/alexraymond/ligma/issues
+PackageName: Ligma
+PackageUrl: https://github.com/alexraymond/ligma
+License: MIT
+LicenseUrl: https://github.com/alexraymond/ligma/blob/main/LICENSE
+ShortDescription: Open-source desktop AI design tool — prompt to prototype, BYOK, local-first
+Description: |
+  Ligma turns natural-language prompts into HTML/JSX prototypes,
+  slide decks, and marketing assets. It runs entirely on your laptop with
+  whichever AI provider you already pay for (Anthropic, OpenAI, Gemini,
+  DeepSeek, or any OpenAI-compatible relay — including keyless
+  IP-allowlisted proxies).
+Moniker: ligma
+Tags:
+  - ai
+  - design
+  - electron
+  - open-source
+  - prototyping
+ReleaseNotesUrl: https://github.com/alexraymond/ligma/releases/tag/v0.1.2
+ManifestType: defaultLocale
+ManifestVersion: 1.6.0

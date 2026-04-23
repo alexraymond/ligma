@@ -1,0 +1,258 @@
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vitepress';
+import rootPkg from '../../package.json' with { type: 'json' };
+
+const SITE_ORIGIN = 'https://alexraymond.github.io';
+const SITE_BASE = '/ligma/';
+const SITE_URL = `${SITE_ORIGIN}${SITE_BASE}`;
+const OG_IMAGE = `${SITE_URL}og.svg`;
+const SOFTWARE_VERSION = (rootPkg as { version: string }).version;
+
+export default defineConfig({
+  title: 'Ligma',
+  titleTemplate: ':title — Ligma',
+  description:
+    'Open-source desktop AI design tool — the self-hosted alternative to Claude Design. Multi-model BYOK (Anthropic, OpenAI, Gemini, DeepSeek, Ollama), local-first.',
+  lang: 'en-US',
+
+  base: SITE_BASE,
+  cleanUrls: true,
+  lastUpdated: true,
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
+
+  head: [
+    ['link', { rel: 'icon', href: `${SITE_BASE}favicon.ico` }],
+    ['meta', { name: 'theme-color', content: '#c96442' }],
+    ['meta', { name: 'google-site-verification', content: 'c3cbbeaec5437546' }],
+    // Open Graph
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:site_name', content: 'Ligma' }],
+    ['meta', { property: 'og:title', content: 'Ligma — Open-Source AI Design Tool' }],
+    [
+      'meta',
+      {
+        property: 'og:description',
+        content:
+          'Open-source desktop AI design tool. A self-hosted alternative to Claude Design. Prompt to prototype, slide deck, or marketing asset. Multi-model BYOK, local-first.',
+      },
+    ],
+    ['meta', { property: 'og:image', content: OG_IMAGE }],
+    ['meta', { property: 'og:image:width', content: '1200' }],
+    ['meta', { property: 'og:image:height', content: '630' }],
+    ['meta', { property: 'og:url', content: SITE_URL }],
+    // Twitter / X
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:site', content: '@alexraymond' }],
+    ['meta', { name: 'twitter:title', content: 'Ligma — Open-Source AI Design Tool' }],
+    [
+      'meta',
+      {
+        name: 'twitter:description',
+        content: 'Open-source desktop AI design tool. BYOK, local-first. Runs on your laptop.',
+      },
+    ],
+    ['meta', { name: 'twitter:image', content: OG_IMAGE }],
+    // SEO keywords — natural density, not stuffed
+    [
+      'meta',
+      {
+        name: 'keywords',
+        content:
+          'open source AI design tool, Claude Design alternative, BYOK design app, local-first design generator, AI prototype generator, prompt to HTML, prompt to React component, ligma, multi-model design, Electron design app',
+      },
+    ],
+    ['meta', { name: 'robots', content: 'index,follow,max-image-preview:large' }],
+    ['meta', { name: 'author', content: 'alexraymond' }],
+    ['link', { rel: 'alternate', hreflang: 'en', href: SITE_URL }],
+    ['link', { rel: 'alternate', hreflang: 'x-default', href: SITE_URL }],
+    // JSON-LD — SoftwareApplication
+    [
+      'script',
+      { type: 'application/ld+json' },
+      JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: 'Ligma',
+        alternateName: 'ligma',
+        description:
+          'Open-source desktop AI design tool. The open-source alternative to Anthropic Claude Design. Prompt to interactive prototype, slide deck, and marketing assets. Multi-model BYOK, local-first.',
+        url: SITE_URL,
+        applicationCategory: 'DesignApplication',
+        operatingSystem: 'macOS, Windows, Linux',
+        softwareVersion: SOFTWARE_VERSION,
+        releaseNotes: `${SITE_URL}#whats-working-today`,
+        downloadUrl: 'https://github.com/alexraymond/ligma/releases',
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+          description: 'Free and open source. Bring your own API key (token cost only).',
+        },
+        codeRepository: 'https://github.com/alexraymond/ligma',
+        author: {
+          '@type': 'Organization',
+          name: 'alexraymond',
+          url: 'https://github.com/alexraymond',
+        },
+        keywords:
+          'Claude Design alternative, open source AI design, BYOK, local-first, Anthropic, Electron desktop app, prompt to prototype, React component generator, AI design tool',
+      }),
+    ],
+    // JSON-LD — FAQPage (helps AI answers and Google rich results)
+    [
+      'script',
+      { type: 'application/ld+json' },
+      JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: [
+          {
+            '@type': 'Question',
+            name: 'What is Ligma?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Ligma is an open-source desktop AI design tool that turns natural-language prompts into HTML prototypes, JSX/React components, slide decks, and marketing assets. It is the open-source alternative to Anthropic Claude Design and runs entirely on your laptop.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Is Ligma free?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Yes. Ligma is free to download and use. You bring your own API key for any supported model provider and pay only the token cost to that provider. There is no subscription, no cloud account, and no per-token surcharge from us.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Which AI models can I use with Ligma?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Anthropic Claude, OpenAI GPT, Google Gemini, DeepSeek, OpenRouter, SiliconFlow, local Ollama, and any OpenAI-compatible endpoint. Keyless (IP-allowlisted) corporate proxies are also supported.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Does Ligma send my data to the cloud?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'No. All designs, prompts, and configuration live on your machine — SQLite for history and encrypted TOML (via Electron safeStorage) for configuration. The only outbound network traffic is to the model provider you configure.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'How is Ligma different from Claude Design?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Ligma is open source, runs locally, supports any AI model via BYOK, ships twelve built-in design skill modules and fifteen demo prompts, imports your existing Claude Code or Codex config in one click, and exports to HTML, PDF, PPTX, ZIP, and Markdown. Claude Design is closed source, cloud-only, Anthropic-only, subscription-priced, and has limited export.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Which platforms are supported?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'macOS (Apple Silicon and Intel), Windows (x64 and arm64), and Linux (AppImage, .deb, .rpm). Heavy features like PDF and PPTX export are lazy-loaded.',
+            },
+          },
+        ],
+      }),
+    ],
+    // JSON-LD — Organization
+    [
+      'script',
+      { type: 'application/ld+json' },
+      JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'alexraymond',
+        url: 'https://github.com/alexraymond',
+        logo: `${SITE_URL}logo.png`,
+        sameAs: ['https://github.com/alexraymond', 'https://twitter.com/alexraymond'],
+      }),
+    ],
+  ],
+
+  sitemap: { hostname: SITE_URL },
+
+  transformPageData(pageData) {
+    const path = pageData.relativePath.replace(/index\.md$/, '').replace(/\.md$/, '');
+    const canonical = `${SITE_URL}${path}`;
+    pageData.frontmatter.head ??= [];
+    pageData.frontmatter.head.push(['link', { rel: 'canonical', href: canonical }]);
+  },
+
+  themeConfig: {
+    logo: { src: '/logo.png', alt: 'ligma' },
+
+    nav: [
+      { text: 'Home', link: '/' },
+      { text: 'Features', link: '/#features' },
+      { text: 'Quickstart', link: '/quickstart' },
+      {
+        text: 'Compare',
+        items: [
+          { text: 'vs Claude Design', link: '/claude-design-alternative' },
+          { text: 'vs v0 by Vercel', link: '/v0-alternative' },
+          { text: 'vs Lovable', link: '/lovable-alternative' },
+          { text: 'vs Bolt.new', link: '/bolt-alternative' },
+          { text: 'vs Figma AI', link: '/figma-ai-alternative' },
+        ],
+      },
+      { text: 'Architecture', link: '/architecture' },
+      { text: 'Roadmap', link: '/roadmap' },
+      {
+        text: 'Changelog',
+        link: 'https://github.com/alexraymond/ligma/blob/main/CHANGELOG.md',
+      },
+    ],
+
+    sidebar: [
+      {
+        text: 'Get started',
+        items: [
+          { text: 'Overview', link: '/' },
+          { text: 'Quickstart', link: '/quickstart' },
+        ],
+      },
+      {
+        text: 'Compare',
+        items: [
+          { text: 'vs Claude Design', link: '/claude-design-alternative' },
+          { text: 'vs v0 by Vercel', link: '/v0-alternative' },
+          { text: 'vs Lovable', link: '/lovable-alternative' },
+          { text: 'vs Bolt.new', link: '/bolt-alternative' },
+          { text: 'vs Figma AI', link: '/figma-ai-alternative' },
+        ],
+      },
+      {
+        text: 'Project',
+        items: [
+          { text: 'Architecture', link: '/architecture' },
+          { text: 'Roadmap', link: '/roadmap' },
+          {
+            text: 'Changelog',
+            link: 'https://github.com/alexraymond/ligma/blob/main/CHANGELOG.md',
+          },
+        ],
+      },
+    ],
+
+    socialLinks: [{ icon: 'github', link: 'https://github.com/alexraymond/ligma' }],
+
+    footer: {
+      message:
+        '<a href="https://github.com/alexraymond/ligma/blob/main/CONTRIBUTING.md">Contribute</a> · <a href="https://github.com/alexraymond/ligma/issues">Issues</a>',
+      copyright: '© 2026-present alexraymond',
+    },
+  },
+
+  locales: {
+    root: {
+      label: 'English',
+      lang: 'en',
+    },
+  },
+});

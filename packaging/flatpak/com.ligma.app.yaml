@@ -1,0 +1,53 @@
+# Flathub submission template — manual process; Flathub does not accept
+# auto-bumps via PR from external repos. When we cut a release:
+#   1. Fork flathub/flathub and create a branch `new-pr/com.ligma.app`.
+#   2. Copy this manifest there as `com.ligma.app.yaml`.
+#   3. Update `tag` + `commit` under `sources` to the new v*.*.* tag SHA.
+#   4. Update sha256 of the AppImage under `modules.sources` (the
+#      extra-data hash; use `sha256sum` on the AppImage).
+#   5. Open PR to flathub/flathub; respond to reviewer feedback in the PR.
+#
+# Docs: https://docs.flathub.org/docs/for-app-authors/submission
+app-id: com.ligma.app
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: '23.08'
+command: ligma
+separate-locales: false
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --socket=pulseaudio
+  - --share=network
+  - --device=dri
+  - --filesystem=home
+  - --filesystem=xdg-config/ligma:create
+  - --talk-name=org.freedesktop.Notifications
+modules:
+  - name: ligma
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 apply_extra /app/bin/apply_extra
+      - install -Dm755 ligma.sh /app/bin/ligma
+      - install -Dm644 com.ligma.app.desktop /app/share/applications/com.ligma.app.desktop
+      - install -Dm644 com.ligma.app.png /app/share/icons/hicolor/512x512/apps/com.ligma.app.png
+    sources:
+      - type: extra-data
+        filename: ligma.AppImage
+        url: https://github.com/alexraymond/ligma/releases/download/v0.1.3/ligma-0.1.3-x64.AppImage
+        sha256: 6d832e4568d02b4e3e0387d31218c6084c7ee2ee9af41ea5ccf819c10b771fba
+        size: 149590498
+      - type: script
+        dest-filename: apply_extra
+        commands:
+          - chmod +x ligma.AppImage
+          - ./ligma.AppImage --appimage-extract
+          - mv squashfs-root/* .
+          - rm ligma.AppImage
+      - type: script
+        dest-filename: ligma.sh
+        commands:
+          - 'exec zypak-wrapper /app/extra/ligma "$@"'

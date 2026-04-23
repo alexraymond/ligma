@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+set -e
+echo "Running pre-push checks (typecheck + lint)..."
+pnpm -r typecheck
+pnpm lint
+echo "Pre-push checks passed"

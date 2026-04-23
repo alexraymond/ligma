@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you reference Ligma in a paper, article, or product comparison, please cite it as below."
+type: software
+title: "Ligma"
+abstract: "Local-first AI design desktop app. Accepts natural-language prompts and produces HTML prototypes, PPTX slide decks, PDF one-pagers, and marketing assets. Claude Max subscription by default, BYO Anthropic key as fallback. MIT licensed."
+authors:
+  - name: "Ligma Contributors"
+repository-code: "https://github.com/alexraymond/ligma"
+url: "https://github.com/alexraymond/ligma"
+license: MIT
+version: "0.1.0"
+date-released: "2026-04-23"
+preferred-citation:
+  type: software
+  title: "Ligma: Local-First AI Design Tool"
+  authors:
+    - name: "Ligma Contributors"
+  year: 2026
+  repository-code: "https://github.com/alexraymond/ligma"
+  url: "https://github.com/alexraymond/ligma"
+  notes: "GitHub repository"
+keywords:
+  - "AI design"
+  - "Claude"
+  - "BYOK"
+  - "local-first"
+  - "Electron"
+  - "prototype generator"

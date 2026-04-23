@@ -1,0 +1,4 @@
+# Default reviewers for any change in the repository.
+# Members of @alexraymond/maintainers are auto-requested on every PR.
+
+* @alexraymond/maintainers
