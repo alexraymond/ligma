@@ -64,6 +64,7 @@ import { resolveActiveModel } from './provider-settings';
 import { cleanupStaleTmps } from './reported-fingerprints';
 import { resolveActiveApiKey, resolveApiKeyWithKeylessFallback } from './resolve-api-key';
 import { withRun } from './runContext';
+import { registerSessionIpc } from './session-ipc';
 import { pruneDiagnosticEvents, recordDiagnosticEvent, safeInitSnapshotsDb } from './snapshots-db';
 import { registerSnapshotsIpc, registerSnapshotsUnavailableIpc } from './snapshots-ipc';
 import { initStorageSettings } from './storage-settings';
@@ -1106,6 +1107,7 @@ void app.whenReady().then(async () => {
     registerLocaleIpc();
     registerConnectionIpc();
     registerOnboardingIpc();
+    registerSessionIpc();
     registerCodexOAuthIpc();
     registerClaudeCliIpc();
     registerPreferencesIpc();

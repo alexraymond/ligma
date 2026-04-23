@@ -18,6 +18,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@ligma/session": "workspace:*",
     "@open-codesign/artifacts": "workspace:*",
     "@open-codesign/core": "workspace:*",
     "@open-codesign/exporters": "workspace:*",
