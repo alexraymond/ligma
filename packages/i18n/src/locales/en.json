@@ -79,7 +79,8 @@
     "commentModeHint": "Click any element to comment",
     "runtimeError": "Preview runtime error",
     "dismissErrors": "Dismiss preview errors",
-    "zoom": "Zoom"
+    "zoom": "Zoom",
+    "resetZoom": "Reset zoom to 100%"
   },
   "tweaks": {
     "title": "Tweaks",

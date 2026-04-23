@@ -14,6 +14,7 @@ import { ErrorState } from '../preview/ErrorState';
 import { useCodesignStore } from '../store';
 import { CanvasErrorBar } from './CanvasErrorBar';
 import { CanvasTabBar } from './CanvasTabBar';
+import { CanvasViewport } from './canvas/CanvasViewport';
 import { FilesTabView } from './FilesTabView';
 import { PhoneFrame } from './PhoneFrame';
 import { PreviewToolbar } from './PreviewToolbar';
@@ -500,36 +501,40 @@ export function PreviewPane({ onPickStarter }: PreviewPaneProps) {
     // Pool slots stay mounted even when the current design has no preview —
     // background iframes for recently-visited designs keep their documents
     // alive for instant switch-back. EmptyState is overlaid in the same
-    // stacking context when the active design has no content yet.
+    // stacking context when the active design has no content yet. The
+    // CanvasViewport gives the canvas scroll + space-drag pan + ctrl-wheel
+    // zoom for large multi-artboard outputs (DESIGN_CANVAS pattern).
     body = (
-      <div className="relative h-full w-full">
-        {poolEntries.map((entry) => (
-          <PreviewSlot
-            key={entry.id}
-            designId={entry.id}
-            html={entry.html}
-            active={entry.id === currentDesignId}
-            viewport={previewViewport}
-            zoom={previewZoom}
-            showCommentUi={showCommentUi}
-            commentHintLabel={t('preview.commentModeHint')}
-            pinOverlay={pinOverlay}
-            interactionMode={interactionMode}
-            registerIframe={registerIframe}
-            onIframeError={pushIframeError}
-            onIframeLoaded={handleIframeLoaded}
-          />
-        ))}
-        {!activeHasHtml ? (
-          designHasContent ? (
-            <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-background)]">
-              <div className="w-[60%] max-w-[720px] aspect-[4/3] rounded-[var(--radius-lg)] bg-[linear-gradient(110deg,var(--color-background-secondary)_0%,rgba(0,0,0,0.03)_40%,var(--color-background-secondary)_80%)] animate-pulse" />
-            </div>
-          ) : (
-            <EmptyState onPickStarter={onPickStarter} />
-          )
-        ) : null}
-      </div>
+      <CanvasViewport>
+        <div className="relative h-full w-full">
+          {poolEntries.map((entry) => (
+            <PreviewSlot
+              key={entry.id}
+              designId={entry.id}
+              html={entry.html}
+              active={entry.id === currentDesignId}
+              viewport={previewViewport}
+              zoom={previewZoom}
+              showCommentUi={showCommentUi}
+              commentHintLabel={t('preview.commentModeHint')}
+              pinOverlay={pinOverlay}
+              interactionMode={interactionMode}
+              registerIframe={registerIframe}
+              onIframeError={pushIframeError}
+              onIframeLoaded={handleIframeLoaded}
+            />
+          ))}
+          {!activeHasHtml ? (
+            designHasContent ? (
+              <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-background)]">
+                <div className="w-[60%] max-w-[720px] aspect-[4/3] rounded-[var(--radius-lg)] bg-[linear-gradient(110deg,var(--color-background-secondary)_0%,rgba(0,0,0,0.03)_40%,var(--color-background-secondary)_80%)] animate-pulse" />
+              </div>
+            ) : (
+              <EmptyState onPickStarter={onPickStarter} />
+            )
+          ) : null}
+        </div>
+      </CanvasViewport>
     );
   }
 
