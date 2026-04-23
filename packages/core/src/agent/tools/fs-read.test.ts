@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { FsViewAckV1 } from '../_stub-ipc-types.js';
+import type { FsViewAckV1 } from '@ligma/shared';
 import { makeFsReadTool } from './fs-read.js';
 
 const ctx = { signal: new AbortController().signal };

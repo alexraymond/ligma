@@ -1,6 +1,6 @@
 /**
  * fs-write tool — delegates to the main process via the IPC-ACK
- * contract W1 is introducing at `packages/shared/src/ipc-ack.ts`.
+ * contract at `packages/shared/src/ipc-ack.ts` (`FsUpdatedAckV1`).
  *
  * Concurrency-safe: false. A write can race the same (or a different)
  * file so orchestration serializes these calls.
@@ -9,9 +9,7 @@
  * round-trip happens in production. In tests a fake map is fine.
  */
 
-// TODO(w1-integration): swap to `import type { FsUpdatedAckV1 } from
-//   '@ligma/shared';` once W1's shared module lands.
-import type { FsUpdatedAckV1 } from '../_stub-ipc-types.js';
+import type { FsUpdatedAckV1 } from '@ligma/shared';
 import type { Tool, ToolRunContext, ToolRunResult } from './index.js';
 
 export interface FsWriteInput {

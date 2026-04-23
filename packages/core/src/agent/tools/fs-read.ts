@@ -1,7 +1,6 @@
 /**
  * fs-read tool — delegates to the main process via the IPC-ACK contract
- * W1 is introducing at `packages/shared/src/ipc-ack.ts`. Until that
- * lands the stub at `../_stub-ipc-types.ts` keeps the shapes typed.
+ * at `packages/shared/src/ipc-ack.ts` (`FsViewAckV1`).
  *
  * The core package has no Electron dependency, so the main-process
  * bridge is injected as `ReadFile`. That keeps the tool testable in
@@ -11,10 +10,7 @@
  * Concurrency-safe: true. Read-only by contract.
  */
 
-// TODO(w1-integration): when W1 lands, replace this stub import with
-//   `import type { FsViewAckV1 } from '@ligma/shared';`
-// and delete packages/core/src/agent/_stub-ipc-types.ts.
-import type { FsViewAckV1 } from '../_stub-ipc-types.js';
+import type { FsViewAckV1 } from '@ligma/shared';
 import type { Tool, ToolRunContext, ToolRunResult } from './index.js';
 
 export interface FsReadInput {

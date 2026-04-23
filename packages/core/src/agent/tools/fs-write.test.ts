@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { FsUpdatedAckV1 } from '../_stub-ipc-types.js';
+import type { FsUpdatedAckV1 } from '@ligma/shared';
 import { makeFsWriteTool } from './fs-write.js';
 
 const ctx = { signal: new AbortController().signal };
