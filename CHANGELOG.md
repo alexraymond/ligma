@@ -24,6 +24,14 @@ First public release. Prompt-to-design desktop app targeting Claude Max subscrip
 - SDK-to-agent-events adapter (`packages/providers/src/claude-cli/sdk-to-agent-events.ts`) maps the Claude Code SDK stream onto `ProviderStreamItem` so the loop stays provider-agnostic.
 - Opt-in "Run with new loop (beta)" seam exposed from `@ligma/core` so the UI can drive end-to-end runs through the new path without retiring the legacy `generate()` entrypoint yet.
 
+### Session log
+
+- New `@ligma/session` package: append-only JSONL transcript at `~/.config/ligma/sessions/<id>/transcript.jsonl` with sibling entry types (`transcript`, `file_history_snapshot`, `custom_title`, `tool_use_summary`, `turn_done`), each carrying `schemaVersion: 1`.
+- Cursor-paginated reader (`fetchLatest`, `fetchOlder`) and forward-replay resume with truncated-last-line recovery and mid-stream corruption tolerance.
+- Content-addressed file-body blobs via SHA-256 fingerprints under `sessions/<id>/files/<hex>`; identical file versions across turns dedupe to one blob.
+- `fsync` on turn-boundary entries (`turn_done`, `custom_title`) only — others batch; a test seam lets the behavior be asserted without OS-level syscall instrumentation.
+- Main-process IPC handlers: `session:list`, `session:open`, `session:append`, `session:fetchOlder`.
+
 ### Rebrand
 
 - `com.ligma.app` Electron appId, `"Ligma"` productName, `~/.config/ligma/` config directory.
