@@ -59,3 +59,24 @@ export {
   type FsWriteInput,
   type WriteFile,
 } from './tools/fs-write.js';
+
+// ---------------------------------------------------------------------------
+// UI-facing seam. The `GenerateInput` shape in `packages/core/src/index.ts`
+// is owned by the monolith and W2 is not allowed to modify it. Instead,
+// this sidecar type declares the one new flag the UI needs to opt in to
+// the async-generator loop. Callers spread-merge this into their
+// existing GenerateInput before invoking the new path:
+//
+//   const input: GenerateInput & GenerateInputExtensions = { ..., useNewLoop: true };
+//
+// Default behaviour (`useNewLoop` unset or false) is the flat generate()
+// path, which keeps the "Run with new loop (beta)" button opt-in.
+// ---------------------------------------------------------------------------
+
+export interface GenerateInputExtensions {
+  /** When true, the UI requests the async-generator loop path instead
+   *  of the flat `generate()` call. The dispatcher reads this flag on
+   *  the same `GenerateInput` object the legacy path uses; leaving it
+   *  unset preserves bit-for-bit behaviour. */
+  useNewLoop?: boolean;
+}
