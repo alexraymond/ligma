@@ -10,6 +10,7 @@ import { ChatMessageList } from './chat/ChatMessageList';
 import { CommentChipBar } from './chat/CommentChipBar';
 import { EmptyState } from './chat/EmptyState';
 import { PromptInput, type PromptInputHandle } from './chat/PromptInput';
+import { FidelityChip } from './chat/FidelityChip';
 import { WorkspaceChip } from './chat/WorkspaceChip';
 
 export interface SidebarProps {
@@ -157,6 +158,7 @@ export function Sidebar({ prompt, setPrompt, onSubmit }: SidebarProps) {
           <CommentChipBar />
           <div className="flex flex-wrap gap-[8px]">
             <WorkspaceChip />
+            <FidelityChip />
           </div>
           <PromptInput
             ref={promptInputRef}

@@ -197,6 +197,8 @@ const api = {
     /** Virtual-FS path the generated artifact should write into.
      *  Defaults to 'index.html' in main when omitted. */
     targetFilePath?: string;
+    /** Per-generation fidelity preset. 'wireframe' | 'highFidelity' | undefined. */
+    fidelity?: 'wireframe' | 'highFidelity';
   }) =>
     ipcRenderer.invoke('codesign:v1:generate', {
       schemaVersion: 1,

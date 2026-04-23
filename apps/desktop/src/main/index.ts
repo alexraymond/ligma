@@ -822,6 +822,7 @@ function registerIpcHandlers(db: Database | null): void {
             ...(payload.useNewLoop === true ? { useNewLoop: true } : {}),
             ...(payload.workspace !== undefined ? { workspace: payload.workspace } : {}),
             ...(canUseTool !== undefined ? { canUseTool } : {}),
+            ...(payload.fidelity !== undefined ? { fidelity: payload.fidelity } : {}),
             signal: controller.signal,
             logger: coreLogger,
           },

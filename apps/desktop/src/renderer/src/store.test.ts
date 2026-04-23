@@ -584,6 +584,33 @@ describe('useCodesignStore previewZoom', () => {
     expect(useCodesignStore.getState().previewZoom).toBe(100);
   });
 });
+
+describe('useCodesignStore fidelity slice', () => {
+  it('starts empty (model picks)', () => {
+    expect(useCodesignStore.getState().fidelityByDesign).toEqual({});
+  });
+
+  it('sets fidelity per design', () => {
+    useCodesignStore.getState().setFidelity('d1', 'wireframe');
+    expect(useCodesignStore.getState().fidelityByDesign['d1']).toBe('wireframe');
+    useCodesignStore.getState().setFidelity('d1', 'highFidelity');
+    expect(useCodesignStore.getState().fidelityByDesign['d1']).toBe('highFidelity');
+  });
+
+  it('clears fidelity when passed null', () => {
+    useCodesignStore.getState().setFidelity('d2', 'wireframe');
+    useCodesignStore.getState().setFidelity('d2', null);
+    expect(useCodesignStore.getState().fidelityByDesign['d2']).toBeUndefined();
+  });
+
+  it('scopes fidelity per design id', () => {
+    useCodesignStore.getState().setFidelity('d3', 'wireframe');
+    useCodesignStore.getState().setFidelity('d4', 'highFidelity');
+    const state = useCodesignStore.getState();
+    expect(state.fidelityByDesign['d3']).toBe('wireframe');
+    expect(state.fidelityByDesign['d4']).toBe('highFidelity');
+  });
+});
 describe('useCodesignStore artifact persistence', () => {
   beforeAll(async () => {
     await initI18n('en');
