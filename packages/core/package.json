@@ -13,7 +13,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@mariozechner/pi-agent-core": "^0.67.68",
+    "@mariozechner/pi-agent-core": "^0.69.0",
     "@mariozechner/pi-ai": "^0.67.68",
     "@ligma/artifacts": "workspace:*",
     "@ligma/providers": "workspace:*",
