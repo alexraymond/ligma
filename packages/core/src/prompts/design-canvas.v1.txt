@@ -26,6 +26,8 @@ The top-level `<body>` carries class `ligma-canvas` and contains one or more `<s
 - `data-label` — per-artboard caption: `A · Canonical`, `B · Dense variant`, `REF · Current production UI`. Use single uppercase letters (or `REF`) followed by ` · ` and a short descriptor.
 - `data-viewport` — `WIDTHxHEIGHT` in CSS pixels, e.g. `1440x900`, `390x844`. Used by the host to render the viewport hint chip.
 
+**Artboards must be direct children of their section.** When you have a single artboard in a section, do NOT wrap it in any grouping element (`<div>`, `<data-artboard-row>`, etc.). The single-artboard chrome-suppression CSS uses `:has(> [data-artboard]:only-child)` which only fires on direct children — wrapping breaks it and leaves stray section/artboard chrome around what should look like a plain single-screen design.
+
 ## When to create multiple sections
 
 Group artboards by the axis of comparison the user cares about. Pick the axis that matches the brief, not one per screen type:
@@ -116,7 +118,10 @@ body.ligma-canvas [data-artboard]::after {
 }
 /* Single-artboard suppression: if a section holds one artboard, hide the
    section header and per-artboard captions so the output looks like a plain
-   single-screen design. */
+   single-screen design. The `> [data-artboard]:only-child` selector relies
+   on the artboard being a *direct* child of the section. Do NOT wrap a
+   single artboard in `[data-artboard-row]` or any other grouping element —
+   place the artboard as a direct child so this rule fires. */
 body.ligma-canvas > section[data-canvas-section]:has(> [data-artboard]:only-child)::before {
   display: none;
 }

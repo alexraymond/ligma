@@ -33,7 +33,6 @@ export function DesignSystemsTab() {
   const [systems, setSystems] = useState<DesignSystemRow[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const pushToast = useCodesignStore((s) => s.pushToast);
-  const pickDirectory = useCodesignStore((s) => s.pickWorkspaceDirectory);
 
   const refresh = useCallback(async () => {
     if (!window.codesign?.designSystems) {
@@ -55,11 +54,11 @@ export function DesignSystemsTab() {
   }, [refresh]);
 
   const scanNew = async () => {
-    const rootPath = window.prompt('Root path of the design system to scan (absolute path)', '');
-    if (!rootPath || rootPath.trim().length === 0) return;
-    if (!window.codesign?.designSystems) return;
+    if (!window.codesign?.workspace || !window.codesign?.designSystems) return;
+    const rootPath = await window.codesign.workspace.pickDirectory();
+    if (rootPath === null) return;
     try {
-      const row = await window.codesign.designSystems.scan(rootPath.trim());
+      const row = await window.codesign.designSystems.scan(rootPath);
       pushToast({
         variant: 'success',
         title: 'Design system scanned',
@@ -73,9 +72,6 @@ export function DesignSystemsTab() {
         description: err instanceof Error ? err.message : String(err),
       });
     }
-    // silence unused-lint on the picker hook — it's reserved for a later
-    // directory-picker upgrade.
-    void pickDirectory;
   };
 
   const onRename = async (row: DesignSystemRow) => {

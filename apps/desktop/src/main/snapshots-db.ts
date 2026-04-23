@@ -525,8 +525,8 @@ export function duplicateDesign(db: Database, sourceId: string, newName: string)
 
   const tx = db.transaction(() => {
     db.prepare(
-      'INSERT INTO designs (id, schema_version, name, created_at, updated_at, thumbnail_text, deleted_at) VALUES (?, 1, ?, ?, ?, ?, NULL)',
-    ).run(newId, trimmed, now, now, source.thumbnailText);
+      'INSERT INTO designs (id, schema_version, name, created_at, updated_at, thumbnail_text, deleted_at, design_system_id) VALUES (?, 1, ?, ?, ?, ?, NULL, ?)',
+    ).run(newId, trimmed, now, now, source.thumbnailText, source.designSystemId ?? null);
 
     const messages = db
       .prepare('SELECT * FROM design_messages WHERE design_id = ? ORDER BY ordinal ASC')
@@ -549,8 +549,8 @@ export function duplicateDesign(db: Database, sourceId: string, newName: string)
     const idMap = new Map<string, string>();
     const insertSnap = db.prepare(
       `INSERT INTO design_snapshots
-         (id, schema_version, design_id, parent_id, type, prompt, artifact_type, artifact_source, created_at, message)
-       VALUES (?, 1, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         (id, schema_version, design_id, parent_id, type, prompt, artifact_type, artifact_source, created_at, message, file_path)
+       VALUES (?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     );
     for (const s of snaps) {
       const cloneId = crypto.randomUUID();
@@ -566,6 +566,7 @@ export function duplicateDesign(db: Database, sourceId: string, newName: string)
         s.artifact_source,
         s.created_at,
         s.message,
+        s.file_path ?? 'index.html',
       );
     }
   });

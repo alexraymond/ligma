@@ -7,7 +7,7 @@
  * The `db` argument is injected so tests can pass an in-memory instance.
  */
 
-import { basename } from 'node:path';
+import { basename, isAbsolute, resolve } from 'node:path';
 import type { Design, DesignSystemRow } from '@ligma/shared';
 import { CodesignError } from '@ligma/shared';
 import type BetterSqlite3 from 'better-sqlite3';
@@ -37,6 +37,25 @@ function requireString(r: Record<string, unknown>, key: string): string {
   return v;
 }
 
+/** Defensive validation for any filesystem path crossing the IPC boundary
+ *  before being handed to a recursive scanner. The renderer should always
+ *  source these paths from `workspace:v1:pickDirectory` (a native dialog
+ *  the user explicitly approves), but we re-validate here so a compromised
+ *  renderer can't traverse the disk via `..` or relative segments. */
+function validateAbsolutePath(rootPath: string, channel: string): string {
+  if (!isAbsolute(rootPath)) {
+    throw new CodesignError(`${channel}: rootPath must be absolute`, 'IPC_BAD_INPUT');
+  }
+  const normalized = resolve(rootPath);
+  if (normalized !== rootPath) {
+    throw new CodesignError(
+      `${channel}: rootPath must be normalized (no '..' or trailing separators)`,
+      'IPC_BAD_INPUT',
+    );
+  }
+  return normalized;
+}
+
 export function registerDesignSystemsIpc(db: Database): void {
   ipcMain.handle('designSystems:v1:list', (_e: unknown, raw: unknown): DesignSystemRow[] => {
     if (typeof raw !== 'object' || raw === null) {
@@ -54,7 +73,7 @@ export function registerDesignSystemsIpc(db: Database): void {
       }
       const r = raw as Record<string, unknown>;
       requireSchemaV1(r, 'designSystems:v1:scan');
-      const rootPath = requireString(r, 'rootPath');
+      const rootPath = validateAbsolutePath(requireString(r, 'rootPath'), 'designSystems:v1:scan');
       const name =
         typeof r['name'] === 'string' && r['name'].trim().length > 0
           ? (r['name'] as string)
