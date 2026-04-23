@@ -105,6 +105,41 @@ const USE_AGENT_RUNTIME = (() => {
   return true;
 })();
 
+// region:window-chrome
+// Ligma window-chrome surface — title, About dialog, icon. This region is
+// owned by the UI reskin workstream. Boot/init and fsmap callbacks live in
+// their own regions elsewhere in this file; do not cross streams.
+const LIGMA_WINDOW_TITLE = 'Ligma';
+
+function applyLigmaWindowChrome(win: ElectronBrowserWindow): void {
+  // The renderer HTML sets `<title>Ligma</title>` but Electron re-syncs the
+  // BrowserWindow title from `webContents.title` on load, which can briefly
+  // flicker to the pre-load title. Setting it explicitly here before show is
+  // the belt-and-braces fix.
+  win.setTitle(LIGMA_WINDOW_TITLE);
+  win.webContents.on('page-title-updated', (event) => {
+    event.preventDefault();
+    win.setTitle(LIGMA_WINDOW_TITLE);
+  });
+}
+
+function registerLigmaAboutPanel(): void {
+  // macOS "About Ligma" uses the native panel; Windows/Linux fall back to
+  // a manual dialog via the Help menu if needed.
+  if (process.platform === 'darwin' && typeof app.setAboutPanelOptions === 'function') {
+    app.setAboutPanelOptions({
+      applicationName: LIGMA_WINDOW_TITLE,
+      applicationVersion: app.getVersion(),
+      version: app.getVersion(),
+      copyright: `© ${new Date().getFullYear()} Ligma`,
+    });
+  }
+  if (typeof app.setName === 'function') {
+    app.setName(LIGMA_WINDOW_TITLE);
+  }
+}
+// endregion:window-chrome
+
 function createWindow(): void {
   mainWindow = new BrowserWindow({
     width: 1280,
@@ -114,7 +149,10 @@ function createWindow(): void {
     autoHideMenuBar: process.platform !== 'darwin',
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     backgroundColor: BRAND.backgroundColor,
-    icon: join(__dirname, '../../resources/icon.png'),
+    // region:window-chrome
+    title: LIGMA_WINDOW_TITLE,
+    icon: join(__dirname, '../../resources/icons/ligma-512.png'),
+    // endregion:window-chrome
     show: false,
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs'),
@@ -123,6 +161,10 @@ function createWindow(): void {
       nodeIntegration: false,
     },
   });
+
+  // region:window-chrome
+  applyLigmaWindowChrome(mainWindow);
+  // endregion:window-chrome
 
   mainWindow.on('ready-to-show', () => mainWindow?.show());
   // Null the reference on close so stale IPC sends from async emitters
@@ -1112,6 +1154,9 @@ void app.whenReady().then(async () => {
     registerExporterIpc(() => mainWindow);
     registerDiagnosticsIpc(diagnosticsDb);
     setupAutoUpdater();
+    // region:window-chrome
+    registerLigmaAboutPanel();
+    // endregion:window-chrome
     registerAppMenu();
     createWindow();
     void scheduleStartupUpdateCheck();
