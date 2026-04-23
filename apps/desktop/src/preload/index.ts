@@ -156,9 +156,13 @@ export interface AgentStreamEvent {
   durationMs?: number;
   // fs_updated — emitted whenever the agent's text_editor mutates a file in the
   // virtual fs. Renderer uses this to re-render the iframe live during
-  // generation so the user can watch the design take shape.
+  // generation so the user can watch the design take shape. The `seq`
+  // identifies this update in the V1 ACK contract; renderer is expected to
+  // send `codesign:v1:fs_updated_ack` with the matching seq so main can
+  // detect dropped updates. See packages/shared/src/ipc-ack.ts.
   path?: string;
   content?: string;
+  seq?: number;
   // error
   message?: string;
   code?: string;
