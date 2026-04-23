@@ -131,6 +131,9 @@ export type GeneratePayload = z.infer<typeof GeneratePayload>;
 /** @deprecated Use GeneratePayloadV1. */
 export type LegacyGeneratePayload = GeneratePayload;
 
+export const ProjectFidelity = z.enum(['wireframe', 'highFidelity']);
+export type ProjectFidelity = z.infer<typeof ProjectFidelity>;
+
 export const GeneratePayloadV1 = z.object({
   schemaVersion: z.literal(1),
   prompt: z.string().min(1).max(32_000),
@@ -154,6 +157,10 @@ export const GeneratePayloadV1 = z.object({
    *  here so the resulting artifact lands in the correct file without
    *  clobbering siblings. */
   targetFilePath: z.string().min(1).optional(),
+  /** Per-generation fidelity preset. When set, `composeSystemPrompt`
+   *  injects a wireframe / high-fidelity rubric; when absent, the model
+   *  picks based on the brief. */
+  fidelity: ProjectFidelity.optional(),
   /** W2 golden-path beta — when true AND the active provider's wire is
    *  `claude-cli`, main routes the request through `generateViaNewLoop`
    *  (the async-generator agent loop) instead of the legacy flat
@@ -215,9 +222,6 @@ export const PROJECT_SCHEMA_VERSION = 1 as const;
 
 export const ProjectType = z.enum(['prototype', 'slideDeck', 'template', 'other']);
 export type ProjectType = z.infer<typeof ProjectType>;
-
-export const ProjectFidelity = z.enum(['wireframe', 'highFidelity']);
-export type ProjectFidelity = z.infer<typeof ProjectFidelity>;
 
 export const Project = z.object({
   schemaVersion: z.literal(PROJECT_SCHEMA_VERSION),

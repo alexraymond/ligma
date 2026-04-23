@@ -872,6 +872,76 @@ const MARKETING_FONT_HINT = `# Marketing typography hint
 
 Marketing / landing / case-study artifacts: prefer **Fraunces** (variable font, optical-size 9..144) for the display family — its 72pt+ optical size unlocks subtle character better than fixed-size DM Serif Display. Pair with **DM Sans** or **Geist** for body, and **JetBrains Mono** for any code / timestamp accents.`;
 
+const WIREFRAME_PRESET = `# Fidelity preset: wireframe
+
+The user selected **Wireframe** fidelity for this generation. Produce a deliberately low-fidelity layout that makes structure and hierarchy legible without committing to visual treatment. Think: what a product designer would sketch in the first 30 minutes to align on information architecture.
+
+## Palette
+
+Only three values:
+
+- Background: \`#f4f4f4\`
+- Surface / stroke: \`#ffffff\` with a hairline border \`1px solid #cfcfcf\`
+- Text: \`#1a1a1a\` for content, \`#7a7a7a\` for secondary / labels
+
+No accent color. No gradients. No shadows. No brand hues.
+
+## Typography
+
+A single sans-serif family: \`Inter\`, \`system-ui\`, \`sans-serif\`. Two weights (400, 600). Scale stays tight — \`text-sm\` through \`text-2xl\`. No display font.
+
+## Composition
+
+- Rectangles with hairline borders stand in for real UI: images become a \`<div>\` with a diagonal-line fill (\`background: repeating-linear-gradient(45deg, #e5e5e5 0 6px, transparent 6px 12px)\`) and a "1024×1024" label.
+- Buttons are outlined, not filled.
+- Cards are plain surfaces with a 1px border; no elevation.
+- Icons: simple 1.5px-stroke SVGs in \`#1a1a1a\`; avoid filled or colored glyphs.
+- Charts: line/bar at 1.5px stroke, grey only. Axes visible, labels present, no color encoding.
+
+## Content
+
+Use realistic domain-specific copy — wireframes are for structure, not for lorem ipsum. Numbers, names, dates should all feel plausible for the described product.
+
+## What to preserve
+
+The DESIGN_CANVAS wrapper (\`<body class="ligma-canvas">\`, \`<section data-canvas-section>\`, \`<article data-artboard>\`) is mandatory regardless of fidelity. So is the section/viewport labelling system. The wireframe styling applies **inside** each artboard, not to the canvas chrome.`;
+
+const HI_FIDELITY_PRESET = `# Fidelity preset: high fidelity
+
+The user selected **High fidelity** for this generation. Produce a polished, production-quality visual treatment — this is what they would hand a developer to implement as-is. Every choice (palette, type, spacing, motion) should feel deliberate and senior-level, not default.
+
+## Palette
+
+Build a real palette, not three greys:
+
+- Brand / accent color with at least one tonal pair (e.g. \`accent\` + \`accent-hover\` / \`accent-muted\`)
+- A neutral ramp with 4+ steps (background, surface, surface-elevated, border, text)
+- Use \`oklch()\` for saturation consistency; include \`/ alpha\` variants where transparency is load-bearing
+
+Every load-bearing value lives as a \`:root\` custom property (per OUTPUT_RULES).
+
+## Typography
+
+Pair two families deliberately — one for display (editorial / bold / geometric) and one for body (clean sans) — from the approved list in ANTI_SLOP. Ladder has four real steps (display · h1 · body · caption); no jumping levels.
+
+## Elevation + depth
+
+- Shadows: soft, layered (\`0 1px 2px + 0 8px 24px\`), not a single flat \`box-shadow\`.
+- Surfaces: at least two elevations so hierarchy reads without relying on color alone.
+- Dark themes: three distinct surface tones plus a gradient or glow (per CRAFT_DIRECTIVES).
+
+## Micro-interactions
+
+Hover, focus, and pressed states for every interactive element. Transitions ≤ 300ms; use \`ease-out\` / \`cubic-bezier(0.22, 1, 0.36, 1)\` for the expressive ones. No JS animation loops.
+
+## Content + imagery
+
+Invent specific, plausible content — real names, real numbers, dates that make sense for the described product. For imagery, use CSS gradient + SVG compositions that fit the brand, not hatched placeholder rectangles (that's for wireframes). Logos are constructed monograms or wordmarks per ANTI_SLOP.
+
+## What to preserve
+
+The DESIGN_CANVAS wrapper is mandatory. High fidelity applies **inside** each artboard — section labels + artboard captions stay in the neutral mono treatment the canvas stylesheet provides so the canvas itself always looks like a design-tool surface, not part of the design.`;
+
 const DESIGN_CANVAS = `# Canvas layout (required)
 
 Every HTML artifact is wrapped in a **canvas** — one or more labelled sections, each containing one or more **artboards**. The canvas is what the user pans and zooms over. Single-screen designs become a one-section / one-artboard canvas; multi-screen or multi-platform designs become several artboards side by side under a shared section heading.
@@ -1070,6 +1140,8 @@ export const PROMPT_SECTIONS: Record<string, string> = {
   antiSlopDigest: ANTI_SLOP_DIGEST,
   marketingFontHint: MARKETING_FONT_HINT,
   designCanvas: DESIGN_CANVAS,
+  wireframePreset: WIREFRAME_PRESET,
+  hiFidelityPreset: HI_FIDELITY_PRESET,
   safety: SAFETY,
 };
 
@@ -1090,6 +1162,8 @@ export const PROMPT_SECTION_FILES: Record<keyof typeof PROMPT_SECTIONS, string> 
   antiSlopDigest: 'anti-slop-digest.v1.txt',
   marketingFontHint: 'marketing-font-hint.v1.txt',
   designCanvas: 'design-canvas.v1.txt',
+  wireframePreset: 'wireframe-preset.v1.txt',
+  hiFidelityPreset: 'hi-fidelity-preset.v1.txt',
   safety: 'safety.v1.txt',
 };
 
@@ -1112,6 +1186,10 @@ export interface PromptComposeOptions {
   userPrompt?: string | undefined;
   /** Additional skill blobs to append (future extension point). */
   skills?: string[] | undefined;
+  /** Per-call fidelity preset. When set, a ~30-line preset is injected after
+   *  DESIGN_METHODOLOGY so the model commits to a specific visual fidelity
+   *  for this generation. Undefined lets the model pick (today's behavior). */
+  fidelity?: 'wireframe' | 'highFidelity' | undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -1159,11 +1237,32 @@ const KEYWORDS_LOGO = /\b(logo|brand|monogram)s?\b|品牌/i;
  * They are passed as untrusted user-role content in the message array to prevent
  * prompt injection attacks from adversarial codebase content.
  */
+function fidelityPreset(fidelity: PromptComposeOptions['fidelity']): string | null {
+  if (fidelity === 'wireframe') return WIREFRAME_PRESET;
+  if (fidelity === 'highFidelity') return HI_FIDELITY_PRESET;
+  return null;
+}
+
+/** Splice the chosen fidelity preset immediately after DESIGN_METHODOLOGY so it
+ *  sits next to the "start from the user's context" guidance. If
+ *  DESIGN_METHODOLOGY isn't present (progressive path can drop sections),
+ *  append the preset to the tail — still in front of `---` joiners. */
+function injectFidelity(sections: string[], fidelity: PromptComposeOptions['fidelity']): string[] {
+  const preset = fidelityPreset(fidelity);
+  if (!preset) return sections;
+  const idx = sections.indexOf(DESIGN_METHODOLOGY);
+  if (idx >= 0) {
+    return [...sections.slice(0, idx + 1), preset, ...sections.slice(idx + 1)];
+  }
+  return [...sections, preset];
+}
+
 export function composeSystemPrompt(opts: PromptComposeOptions): string {
-  const sections =
+  const baseSections =
     opts.userPrompt !== undefined && opts.mode === 'create'
       ? composeCreateProgressive(opts.userPrompt)
       : composeFull(opts.mode);
+  const sections = injectFidelity(baseSections, opts.fidelity);
 
   if (opts.skills?.length) {
     const header = [

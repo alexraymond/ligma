@@ -720,6 +720,7 @@ export async function generateViaAgent(
       mode: 'create',
       userPrompt: input.prompt,
       ...(skillResult.blobs.length > 0 ? { skills: skillResult.blobs } : {}),
+      ...(input.fidelity !== undefined ? { fidelity: input.fidelity } : {}),
     });
 
   const userContent = buildUserPromptWithContext(

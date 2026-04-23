@@ -1,0 +1,35 @@
+# Fidelity preset: high fidelity
+
+The user selected **High fidelity** for this generation. Produce a polished, production-quality visual treatment — this is what they would hand a developer to implement as-is. Every choice (palette, type, spacing, motion) should feel deliberate and senior-level, not default.
+
+## Palette
+
+Build a real palette, not three greys:
+
+- Brand / accent color with at least one tonal pair (e.g. `accent` + `accent-hover` / `accent-muted`)
+- A neutral ramp with 4+ steps (background, surface, surface-elevated, border, text)
+- Use `oklch()` for saturation consistency; include `/ alpha` variants where transparency is load-bearing
+
+Every load-bearing value lives as a `:root` custom property (per OUTPUT_RULES).
+
+## Typography
+
+Pair two families deliberately — one for display (editorial / bold / geometric) and one for body (clean sans) — from the approved list in ANTI_SLOP. Ladder has four real steps (display · h1 · body · caption); no jumping levels.
+
+## Elevation + depth
+
+- Shadows: soft, layered (`0 1px 2px + 0 8px 24px`), not a single flat `box-shadow`.
+- Surfaces: at least two elevations so hierarchy reads without relying on color alone.
+- Dark themes: three distinct surface tones plus a gradient or glow (per CRAFT_DIRECTIVES).
+
+## Micro-interactions
+
+Hover, focus, and pressed states for every interactive element. Transitions ≤ 300ms; use `ease-out` / `cubic-bezier(0.22, 1, 0.36, 1)` for the expressive ones. No JS animation loops.
+
+## Content + imagery
+
+Invent specific, plausible content — real names, real numbers, dates that make sense for the described product. For imagery, use CSS gradient + SVG compositions that fit the brand, not hatched placeholder rectangles (that's for wireframes). Logos are constructed monograms or wordmarks per ANTI_SLOP.
+
+## What to preserve
+
+The DESIGN_CANVAS wrapper is mandatory. High fidelity applies **inside** each artboard — section labels + artboard captions stay in the neutral mono treatment the canvas stylesheet provides so the canvas itself always looks like a design-tool surface, not part of the design.

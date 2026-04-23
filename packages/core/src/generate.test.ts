@@ -1337,6 +1337,41 @@ describe('composeSystemPrompt()', () => {
     expect(prompt).toContain('data-artboard');
   });
 
+  it('injects the WIREFRAME_PRESET when fidelity is wireframe', () => {
+    const prompt = composeSystemPrompt({ mode: 'create', fidelity: 'wireframe' });
+    expect(prompt).toContain('Fidelity preset: wireframe');
+    expect(prompt).not.toContain('Fidelity preset: high fidelity');
+  });
+
+  it('injects the HI_FIDELITY_PRESET when fidelity is highFidelity', () => {
+    const prompt = composeSystemPrompt({ mode: 'create', fidelity: 'highFidelity' });
+    expect(prompt).toContain('Fidelity preset: high fidelity');
+    expect(prompt).not.toContain('Fidelity preset: wireframe');
+  });
+
+  it('omits both presets when fidelity is undefined', () => {
+    const prompt = composeSystemPrompt({ mode: 'create' });
+    expect(prompt).not.toContain('Fidelity preset: wireframe');
+    expect(prompt).not.toContain('Fidelity preset: high fidelity');
+  });
+
+  it('places the fidelity preset next to the design methodology section', () => {
+    const prompt = composeSystemPrompt({ mode: 'create', fidelity: 'wireframe' });
+    const methIdx = prompt.indexOf('Design methodology');
+    const presetIdx = prompt.indexOf('Fidelity preset: wireframe');
+    expect(methIdx).toBeGreaterThan(-1);
+    expect(presetIdx).toBeGreaterThan(methIdx);
+  });
+
+  it('honors fidelity in progressive-disclosure create mode', () => {
+    const prompt = composeSystemPrompt({
+      mode: 'create',
+      userPrompt: 'landing page for a developer tool',
+      fidelity: 'highFidelity',
+    });
+    expect(prompt).toContain('Fidelity preset: high fidelity');
+  });
+
   it('revise mode does not include iOS frame starter template', () => {
     const prompt = composeSystemPrompt({ mode: 'revise' });
     expect(prompt).not.toContain('iOS frame starter');

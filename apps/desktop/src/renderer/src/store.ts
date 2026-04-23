@@ -473,6 +473,11 @@ interface CodesignState {
    *  that file instead of index.html. */
   currentFilePathByDesign: Record<string, string>;
   setCurrentFilePath: (designId: string, path: string) => void;
+  /** Per-design fidelity selection. Undefined = model picks based on
+   *  the brief (today's default). Set via the FidelityChip next to
+   *  WorkspaceChip in the Sidebar. Sent on the next generate payload. */
+  fidelityByDesign: Record<string, 'wireframe' | 'highFidelity' | undefined>;
+  setFidelity: (designId: string, fidelity: 'wireframe' | 'highFidelity' | null) => void;
 
   // Workspace + permissions (Claude Agent SDK scope + tool prompts)
   /** Per-design workspace settings cached in memory. Hydrated from main
@@ -1351,6 +1356,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
   activeCanvasTab: 0,
   filesRefreshCounter: 0,
   currentFilePathByDesign: {},
+  fidelityByDesign: {},
 
   recentEvents: [],
   unreadErrorCount: 0,
@@ -1562,6 +1568,9 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
         : null;
       const targetFilePath =
         (designIdAtStart && get().currentFilePathByDesign[designIdAtStart]) || 'index.html';
+      const fidelity = designIdAtStart
+        ? get().fidelityByDesign[designIdAtStart]
+        : undefined;
       await runGenerate(
         get,
         set,
@@ -1578,6 +1587,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
           ...(get().useNewLoop ? { useNewLoop: true } : {}),
           ...(workspace !== null ? { workspace } : {}),
           targetFilePath,
+          ...(fidelity !== undefined ? { fidelity } : {}),
         },
         designIdAtStart,
       );
@@ -2697,6 +2707,15 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     set((s) => ({
       currentFilePathByDesign: { ...s.currentFilePathByDesign, [designId]: path },
     }));
+  },
+
+  setFidelity(designId: string, fidelity: 'wireframe' | 'highFidelity' | null) {
+    set((s) => {
+      const next = { ...s.fidelityByDesign };
+      if (fidelity === null) delete next[designId];
+      else next[designId] = fidelity;
+      return { fidelityByDesign: next };
+    });
   },
 
   workspaceByDesign: {},

@@ -143,6 +143,12 @@ export interface GenerateInput {
    * call. Allows the host UI to async-prompt the user for allow/deny.
    */
   canUseTool?: PermissionCallback | undefined;
+  /**
+   * Per-request fidelity preset. Injected into the composed system prompt
+   * as a WIREFRAME_PRESET or HI_FIDELITY_PRESET block so this generation
+   * commits to a specific visual fidelity.
+   */
+  fidelity?: 'wireframe' | 'highFidelity' | undefined;
 }
 
 export interface ApplyCommentInput {
@@ -684,6 +690,7 @@ export async function generate(input: GenerateInput): Promise<GenerateOutput> {
           mode: 'create',
           userPrompt: input.prompt,
           ...(skillBlobs.length > 0 ? { skills: skillBlobs } : {}),
+          ...(input.fidelity !== undefined ? { fidelity: input.fidelity } : {}),
         }),
     },
     ...input.history,

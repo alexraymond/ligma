@@ -1,0 +1,33 @@
+# Fidelity preset: wireframe
+
+The user selected **Wireframe** fidelity for this generation. Produce a deliberately low-fidelity layout that makes structure and hierarchy legible without committing to visual treatment. Think: what a product designer would sketch in the first 30 minutes to align on information architecture.
+
+## Palette
+
+Only three values:
+
+- Background: `#f4f4f4`
+- Surface / stroke: `#ffffff` with a hairline border `1px solid #cfcfcf`
+- Text: `#1a1a1a` for content, `#7a7a7a` for secondary / labels
+
+No accent color. No gradients. No shadows. No brand hues.
+
+## Typography
+
+A single sans-serif family: `Inter`, `system-ui`, `sans-serif`. Two weights (400, 600). Scale stays tight — `text-sm` through `text-2xl`. No display font.
+
+## Composition
+
+- Rectangles with hairline borders stand in for real UI: images become a `<div>` with a diagonal-line fill (`background: repeating-linear-gradient(45deg, #e5e5e5 0 6px, transparent 6px 12px)`) and a "1024×1024" label.
+- Buttons are outlined, not filled.
+- Cards are plain surfaces with a 1px border; no elevation.
+- Icons: simple 1.5px-stroke SVGs in `#1a1a1a`; avoid filled or colored glyphs.
+- Charts: line/bar at 1.5px stroke, grey only. Axes visible, labels present, no color encoding.
+
+## Content
+
+Use realistic domain-specific copy — wireframes are for structure, not for lorem ipsum. Numbers, names, dates should all feel plausible for the described product.
+
+## What to preserve
+
+The DESIGN_CANVAS wrapper (`<body class="ligma-canvas">`, `<section data-canvas-section>`, `<article data-artboard>`) is mandatory regardless of fidelity. So is the section/viewport labelling system. The wireframe styling applies **inside** each artboard, not to the canvas chrome.
