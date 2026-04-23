@@ -228,7 +228,7 @@ function PreviewSlot({
   let body: React.ReactNode;
   if (isMobile) {
     body = (
-      <div className="min-h-full p-6 flex flex-col items-center justify-center overflow-auto">
+      <div className="min-h-full p-8 flex flex-col items-center justify-center overflow-auto">
         <div className="relative inline-flex">
           <PhoneFrame>{iframe}</PhoneFrame>
           {active ? pinOverlay : null}
@@ -237,7 +237,7 @@ function PreviewSlot({
     );
   } else if (viewport === 'tablet') {
     body = (
-      <div className="h-full p-6 flex flex-col items-center justify-start overflow-auto">
+      <div className="h-full p-8 flex flex-col items-center justify-start overflow-auto">
         <div
           className="relative"
           style={{
