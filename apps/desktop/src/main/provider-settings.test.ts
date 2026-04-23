@@ -1,9 +1,4 @@
-import {
-  BUILTIN_PROVIDERS,
-  CodesignError,
-  type Config,
-  hydrateConfig,
-} from '@ligma/shared';
+import { BUILTIN_PROVIDERS, CodesignError, type Config, hydrateConfig } from '@ligma/shared';
 import { describe, expect, it } from 'vitest';
 import {
   assertProviderHasStoredSecret,

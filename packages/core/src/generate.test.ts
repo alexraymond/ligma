@@ -10,9 +10,7 @@ const completeMock = vi.fn();
 const loadBuiltinSkillsMock = vi.fn(async (): Promise<LoadedSkill[]> => []);
 
 vi.mock('@ligma/providers', async () => {
-  const actual = await vi.importActual<typeof import('@ligma/providers')>(
-    '@ligma/providers',
-  );
+  const actual = await vi.importActual<typeof import('@ligma/providers')>('@ligma/providers');
   return {
     ...actual,
     complete: (...args: unknown[]) => completeMock(...args),

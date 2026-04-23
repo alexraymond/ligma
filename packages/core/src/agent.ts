@@ -22,13 +22,6 @@
  *     events directly via `onEvent`.
  */
 
-import {
-  Agent,
-  type AgentEvent,
-  type AgentMessage,
-  type AgentTool,
-} from '@mariozechner/pi-agent-core';
-import type { Message as PiAiMessage, Model as PiAiModel } from '@mariozechner/pi-ai';
 import { type ArtifactEvent, createArtifactParser } from '@ligma/artifacts';
 import type { RetryReason } from '@ligma/providers';
 import {
@@ -46,6 +39,13 @@ import {
   type WireApi,
   canonicalBaseUrl,
 } from '@ligma/shared';
+import {
+  Agent,
+  type AgentEvent,
+  type AgentMessage,
+  type AgentTool,
+} from '@mariozechner/pi-agent-core';
+import type { Message as PiAiMessage, Model as PiAiModel } from '@mariozechner/pi-ai';
 import type { TSchema } from '@sinclair/typebox';
 import { buildTransformContext } from './context-prune.js';
 import { remapProviderError } from './errors.js';

@@ -5,12 +5,7 @@
  * can bump version without touching snapshot or chat_messages callers.
  */
 
-import type {
-  CommentCreateInput,
-  CommentKind,
-  CommentRow,
-  CommentStatus,
-} from '@ligma/shared';
+import type { CommentCreateInput, CommentKind, CommentRow, CommentStatus } from '@ligma/shared';
 import { CodesignError, ERROR_CODES } from '@ligma/shared';
 import type BetterSqlite3 from 'better-sqlite3';
 import { ipcMain } from './electron-runtime';

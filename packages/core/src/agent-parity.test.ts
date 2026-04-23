@@ -13,16 +13,14 @@
  * toggleable and Workstream C must not assume byte-identical canvas output.
  */
 
-import type { AgentEvent, AgentMessage, AgentOptions } from '@mariozechner/pi-agent-core';
 import type { ModelRef } from '@ligma/shared';
+import type { AgentEvent, AgentMessage, AgentOptions } from '@mariozechner/pi-agent-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const completeMock = vi.fn();
 
 vi.mock('@ligma/providers', async () => {
-  const actual = await vi.importActual<typeof import('@ligma/providers')>(
-    '@ligma/providers',
-  );
+  const actual = await vi.importActual<typeof import('@ligma/providers')>('@ligma/providers');
   return {
     ...actual,
     complete: (...args: unknown[]) => completeMock(...args),

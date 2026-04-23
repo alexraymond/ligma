@@ -26,11 +26,7 @@ afterEach(async () => {
 
 describe('buildAppPaths', () => {
   it('returns file paths and their containing folders for config and logs', () => {
-    const paths = buildAppPaths(
-      '/tmp/ligma/config.toml',
-      '/tmp/ligma/logs/main.log',
-      '/tmp/ligma',
-    );
+    const paths = buildAppPaths('/tmp/ligma/config.toml', '/tmp/ligma/logs/main.log', '/tmp/ligma');
 
     expect(paths).toEqual({
       config: '/tmp/ligma/config.toml',

@@ -58,10 +58,7 @@ export async function exportZip(
     const indexPath = path.join(stagingDir, 'index.html');
     await fs.writeFile(indexPath, htmlContent, 'utf8');
 
-    const readme = README_TEMPLATE(
-      opts.readmeTitle ?? 'ligma export',
-      new Date().toISOString(),
-    );
+    const readme = README_TEMPLATE(opts.readmeTitle ?? 'ligma export', new Date().toISOString());
     const readmePath = path.join(stagingDir, 'README.md');
     await fs.writeFile(readmePath, readme, 'utf8');
 

@@ -1,9 +1,6 @@
 import { setLocale as applyLocale, getCurrentLocale, useT } from '@ligma/i18n';
 import type { OnboardingState, ReasoningLevel, WireApi } from '@ligma/shared';
-import {
-  PROVIDER_SHORTLIST as SHORTLIST,
-  isSupportedOnboardingProvider,
-} from '@ligma/shared';
+import { PROVIDER_SHORTLIST as SHORTLIST, isSupportedOnboardingProvider } from '@ligma/shared';
 import { Button } from '@ligma/ui';
 import {
   AlertCircle,

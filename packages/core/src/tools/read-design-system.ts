@@ -5,8 +5,8 @@
  * rather than paying the prompt-token cost every turn.
  */
 
-import type { AgentTool, AgentToolResult } from '@mariozechner/pi-agent-core';
 import type { StoredDesignSystem } from '@ligma/shared';
+import type { AgentTool, AgentToolResult } from '@mariozechner/pi-agent-core';
 import { Type } from '@sinclair/typebox';
 
 const ReadDesignSystemParams = Type.Object({});
