@@ -1313,6 +1313,30 @@ describe('composeSystemPrompt()', () => {
     expect(prompt).toContain('frames/iphone.html');
   });
 
+  it('create mode wraps artifacts in the canvas pattern (section + artboard attributes)', () => {
+    const prompt = composeSystemPrompt({ mode: 'create' });
+    expect(prompt).toContain('Canvas layout (required)');
+    expect(prompt).toContain('data-canvas-section');
+    expect(prompt).toContain('data-artboard');
+    expect(prompt).toContain('data-viewport');
+    expect(prompt).toContain('body.ligma-canvas');
+  });
+
+  it('revise mode keeps the canvas pattern so edits preserve wrapping structure', () => {
+    const prompt = composeSystemPrompt({ mode: 'revise' });
+    expect(prompt).toContain('Canvas layout (required)');
+    expect(prompt).toContain('data-canvas-section');
+  });
+
+  it('progressive create mode ships the canvas pattern to small-context models too', () => {
+    const prompt = composeSystemPrompt({
+      mode: 'create',
+      userPrompt: 'a brutalist editorial homepage about typography',
+    });
+    expect(prompt).toContain('Canvas layout (required)');
+    expect(prompt).toContain('data-artboard');
+  });
+
   it('revise mode does not include iOS frame starter template', () => {
     const prompt = composeSystemPrompt({ mode: 'revise' });
     expect(prompt).not.toContain('iOS frame starter');
@@ -1464,9 +1488,13 @@ describe('composeSystemPrompt() — progressive disclosure', () => {
     expect(p).toContain('Single-page structure ladder');
   });
 
-  it('regression guard: matched dashboard prompt stays under 25 KB', () => {
+  it('regression guard: matched dashboard prompt stays under 30 KB', () => {
+    // Ceiling raised from 25 KB when DESIGN_CANVAS joined LAYER_1_BASE — the
+    // always-on canvas block (structure + inline stylesheet) is ~4 KB and is
+    // deliberately shipped to every context size so the wrapping pattern
+    // applies even on small-context models.
     const p = composeSystemPrompt({ mode: 'create', userPrompt: '做个数据看板' });
-    expect(p.length).toBeLessThan(25_000);
+    expect(p.length).toBeLessThan(30_000);
   });
 
   it('mode tweak ignores userPrompt and returns the full tweak prompt', () => {
