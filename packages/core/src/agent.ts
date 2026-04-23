@@ -617,6 +617,16 @@ const AGENTIC_TOOL_GUIDANCE = [
 
 export type { AgentEvent };
 
+// ---------------------------------------------------------------------------
+// W2 — new async-generator agent loop. Exposed as a namespace so the
+// pre-existing `AgentEvent` re-export above continues to name
+// pi-agent-core's event type; the CC-style event schema lives at
+// `AgentLoop.AgentEvent`. Callers opt in via the `useNewLoop` flag
+// tracked in `AgentLoop.RunTurnOptions`.
+// ---------------------------------------------------------------------------
+
+export * as AgentLoop from './agent/index.js';
+
 export interface GenerateViaAgentDeps {
   /** Optional subscriber for Agent lifecycle + streaming events. */
   onEvent?: ((event: AgentEvent) => void) | undefined;
