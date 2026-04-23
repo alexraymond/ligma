@@ -640,8 +640,7 @@ const api = {
     },
     /** Resolve a pending permission request. Must include the original
      *  `requestId` from the matching `onRequest` event. */
-    respond: (decision: PermissionDecision) =>
-      ipcRenderer.send('permissions:v1:respond', decision),
+    respond: (decision: PermissionDecision) => ipcRenderer.send('permissions:v1:respond', decision),
   },
   workspace: {
     /** Returns the persisted workspace cwd / additional dirs for a design,
@@ -660,8 +659,7 @@ const api = {
       }) as Promise<{ ok: true }>,
     /** Open the native folder picker; resolves to the chosen absolute path
      *  or `null` on cancel. */
-    pickDirectory: () =>
-      ipcRenderer.invoke('workspace:v1:pickDirectory') as Promise<string | null>,
+    pickDirectory: () => ipcRenderer.invoke('workspace:v1:pickDirectory') as Promise<string | null>,
   },
 };
 

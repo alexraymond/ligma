@@ -230,9 +230,7 @@ function applyAdditiveMigrations(db: Database): void {
     db.exec(
       'ALTER TABLE designs ADD COLUMN design_system_id TEXT REFERENCES design_systems(id) ON DELETE SET NULL',
     );
-    db.exec(
-      'CREATE INDEX IF NOT EXISTS idx_designs_design_system_id ON designs(design_system_id)',
-    );
+    db.exec('CREATE INDEX IF NOT EXISTS idx_designs_design_system_id ON designs(design_system_id)');
   }
 
   // Comments v2 — add scope ('element'|'global') and parent_outer_html for
@@ -610,11 +608,7 @@ export function createSnapshot(db: Database, input: SnapshotCreateInput): Design
 /** Lists every snapshot of a design across all files. Optional `filePath`
  *  narrows the result to a single file's history — used by the per-tab
  *  snapshot timeline in the renderer. */
-export function listSnapshots(
-  db: Database,
-  designId: string,
-  filePath?: string,
-): DesignSnapshot[] {
+export function listSnapshots(db: Database, designId: string, filePath?: string): DesignSnapshot[] {
   if (filePath !== undefined) {
     return (
       db
@@ -1260,10 +1254,7 @@ export interface DesignSystemInsertInput {
   shadows: string[];
 }
 
-export function createDesignSystem(
-  db: Database,
-  input: DesignSystemInsertInput,
-): DesignSystemRow {
+export function createDesignSystem(db: Database, input: DesignSystemInsertInput): DesignSystemRow {
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
   db.prepare(
@@ -1287,17 +1278,13 @@ export function createDesignSystem(
     now,
     now,
   );
-  const row = db
-    .prepare('SELECT * FROM design_systems WHERE id = ?')
-    .get(id) as DesignSystemRowDb;
+  const row = db.prepare('SELECT * FROM design_systems WHERE id = ?').get(id) as DesignSystemRowDb;
   return rowToDesignSystem(row);
 }
 
 export function listDesignSystems(db: Database): DesignSystemRow[] {
   return (
-    db
-      .prepare('SELECT * FROM design_systems ORDER BY updated_at DESC')
-      .all() as DesignSystemRowDb[]
+    db.prepare('SELECT * FROM design_systems ORDER BY updated_at DESC').all() as DesignSystemRowDb[]
   ).map(rowToDesignSystem);
 }
 

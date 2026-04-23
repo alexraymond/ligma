@@ -14,11 +14,11 @@ import { ErrorState } from '../preview/ErrorState';
 import { useCodesignStore } from '../store';
 import { CanvasErrorBar } from './CanvasErrorBar';
 import { CanvasTabBar } from './CanvasTabBar';
-import { CanvasViewport } from './canvas/CanvasViewport';
 import { FilesTabView } from './FilesTabView';
 import { PhoneFrame } from './PhoneFrame';
 import { PreviewToolbar } from './PreviewToolbar';
 import { TweakPanel } from './TweakPanel';
+import { CanvasViewport } from './canvas/CanvasViewport';
 import { CommentBubble } from './comment/CommentBubble';
 import { PinOverlay } from './comment/PinOverlay';
 

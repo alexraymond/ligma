@@ -1,4 +1,4 @@
-import type { PointerEvent as ReactPointerEvent, ReactNode, WheelEvent } from 'react';
+import type { ReactNode, PointerEvent as ReactPointerEvent, WheelEvent } from 'react';
 import { useCallback, useEffect, useRef } from 'react';
 import { useCodesignStore } from '../../store';
 
@@ -32,7 +32,12 @@ export function CanvasViewport({ children }: CanvasViewportProps) {
   const setPreviewZoom = useCodesignStore((s) => s.setPreviewZoom);
   const ref = useRef<HTMLDivElement | null>(null);
   const spaceHeld = useRef(false);
-  const panning = useRef<{ startX: number; startY: number; scrollLeft: number; scrollTop: number } | null>(null);
+  const panning = useRef<{
+    startX: number;
+    startY: number;
+    scrollLeft: number;
+    scrollTop: number;
+  } | null>(null);
 
   // Track the Space key globally so pan-on-space works anywhere inside the
   // viewport. We attach to `window` because the preview iframes steal focus.

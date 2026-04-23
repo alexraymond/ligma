@@ -43,11 +43,11 @@ import {
   registerCodexOAuthIpc,
 } from './codex-oauth-ipc';
 import { registerCommentsIpc, registerCommentsUnavailableIpc } from './comments-ipc';
-import { registerDesignFilesIpc } from './design-files-ipc';
-import { registerDesignSystemsIpc } from './design-systems-ipc';
 import { configDir } from './config';
 import { registerConnectionIpc } from './connection-ipc';
+import { registerDesignFilesIpc } from './design-files-ipc';
 import { scanDesignSystem } from './design-system';
+import { registerDesignSystemsIpc } from './design-systems-ipc';
 import { registerDiagnosticsIpc } from './diagnostics-ipc';
 import { makeRuntimeVerifier } from './done-verify';
 import { BrowserWindow, app, clipboard, dialog, ipcMain, shell } from './electron-runtime';
@@ -66,9 +66,8 @@ import {
   setDesignSystem,
 } from './onboarding-ipc';
 import { isAllowedExternalUrl } from './open-external';
-import { readPersisted as readPreferences, registerPreferencesIpc } from './preferences-ipc';
 import { registerPermissionsIpc, requestPermission } from './permissions-ipc';
-import { registerWorkspaceIpc } from './workspace-ipc';
+import { readPersisted as readPreferences, registerPreferencesIpc } from './preferences-ipc';
 import { preparePromptContext } from './prompt-context';
 import { createProviderContextStore } from './provider-context';
 import { resolveActiveModel } from './provider-settings';
@@ -91,6 +90,7 @@ import {
   applyLigmaWindowChrome,
   registerLigmaAboutPanel,
 } from './window-chrome';
+import { registerWorkspaceIpc } from './workspace-ipc';
 // endregion:window-chrome
 
 // ESM shim: package.json "type": "module" means the built bundle is ESM and
@@ -846,8 +846,7 @@ function registerIpcHandlers(db: Database | null): void {
         // have no SDK tool loop here, so the callback would never fire.
         const canUseTool =
           senderWindow !== null && active.wire === 'claude-cli'
-            ? (req: PermissionRequest) =>
-                requestPermission(req, { window: senderWindow })
+            ? (req: PermissionRequest) => requestPermission(req, { window: senderWindow })
             : undefined;
         const result = await runGenerate(
           {

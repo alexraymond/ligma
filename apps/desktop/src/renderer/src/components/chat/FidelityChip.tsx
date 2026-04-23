@@ -19,9 +19,7 @@ const LABELS: Record<Fidelity, string> = {
  */
 export function FidelityChip() {
   const designId = useCodesignStore((s) => s.currentDesignId);
-  const fidelity = useCodesignStore((s) =>
-    designId ? s.fidelityByDesign[designId] : undefined,
-  );
+  const fidelity = useCodesignStore((s) => (designId ? s.fidelityByDesign[designId] : undefined));
   const setFidelity = useCodesignStore((s) => s.setFidelity);
 
   if (!designId) return null;

@@ -83,6 +83,7 @@ export function useDesignFiles(designId: string | null): UseDesignFilesResult {
     }
   }, [designId, designs, filesIpcAvailable, previewHtml]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: refreshCounter is the trigger — bumping it from outside (createCanvasFile, persistArtifactSnapshot) is the only way the hook learns that design_files rows changed without re-running the whole sendPrompt path.
   useEffect(() => {
     void refresh();
   }, [refresh, refreshCounter]);

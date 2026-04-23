@@ -11,6 +11,7 @@
 import type { DesignFile } from '@ligma/shared';
 import { CodesignError } from '@ligma/shared';
 import type BetterSqlite3 from 'better-sqlite3';
+import { ipcMain } from './electron-runtime';
 import {
   createDesignFile,
   deleteDesignFile,
@@ -18,7 +19,6 @@ import {
   renameDesignFile,
   viewDesignFile,
 } from './snapshots-db';
-import { ipcMain } from './electron-runtime';
 
 type Database = BetterSqlite3.Database;
 
