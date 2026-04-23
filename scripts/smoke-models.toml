@@ -26,7 +26,7 @@ text = "iOS 移动端 onboarding 三屏：欢迎、权限请求、登录。Liqui
 
 [[prompts]]
 name = "marketing_landing"
-text = "Landing page for an indie design tool called Open Codesign. Warm cream tones, editorial display serif (Fraunces), dense layout with hero / 3 feature blocks / pricing / FAQ / CTA."
+text = "Landing page for an indie design tool called Ligma. Warm cream tones, editorial display serif (Fraunces), dense layout with hero / 3 feature blocks / pricing / FAQ / CTA."
 
 [[prompts]]
 name = "settings"

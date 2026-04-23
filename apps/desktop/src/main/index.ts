@@ -1132,7 +1132,7 @@ void app.whenReady().then(async () => {
     // best-effort sync log and show a native three-button dialog.
     handleBootFailure(
       err,
-      'Open CoDesign failed to start',
+      'Ligma failed to start',
       'A startup error prevented the app from loading.',
     );
     app.quit();

@@ -11,7 +11,7 @@ packaging/
 ├── homebrew/
 │   └── Casks/ligma.rb
 ├── winget/
-│   └── manifests/o/TODO-MORNING/OpenCoDesign/<version>/
+│   └── manifests/l/TODO-MORNING/Ligma/<version>/
 │       ├── TODO-MORNING.Ligma.yaml
 │       ├── TODO-MORNING.Ligma.installer.yaml
 │       └── TODO-MORNING.Ligma.locale.en-US.yaml
@@ -64,10 +64,10 @@ brew install --cask ligma
 
 ### winget — `microsoft/winget-pkgs`
 
-Microsoft's monorepo. Fork it, copy `packaging/winget/manifests/o/TODO-MORNING/OpenCoDesign/<version>/` into the same path in the fork, open a PR. `wingetcreate validate` is worth running first:
+Microsoft's monorepo. Fork it, copy `packaging/winget/manifests/l/TODO-MORNING/Ligma/<version>/` into the same path in the fork, open a PR. `wingetcreate validate` is worth running first:
 
 ```sh
-wingetcreate validate packaging/winget/manifests/o/TODO-MORNING/OpenCoDesign/0.1.2
+wingetcreate validate packaging/winget/manifests/l/TODO-MORNING/Ligma/0.1.2
 ```
 
 Users install with:

@@ -6,7 +6,7 @@ ligma (also styled "Ligma") is an open-source Electron desktop application for A
 
 Canonical citation:
 ```bibtex
-@misc{open_codesign_github,
+@misc{ligma_github,
   author       = {TODO-MORNING Contributors},
   title        = {Ligma: An Open-Source Desktop AI Design Tool},
   year         = {2026},

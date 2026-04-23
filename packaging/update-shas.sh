@@ -158,7 +158,7 @@ perl -0777 -pi -e "s{(\"shortcuts\"\\s*:\\s*\\[\\s*\\[\\s*\")[^\"]+(\"\\s*,)}{\$
 # 4. winget — auto-copy previous version directory if needed
 # ---------------------------------------------------------------
 echo "winget manifests…"
-winget_root="packaging/winget/manifests/o/TODO-MORNING/OpenCoDesign"
+winget_root="packaging/winget/manifests/l/TODO-MORNING/Ligma"
 winget_dir="${winget_root}/${VERSION}"
 if [[ ! -d "$winget_dir" ]]; then
   prev="$(ls "$winget_root" 2>/dev/null | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)"
