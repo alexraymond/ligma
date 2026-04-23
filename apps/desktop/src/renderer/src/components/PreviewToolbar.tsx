@@ -23,6 +23,7 @@ export function PreviewToolbar(): ReactElement {
   const previewViewport = useCodesignStore((s) => s.previewViewport);
   const previewZoom = useCodesignStore((s) => s.previewZoom);
   const setPreviewZoom = useCodesignStore((s) => s.setPreviewZoom);
+  const resetPreviewView = useCodesignStore((s) => s.resetPreviewView);
   const interactionMode = useCodesignStore((s) => s.interactionMode);
   const setInteractionMode = useCodesignStore((s) => s.setInteractionMode);
   const [open, setOpen] = useState(false);
@@ -112,6 +113,16 @@ export function PreviewToolbar(): ReactElement {
         {t('preview.commentMode')}
       </button>
 
+      {previewZoom !== 100 && !disabled ? (
+        <button
+          type="button"
+          onClick={() => resetPreviewView()}
+          className="h-[26px] px-[8px] text-[11px] uppercase tracking-[var(--tracking-label)] text-[var(--color-text-muted)] hover:text-[var(--color-accent)] transition-colors"
+          aria-label={t('preview.resetZoom')}
+        >
+          Reset
+        </button>
+      ) : null}
       <div className="relative" ref={zoomRef}>
         <button
           type="button"

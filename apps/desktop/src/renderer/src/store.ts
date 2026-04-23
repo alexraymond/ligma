@@ -333,6 +333,9 @@ interface CodesignState {
   selectCanvasElement: (selection: SelectedElement) => void;
   clearCanvasElement: () => void;
   setPreviewZoom: (zoom: number) => void;
+  /** Reset the preview canvas to 100% zoom. Called by the CanvasViewport
+   *  reset chip and by the "fit to window" action. */
+  resetPreviewView: () => void;
   setInteractionMode: (mode: InteractionMode) => void;
 
   setTheme: (theme: Theme) => void;
@@ -1817,7 +1820,14 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
   },
 
   setPreviewZoom(zoom) {
-    set({ previewZoom: zoom });
+    // Clamp to the range the CanvasViewport honors so callers that add
+    // arbitrary deltas (ctrl+wheel) can't drift out of bounds.
+    const clamped = Math.min(400, Math.max(25, Math.round(zoom)));
+    set({ previewZoom: clamped });
+  },
+
+  resetPreviewView() {
+    set({ previewZoom: 100 });
   },
 
   setInteractionMode(mode) {

@@ -568,6 +568,21 @@ describe('useCodesignStore previewZoom', () => {
     useCodesignStore.getState().setPreviewZoom(150);
     expect(useCodesignStore.getState().previewZoom).toBe(150);
   });
+
+  it('clamps setPreviewZoom to the 25..400 range honored by CanvasViewport', () => {
+    const store = useCodesignStore.getState();
+    store.setPreviewZoom(1000);
+    expect(useCodesignStore.getState().previewZoom).toBe(400);
+    store.setPreviewZoom(-50);
+    expect(useCodesignStore.getState().previewZoom).toBe(25);
+    store.setPreviewZoom(100); // reset for later tests
+  });
+
+  it('resetPreviewView returns zoom to 100', () => {
+    useCodesignStore.getState().setPreviewZoom(175);
+    useCodesignStore.getState().resetPreviewView();
+    expect(useCodesignStore.getState().previewZoom).toBe(100);
+  });
 });
 describe('useCodesignStore artifact persistence', () => {
   beforeAll(async () => {
