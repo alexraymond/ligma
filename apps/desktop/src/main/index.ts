@@ -67,6 +67,13 @@ import { withRun } from './runContext';
 import { pruneDiagnosticEvents, recordDiagnosticEvent, safeInitSnapshotsDb } from './snapshots-db';
 import { registerSnapshotsIpc, registerSnapshotsUnavailableIpc } from './snapshots-ipc';
 import { initStorageSettings } from './storage-settings';
+// region:window-chrome
+import {
+  LIGMA_WINDOW_TITLE,
+  applyLigmaWindowChrome,
+  registerLigmaAboutPanel,
+} from './window-chrome';
+// endregion:window-chrome
 
 // ESM shim: package.json "type": "module" means the built bundle is ESM and
 // __dirname/__filename don't exist. Derive them from import.meta.url so the
@@ -104,41 +111,6 @@ const USE_AGENT_RUNTIME = (() => {
   if (raw === '0' || raw === 'false') return false;
   return true;
 })();
-
-// region:window-chrome
-// Ligma window-chrome surface — title, About dialog, icon. This region is
-// owned by the UI reskin workstream. Boot/init and fsmap callbacks live in
-// their own regions elsewhere in this file; do not cross streams.
-const LIGMA_WINDOW_TITLE = 'Ligma';
-
-function applyLigmaWindowChrome(win: ElectronBrowserWindow): void {
-  // The renderer HTML sets `<title>Ligma</title>` but Electron re-syncs the
-  // BrowserWindow title from `webContents.title` on load, which can briefly
-  // flicker to the pre-load title. Setting it explicitly here before show is
-  // the belt-and-braces fix.
-  win.setTitle(LIGMA_WINDOW_TITLE);
-  win.webContents.on('page-title-updated', (event) => {
-    event.preventDefault();
-    win.setTitle(LIGMA_WINDOW_TITLE);
-  });
-}
-
-function registerLigmaAboutPanel(): void {
-  // macOS "About Ligma" uses the native panel; Windows/Linux fall back to
-  // a manual dialog via the Help menu if needed.
-  if (process.platform === 'darwin' && typeof app.setAboutPanelOptions === 'function') {
-    app.setAboutPanelOptions({
-      applicationName: LIGMA_WINDOW_TITLE,
-      applicationVersion: app.getVersion(),
-      version: app.getVersion(),
-      copyright: `© ${new Date().getFullYear()} Ligma`,
-    });
-  }
-  if (typeof app.setName === 'function') {
-    app.setName(LIGMA_WINDOW_TITLE);
-  }
-}
-// endregion:window-chrome
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
