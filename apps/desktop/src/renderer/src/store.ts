@@ -457,6 +457,19 @@ interface CodesignState {
   closeCanvasTab: (index: number) => void;
   setActiveCanvasTab: (index: number) => void;
   resetCanvasTabs: () => void;
+  /** Create a new file in the current design's virtual FS and open it as
+   *  a canvas tab. Returns the normalized path the file was created at. */
+  createCanvasFile: (path: string, content?: string) => Promise<string | null>;
+  /** Counter bumped whenever something changes the design_files rows for
+   *  the current design — successful generation, create/rename/delete.
+   *  Hooks (e.g. `useDesignFiles`) subscribe to it to trigger re-fetches. */
+  filesRefreshCounter: number;
+  bumpFilesRefresh: () => void;
+  /** Active file path per design. Defaults to 'index.html'; changes when the
+   *  user clicks a different file tab so subsequent generations target
+   *  that file instead of index.html. */
+  currentFilePathByDesign: Record<string, string>;
+  setCurrentFilePath: (designId: string, path: string) => void;
 
   // Workspace + permissions (Claude Agent SDK scope + tool prompts)
   /** Per-design workspace settings cached in memory. Hydrated from main
@@ -711,15 +724,21 @@ interface PersistArtifact {
   content: string;
   prompt: string | null;
   message: string | null;
+  /** Virtual-FS path the artifact belongs to. Defaults to 'index.html'
+   *  when the caller doesn't track per-file state yet. */
+  filePath?: string;
 }
 
 function artifactFromResult(
   source: { type?: string; content: string } | undefined,
   prompt: string | null,
   message: string | null,
+  filePath?: string,
 ): PersistArtifact | null {
   if (!source) return null;
-  return { type: source.type, content: source.content, prompt, message };
+  const base: PersistArtifact = { type: source.type, content: source.content, prompt, message };
+  if (filePath !== undefined) base.filePath = filePath;
+  return base;
 }
 
 // Per-designId serialization queue. A single generate run reaches this
@@ -736,14 +755,16 @@ async function persistArtifactSnapshot(
 ): Promise<string | null> {
   if (!window.codesign) return null;
   const prior = snapshotPersistLocks.get(designId) ?? Promise.resolve();
+  const filePath = artifact.filePath ?? 'index.html';
   const run = prior.then(async () => {
     if (!window.codesign) return null;
-    const existing = await window.codesign.snapshots.list(designId);
+    const existing = await window.codesign.snapshots.list(designId, filePath);
     const parent = existing[0] ?? null;
     // Dedupe by content: the agent_end path and the generate-result path both
     // fire at the tail of a run and often hold identical html. Returning the
     // existing id avoids duplicate rows without making either caller aware of
-    // the other.
+    // the other. Scoped per file so edits on a new file don't collide with
+    // a stale index.html snapshot.
     if (parent !== null && parent.artifactSource === artifact.content) {
       return parent.id;
     }
@@ -754,8 +775,34 @@ async function persistArtifactSnapshot(
       prompt: artifact.prompt,
       artifactType: toSnapshotArtifactType(artifact.type),
       artifactSource: artifact.content,
+      filePath,
       ...(artifact.message ? { message: artifact.message } : {}),
     });
+    // Mirror the freshly-persisted HTML into the virtual FS so the Files
+    // panel and the canvas tab bar have a live view of every file the
+    // agent has produced. Failure here is non-fatal — the snapshot row
+    // above is the source of truth; the FS copy is a cache.
+    try {
+      if (window.codesign.files) {
+        await window.codesign.files.create(designId, filePath, artifact.content).catch(
+          async () => {
+            // Row already exists — fall back to the rename-then-replace
+            // dance via delete + create so `UNIQUE(design_id, path)`
+            // doesn't fire. In practice the text-editor tool keeps the
+            // row fresh during the run; this branch only trips on first
+            // generate of a new file.
+            await window.codesign?.files?.delete(designId, filePath);
+            await window.codesign?.files?.create(designId, filePath, artifact.content);
+          },
+        );
+      }
+    } catch (err) {
+      rendererLogger.warn('store', '[files] mirror failed', {
+        designId,
+        filePath,
+        message: err instanceof Error ? err.message : String(err),
+      });
+    }
     return created?.id ?? null;
   });
   snapshotPersistLocks.set(
@@ -971,9 +1018,12 @@ function applyGenerateSuccess(
     // (legacy paths).
     const designId = designIdAtStart ?? get().currentDesignId;
     if (designId) {
-      const artifact = artifactFromResult(firstArtifact, prompt, assistantMessage);
+      const targetPath = get().currentFilePathByDesign[designId] ?? 'index.html';
+      const artifact = artifactFromResult(firstArtifact, prompt, assistantMessage, targetPath);
       if (artifact !== null) {
-        void persistDesignState(get, designId, get().previewHtml, artifact);
+        void persistDesignState(get, designId, get().previewHtml, artifact).finally(() => {
+          get().bumpFilesRefresh();
+        });
       }
       // Sidebar v2: append chat rows for artifact delivery.
       // When agent runtime is active (tool_call rows exist), useAgentStream
@@ -1296,6 +1346,8 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
 
   canvasTabs: [FILES_TAB],
   activeCanvasTab: 0,
+  filesRefreshCounter: 0,
+  currentFilePathByDesign: {},
 
   recentEvents: [],
   unreadErrorCount: 0,
@@ -1505,6 +1557,8 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
       const workspace = designIdAtStart
         ? get().workspaceByDesign[designIdAtStart] ?? null
         : null;
+      const targetFilePath =
+        (designIdAtStart && get().currentFilePathByDesign[designIdAtStart]) || 'index.html';
       await runGenerate(
         get,
         set,
@@ -1520,6 +1574,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
           ...(get().previewHtml ? { previousHtml: get().previewHtml as string } : {}),
           ...(get().useNewLoop ? { useNewLoop: true } : {}),
           ...(workspace !== null ? { workspace } : {}),
+          targetFilePath,
         },
         designIdAtStart,
       );
@@ -1683,8 +1738,16 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
           kind: 'assistant_text',
           payload: { text: assistantText },
         });
-        const artifact = artifactFromResult(firstArtifact, userMessageText, assistantText);
-        void persistDesignState(get, designIdAtStart, get().previewHtml, artifact);
+        const targetPath = get().currentFilePathByDesign[designIdAtStart] ?? 'index.html';
+        const artifact = artifactFromResult(
+          firstArtifact,
+          userMessageText,
+          assistantText,
+          targetPath,
+        );
+        void persistDesignState(get, designIdAtStart, get().previewHtml, artifact).finally(() => {
+          get().bumpFilesRefresh();
+        });
       }
       if (rejectedUsageFields.length > 0) {
         const detail = rejectedUsageFields.join(', ');
@@ -2376,17 +2439,20 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     // message in the chat — that is what the agent was answering.
     const lastUser = [...state.chatMessages].reverse().find((m) => m.kind === 'user');
     const prompt = (lastUser?.payload as { text?: string } | undefined)?.text ?? null;
+    const targetPath = state.currentFilePathByDesign[designId] ?? 'index.html';
     const artifact: PersistArtifact = {
       type: 'html',
       content: html,
       prompt,
       message: finalText && finalText.length > 0 ? finalText : null,
+      filePath: targetPath,
     };
     try {
       const newSnapshotId = await persistArtifactSnapshot(designId, artifact);
       // Refresh the design list so the hub thumbnail / updated_at land on
       // disk for the next ensureCurrentDesign() boot.
       await get().loadDesigns();
+      get().bumpFilesRefresh();
       if (newSnapshotId && get().currentDesignId === designId) {
         set({ currentSnapshotId: newSnapshotId });
       }
@@ -2582,6 +2648,45 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
 
   resetCanvasTabs() {
     set({ canvasTabs: [FILES_TAB], activeCanvasTab: 0 });
+  },
+
+  async createCanvasFile(path: string, content = '') {
+    const designId = get().currentDesignId;
+    if (!designId || !window.codesign?.files) return null;
+    try {
+      const row = await window.codesign.files.create(designId, path, content);
+      set((s) => {
+        const result = openFileTab(s.canvasTabs, row.path);
+        return {
+          canvasTabs: result.tabs,
+          activeCanvasTab: result.index,
+          currentFilePathByDesign: {
+            ...s.currentFilePathByDesign,
+            [designId]: row.path,
+          },
+          filesRefreshCounter: s.filesRefreshCounter + 1,
+        };
+      });
+      return row.path;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      get().pushToast({
+        variant: 'error',
+        title: 'Could not create file',
+        description: message,
+      });
+      return null;
+    }
+  },
+
+  bumpFilesRefresh() {
+    set((s) => ({ filesRefreshCounter: s.filesRefreshCounter + 1 }));
+  },
+
+  setCurrentFilePath(designId: string, path: string) {
+    set((s) => ({
+      currentFilePathByDesign: { ...s.currentFilePathByDesign, [designId]: path },
+    }));
   },
 
   workspaceByDesign: {},

@@ -146,8 +146,13 @@ function parseSnapshotCreateInput(raw: unknown): SnapshotCreateInput {
   if (r['message'] !== undefined && typeof r['message'] !== 'string') {
     throw new CodesignError('message must be a string if provided', 'IPC_BAD_INPUT');
   }
+  if (r['filePath'] !== undefined) {
+    if (typeof r['filePath'] !== 'string' || r['filePath'].trim().length === 0) {
+      throw new CodesignError('filePath must be a non-empty string if provided', 'IPC_BAD_INPUT');
+    }
+  }
 
-  const base = {
+  const base: SnapshotCreateInput = {
     designId: r['designId'] as string,
     parentId: r['parentId'] as string | null,
     type: r['type'] as SnapshotCreateInput['type'],
@@ -155,9 +160,8 @@ function parseSnapshotCreateInput(raw: unknown): SnapshotCreateInput {
     artifactType: r['artifactType'] as SnapshotCreateInput['artifactType'],
     artifactSource: r['artifactSource'] as string,
   };
-  if (typeof r['message'] === 'string') {
-    return { ...base, message: r['message'] };
-  }
+  if (typeof r['message'] === 'string') base.message = r['message'];
+  if (typeof r['filePath'] === 'string') base.filePath = r['filePath'];
   return base;
 }
 
@@ -182,7 +186,11 @@ export function registerSnapshotsIpc(db: Database): void {
     if (typeof r['designId'] !== 'string' || r['designId'].trim().length === 0) {
       throw new CodesignError('designId must be a non-empty string', 'IPC_BAD_INPUT');
     }
-    return runDb('list', () => listSnapshots(db, r['designId'] as string));
+    const filePath =
+      typeof r['filePath'] === 'string' && r['filePath'].trim().length > 0
+        ? (r['filePath'] as string)
+        : undefined;
+    return runDb('list', () => listSnapshots(db, r['designId'] as string, filePath));
   });
 
   ipcMain.handle('snapshots:v1:get', (_e: unknown, raw: unknown): DesignSnapshot | null => {

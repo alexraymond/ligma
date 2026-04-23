@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import type { DesignFile } from '@ligma/shared';
+import { useCallback, useEffect, useState } from 'react';
 import { useCodesignStore } from '../store';
 
 export type DesignFileKind = 'html' | 'asset';
@@ -14,63 +15,83 @@ export interface UseDesignFilesResult {
   files: DesignFileEntry[];
   loading: boolean;
   backend: 'snapshots' | 'files-ipc';
+  refresh: () => Promise<void>;
 }
 
-// TODO: Workstream E — swap the implementation of this hook to call
-// `window.codesign.files.list(designId)` once the files-ipc namespace lands.
-// The hook signature (DesignFileEntry[]) stays stable, so consumers do not
-// change. Until then we derive a single virtual `index.html` file from the
-// latest snapshot in `design_snapshots`.
+function kindForPath(path: string): DesignFileKind {
+  return /\.(html?|jsx?|tsx?|svg)$/i.test(path) ? 'html' : 'asset';
+}
+
+function toEntry(file: DesignFile): DesignFileEntry {
+  return {
+    path: file.path,
+    kind: kindForPath(file.path),
+    updatedAt: file.updatedAt,
+    size: file.content.length,
+  };
+}
+
+/**
+ * Reads the design's virtual-FS rows via `files:v1:list` when the IPC
+ * namespace is registered, and otherwise synthesizes a single `index.html`
+ * entry from the current preview so callers that mount before IPC is up
+ * still render something. Refreshes on `previewHtml` changes and
+ * `filesRefreshCounter` bumps so successful generations show up
+ * immediately.
+ */
 export function useDesignFiles(designId: string | null): UseDesignFilesResult {
   const previewHtml = useCodesignStore((s) => s.previewHtml);
   const designs = useCodesignStore((s) => s.designs);
-  const [latestSnapshotAt, setLatestSnapshotAt] = useState<string | null>(null);
+  const refreshCounter = useCodesignStore((s) => s.filesRefreshCounter);
+  const [files, setFiles] = useState<DesignFileEntry[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+
   const filesIpcAvailable =
     typeof window !== 'undefined' &&
     Boolean((window.codesign as unknown as { files?: unknown })?.files);
 
-  // Look up the latest snapshot timestamp for the current design so the Files
-  // panel can show "N minutes ago" next to the sole `index.html` row. We
-  // debounce on designId + previewHtml so a fresh generation refreshes it.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: previewHtml is intentionally listed as a fresh-generation signal
-  useEffect(() => {
-    let cancelled = false;
+  const refresh = useCallback(async () => {
     if (!designId || !window.codesign) {
-      setLatestSnapshotAt(null);
+      setFiles([]);
+      return;
+    }
+    if (!filesIpcAvailable) {
+      if (previewHtml) {
+        const design = designs.find((d) => d.id === designId);
+        const updatedAt = design?.updatedAt ?? new Date().toISOString();
+        setFiles([
+          {
+            path: 'index.html',
+            kind: 'html',
+            updatedAt,
+            size: previewHtml.length,
+          },
+        ]);
+      } else {
+        setFiles([]);
+      }
       return;
     }
     setLoading(true);
-    window.codesign.snapshots
-      .list(designId)
-      .then((snaps) => {
-        if (cancelled) return;
-        setLatestSnapshotAt(snaps[0]?.createdAt ?? null);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setLatestSnapshotAt(null);
-      })
-      .finally(() => {
-        if (cancelled) return;
-        setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [designId, previewHtml]);
+    try {
+      const rows = await window.codesign.files.list(designId);
+      setFiles(rows.map(toEntry));
+    } catch {
+      setFiles([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [designId, designs, filesIpcAvailable, previewHtml]);
 
-  const files: DesignFileEntry[] = [];
-  if (designId && previewHtml) {
-    const design = designs.find((d) => d.id === designId);
-    const updatedAt = latestSnapshotAt ?? design?.updatedAt ?? new Date().toISOString();
-    files.push({ path: 'index.html', kind: 'html', updatedAt, size: previewHtml.length });
-  }
+  useEffect(() => {
+    void refresh();
+  }, [refresh, refreshCounter]);
 
   return {
     files,
     loading,
     backend: filesIpcAvailable ? 'files-ipc' : 'snapshots',
+    refresh,
   };
 }
 
