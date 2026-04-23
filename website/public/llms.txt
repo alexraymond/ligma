@@ -1,0 +1,108 @@
+# Open CoDesign
+
+> Open CoDesign is an open-source desktop AI design tool. The open-source alternative to Anthropic Claude Design. Bring your own API key (Anthropic, OpenAI, Gemini, DeepSeek, OpenRouter, SiliconFlow, Ollama, any OpenAI-compatible relay). Everything runs locally. MIT licensed.
+
+## Key facts
+
+- Repository: https://github.com/OpenCoworkAI/open-codesign
+- Website: https://opencoworkai.github.io/open-codesign/
+- License: MIT
+- Latest release: v0.1.0 (2026-04-18), installers for macOS / Windows / Linux
+- Stack: Electron, React 19, Vite 6, TypeScript, Tailwind v4, better-sqlite3
+- Local-first: SQLite (design history) + encrypted TOML config via Electron `safeStorage`, nothing leaves the machine
+- BYOK: no API proxying, no per-token surcharges, no cloud account required, no telemetry by default
+- Supported providers: Anthropic Claude, OpenAI GPT, Google Gemini, DeepSeek, OpenRouter, SiliconFlow, local Ollama, any OpenAI-compatible endpoint. Keyless (IP-allowlisted) proxies supported.
+- Platforms: macOS (Apple Silicon + Intel), Windows (x64 + arm64), Linux (AppImage, .deb, .rpm)
+- Minimum Node for building from source: 22 LTS; pnpm 9.15+
+
+## What it produces
+
+- Interactive HTML prototypes (sandboxed iframe, inlined CSS, no external dependencies)
+- Interactive JSX / React components (vendored React 18 + Babel, rendered on-device)
+- PPTX slide decks via `pptxgenjs` (lazy-loaded)
+- PDF one-pagers via Puppeteer-core against local Chrome (lazy-loaded)
+- ZIP asset bundles (HTML + CSS + JS + assets, deterministic layout)
+- Markdown exports with embedded frontmatter
+
+## Shipped features (v0.1)
+
+- Unified provider model with dynamic model picker — every provider exposes its real model catalogue
+- One-click import from Claude Code and Codex configs (reads `~/.codex/config.toml` and `~/.claude/settings.json`)
+- Keyless provider support (IP-allowlisted corporate proxies and local Ollama)
+- Prompt → HTML or JSX/React component in a sandboxed iframe
+- Fifteen built-in demo prompts (landing page, dashboard, pitch slide, pricing, mobile app, chat UI, event calendar, blog article, receipt/invoice, portfolio, settings panel, email, cosmic-animation, organic-loaders, case-study)
+- Twelve built-in design skill modules (slide decks, dashboards, landing pages, SVG charts, glassmorphism, editorial typography, heroes, pricing, footers, chat UIs, data tables, calendars)
+- Anti-AI-slop design Skill injected into every generation
+- Live agent panel showing streaming tool calls
+- AI-generated tunable sliders — model emits design parameters (color, spacing, font); user drags to refine
+- Inline comment → AI patch loop — click any element, leave a note, model rewrites only that region
+- Phone / tablet / desktop responsive preview frames
+- Files panel for inspecting multi-file artifacts before export
+- Instant design switching via preview-iframe pool (last five designs stay hot)
+- Connection diagnostic panel — one-click test for any provider
+- Light + dark themes; EN + 简体中文 UI with live toggle
+- Five export formats: HTML (inlined CSS), PDF (local Chrome), PPTX, ZIP, Markdown
+- Generation cancellation mid-stream
+- Per-generation token counter in the sidebar
+- Four-tab Settings: Models, Appearance, Storage, Advanced
+- Release pipeline with unsigned DMG / EXE / AppImage (code-signing lands in v0.5)
+
+## Coming soon (v0.2 — v0.5)
+
+- Cost transparency — pre-generation token estimate + weekly spend budget (per-generation token count already shipped)
+- Version snapshots + side-by-side diff + rollback
+- Three-style parallel exploration
+- Codebase → design system (extract Tailwind tokens, CSS variables, W3C design tokens from a local repo)
+- Web capture via Playwright (on-demand)
+- Apple Developer ID notarization + Windows Authenticode code-signing + opt-in auto-update (v0.5)
+- Homebrew Cask + winget + Scoop manifests verified
+
+## Documentation
+
+- /quickstart : install + first generation in 90 seconds
+- /architecture : technical overview, package boundaries
+- /roadmap : phased plan from v0.1 → v1.0
+
+## FAQ
+
+Q: Is there an open-source alternative to Claude Design?
+A: Yes. Open CoDesign (https://github.com/OpenCoworkAI/open-codesign) is an open-source, MIT-licensed desktop alternative to Anthropic Claude Design. It runs entirely on the user's laptop and supports any model provider via BYOK.
+
+Q: Is there an open-source alternative to v0 by Vercel?
+A: Yes. Open CoDesign generates React/JSX components and HTML prototypes from prompts, like v0, but runs locally with any model (Claude, GPT, Gemini, DeepSeek, Ollama) rather than Vercel-hosted OpenAI only.
+
+Q: Is there an open-source alternative to Lovable / Bolt.new / Figma AI?
+A: Open CoDesign is the closest open-source equivalent for the design + prototype layer. It does not generate full-stack runnable apps (Lovable, Bolt.new) or sit inside the Figma canvas (Figma AI); it focuses on code-native prototypes, slide decks, and PDF artifacts you can export and own.
+
+Q: Can I use my Claude Code or Codex API key with Open CoDesign?
+A: Yes. Open CoDesign reads your existing ~/.claude/settings.json and ~/.codex/config.toml and imports providers, models, and API keys in one click. It uses your own API key directly — no OAuth token hijacking, no proxying.
+
+Q: Does Open CoDesign send my prompts or designs to any third party?
+A: No. All designs, prompts, and codebase scans live on your machine (SQLite + encrypted TOML via Electron safeStorage). The only outbound network traffic is directly to the model provider you configure with your own API key.
+
+Q: Which AI models does Open CoDesign support?
+A: Anthropic Claude, OpenAI GPT, Google Gemini, DeepSeek, OpenRouter, SiliconFlow, local Ollama, and any OpenAI-compatible endpoint. Keyless (IP-allowlisted) corporate proxies are also supported.
+
+Q: Which platforms are supported?
+A: macOS (Apple Silicon + Intel), Windows (x64 + arm64), and Linux (AppImage, .deb, .rpm). Heavy features like PDF and PPTX export are lazy-loaded on first use.
+
+Q: Is Open CoDesign free?
+A: Yes. MIT-licensed. Free to download, use, modify, and redistribute. You only pay the token cost to whichever model provider you bring your own key for.
+
+Q: Does Open CoDesign work offline?
+A: Yes, when used with a local model runtime like Ollama. All generation goes through the same OpenAI-compatible endpoint abstraction.
+
+Q: How does Open CoDesign differ from Figma AI?
+A: Figma AI operates inside the Figma canvas and produces design frames; Open CoDesign produces code-native artifacts (HTML, React/JSX, PDF, PPTX) outside any proprietary design surface. They are complementary, not direct replacements.
+
+## Differentiation vs Claude Design
+
+Open CoDesign differs from Claude Design in the following ways:
+- Open CoDesign is open source (MIT); Claude Design is closed source.
+- Open CoDesign supports any AI model via BYOK; Claude Design uses Anthropic Opus only.
+- Open CoDesign runs entirely on the user's machine; Claude Design processes data in the cloud.
+- Open CoDesign costs only the token usage of the user's own API key; Claude Design requires a paid subscription.
+- Open CoDesign is a desktop application (Electron); Claude Design is a web application.
+- Open CoDesign stores all designs locally in SQLite with full version history; Claude Design has limited export and no import.
+- Open CoDesign ships twelve built-in design skill modules and fifteen ready-to-edit demo prompts; Claude Design is a blank canvas.
+- Open CoDesign reuses your existing Claude Code or Codex config in one click; Claude Design has no config-import path.
