@@ -872,6 +872,156 @@ const MARKETING_FONT_HINT = `# Marketing typography hint
 
 Marketing / landing / case-study artifacts: prefer **Fraunces** (variable font, optical-size 9..144) for the display family — its 72pt+ optical size unlocks subtle character better than fixed-size DM Serif Display. Pair with **DM Sans** or **Geist** for body, and **JetBrains Mono** for any code / timestamp accents.`;
 
+const DESIGN_CANVAS = `# Canvas layout (required)
+
+Every HTML artifact is wrapped in a **canvas** — one or more labelled sections, each containing one or more **artboards**. The canvas is what the user pans and zooms over. Single-screen designs become a one-section / one-artboard canvas; multi-screen or multi-platform designs become several artboards side by side under a shared section heading.
+
+## Body shape
+
+The top-level \`<body>\` carries class \`ligma-canvas\` and contains one or more \`<section data-canvas-section>\` blocks. Each section contains one or more \`<article data-artboard>\` blocks. Nothing else lives at the body level.
+
+\`\`\`html
+<body class="ligma-canvas">
+  <section data-canvas-section data-section-number="01" data-title="Main gameplay — every platform">
+    <article data-artboard data-label="A · Desktop web — 1440" data-viewport="1440x900">…</article>
+    <article data-artboard data-label="B · Mobile web — 390" data-viewport="390x844">…</article>
+    <article data-artboard data-label="C · iOS native — 402" data-viewport="402x874">…</article>
+    <article data-artboard data-label="D · Android native — 412" data-viewport="412x892">…</article>
+  </section>
+</body>
+\`\`\`
+
+## Attributes
+
+- \`data-canvas-section\` on every \`<section>\`. Required.
+- \`data-section-number\` — two-digit string: \`01\`, \`02\`, \`03\`. Increments across sections of a single file.
+- \`data-title\` — short human label, e.g. "Desktop gameplay — five directions", "Onboarding screens", "Dark / light pair".
+- \`data-artboard\` on every \`<article>\`. Required.
+- \`data-label\` — per-artboard caption: \`A · Canonical\`, \`B · Dense variant\`, \`REF · Current production UI\`. Use single uppercase letters (or \`REF\`) followed by \` · \` and a short descriptor.
+- \`data-viewport\` — \`WIDTHxHEIGHT\` in CSS pixels, e.g. \`1440x900\`, \`390x844\`. Used by the host to render the viewport hint chip.
+
+## When to create multiple sections
+
+Group artboards by the axis of comparison the user cares about. Pick the axis that matches the brief, not one per screen type:
+
+- **"every platform"** — desktop / mobile web / iOS / Android side by side in one section.
+- **"five directions"** — one section per exploration round (e.g. minimalist / bold / neutral) with variants in each.
+- **"before / after"** — reference artboard on the left, new design on the right, same section.
+- **"states"** — default / hover / loading / error / empty as siblings in one section.
+- **"flow"** — screen 1 → screen 2 → screen 3 left-to-right in one section.
+
+A second section is justified when you're switching axes. E.g. section 01 shows cross-platform parity; section 02 shows the five-direction exploration of the desktop cut. Don't start a new section per artboard.
+
+## Single artboard — chrome suppresses itself
+
+When a section has exactly one artboard, the section header (number + title) and the per-artboard caption chrome are hidden by CSS so the output looks identical to a non-canvas single-screen design. You still emit the wrapping tags — the CSS handles suppression. Never skip the wrapping structure; wrap everything.
+
+## Required stylesheet
+
+Include this stylesheet verbatim in a \`<style>\` block inside \`<head>\`. Do not modify it. Additional design styles live in your own rules below this block.
+
+\`\`\`css
+/* ligma-canvas — do not modify */
+body.ligma-canvas {
+  margin: 0;
+  padding: 40px;
+  background: #f5f5f0;
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+  min-height: 100vh;
+}
+body.ligma-canvas > section[data-canvas-section] {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+body.ligma-canvas > section[data-canvas-section]::before {
+  content: attr(data-section-number) "  ·  " attr(data-title);
+  display: block;
+  font: 500 11px/1 ui-monospace, "SF Mono", Menlo, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b6b6b;
+}
+body.ligma-canvas > section[data-canvas-section] > [data-artboard-row],
+body.ligma-canvas > section[data-canvas-section] {
+  --artboard-gap: 32px;
+}
+body.ligma-canvas > section[data-canvas-section] {
+  align-items: flex-start;
+}
+body.ligma-canvas section[data-canvas-section] {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min-content;
+  gap: var(--artboard-gap);
+  align-items: start;
+  justify-content: start;
+}
+body.ligma-canvas [data-artboard] {
+  position: relative;
+  display: block;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  width: max-content;
+}
+body.ligma-canvas [data-artboard]::before {
+  content: attr(data-label);
+  position: absolute;
+  top: -22px;
+  left: 0;
+  font: 500 10px/1 ui-monospace, "SF Mono", Menlo, monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  white-space: nowrap;
+}
+body.ligma-canvas [data-artboard]::after {
+  content: attr(data-viewport);
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  font: 500 10px/1 ui-monospace, "SF Mono", Menlo, monospace;
+  color: #b0b0b0;
+}
+/* Single-artboard suppression: if a section holds one artboard, hide the
+   section header and per-artboard captions so the output looks like a plain
+   single-screen design. */
+body.ligma-canvas > section[data-canvas-section]:has(> [data-artboard]:only-child)::before {
+  display: none;
+}
+body.ligma-canvas > section[data-canvas-section]:has(> [data-artboard]:only-child) > [data-artboard] {
+  border: none;
+  box-shadow: none;
+}
+body.ligma-canvas > section[data-canvas-section]:has(> [data-artboard]:only-child) > [data-artboard]::before,
+body.ligma-canvas > section[data-canvas-section]:has(> [data-artboard]:only-child) > [data-artboard]::after {
+  display: none;
+}
+/* Give section header breathing room from the artboards below it. */
+body.ligma-canvas > section[data-canvas-section] { padding-top: 24px; }
+body.ligma-canvas > section[data-canvas-section]:has(> [data-artboard]:only-child) { padding-top: 0; }
+\`\`\`
+
+## Artboard content
+
+Inside each \`<article data-artboard>\`, render the design at its **natural viewport size** — the artboard is a fixed-width frame, not a responsive container. Set explicit \`width\` and \`height\` on the artboard's inner wrapper matching \`data-viewport\`. Responsive behavior goes inside the artboard (e.g. a mobile artboard renders the mobile breakpoint of the same design); the canvas itself does not collapse or stack.
+
+When there are multiple artboards in a section, their combined width can exceed the user's viewport — that is expected. The host's pan/zoom viewport handles overflow.
+
+## Checklist before emitting
+
+- \`<body class="ligma-canvas">\` — present.
+- At least one \`<section data-canvas-section>\` with \`data-section-number\` and \`data-title\`.
+- At least one \`<article data-artboard>\` per section with \`data-label\` and \`data-viewport\`.
+- The canvas stylesheet block is present verbatim.
+- No content lives directly under \`<body>\` outside a section.
+- Each artboard's inner content is sized to its declared viewport.`;
+
 // Split CRAFT_DIRECTIVES into a Map<subsectionName, "## name\n\nbody"> so the
 // progressive-disclosure composer can include only the subsections relevant to
 // the user's prompt. The intro paragraph (everything before the first `## `)
@@ -919,6 +1069,7 @@ export const PROMPT_SECTIONS: Record<string, string> = {
   antiSlop: ANTI_SLOP,
   antiSlopDigest: ANTI_SLOP_DIGEST,
   marketingFontHint: MARKETING_FONT_HINT,
+  designCanvas: DESIGN_CANVAS,
   safety: SAFETY,
 };
 
@@ -938,6 +1089,7 @@ export const PROMPT_SECTION_FILES: Record<keyof typeof PROMPT_SECTIONS, string> 
   antiSlop: 'anti-slop.v1.txt',
   antiSlopDigest: 'anti-slop-digest.v1.txt',
   marketingFontHint: 'marketing-font-hint.v1.txt',
+  designCanvas: 'design-canvas.v1.txt',
   safety: 'safety.v1.txt',
 };
 
@@ -1030,6 +1182,7 @@ function composeFull(mode: PromptComposeOptions['mode']): string[] {
     IDENTITY,
     WORKFLOW,
     OUTPUT_RULES,
+    DESIGN_CANVAS,
     DESIGN_METHODOLOGY,
     ARTIFACT_TYPES,
     PRE_FLIGHT,
@@ -1060,6 +1213,7 @@ const LAYER_1_BASE: readonly string[] = [
   IDENTITY,
   WORKFLOW,
   OUTPUT_RULES,
+  DESIGN_CANVAS,
   DESIGN_METHODOLOGY,
   PRE_FLIGHT,
   EDITMODE_PROTOCOL,
