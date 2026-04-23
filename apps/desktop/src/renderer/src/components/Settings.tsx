@@ -2094,10 +2094,7 @@ function AdvancedTab() {
         />
       </Row>
 
-      <Row
-        label={t('settings.advanced.useNewLoop')}
-        hint={t('settings.advanced.useNewLoopHint')}
-      >
+      <Row label={t('settings.advanced.useNewLoop')} hint={t('settings.advanced.useNewLoopHint')}>
         <input
           type="checkbox"
           checked={useNewLoop}

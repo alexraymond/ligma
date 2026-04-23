@@ -20,7 +20,7 @@ vi.mock('@ligma/providers', async () => {
 });
 
 import { streamViaClaudeCli } from '@ligma/providers';
-import { generateViaNewLoop, type NewLoopStreamEvent } from './generate-via-new-loop.js';
+import { type NewLoopStreamEvent, generateViaNewLoop } from './generate-via-new-loop.js';
 import type { GenerateInput } from './index.js';
 
 type ProviderItem =

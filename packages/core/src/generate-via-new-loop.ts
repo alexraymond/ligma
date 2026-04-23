@@ -24,7 +24,7 @@
  *     branches than a clean split.
  */
 
-import { streamViaClaudeCli, adaptSdkStreamToProviderTurn } from '@ligma/providers';
+import { adaptSdkStreamToProviderTurn, streamViaClaudeCli } from '@ligma/providers';
 import { CodesignError, ERROR_CODES } from '@ligma/shared';
 import { ToolRegistry, runTurn } from './agent/index.js';
 import type { AgentEvent as NewLoopAgentEvent } from './agent/index.js';
@@ -138,10 +138,7 @@ export async function generateViaNewLoop(
   // a single user turn with the prior history prepended.
   const streamOpts: Parameters<typeof streamViaClaudeCli>[0] = {
     modelId: input.model.modelId,
-    messages: [
-      ...input.history,
-      { role: 'user', content: input.prompt.trim() },
-    ],
+    messages: [...input.history, { role: 'user', content: input.prompt.trim() }],
     // v1: no tools. v2 populates this from the MCP bridge.
     allowedTools: [],
   };
@@ -247,7 +244,9 @@ function translateEvent(
   // extends the renderer to display them.
 }
 
-function mapStopReason(stopReason: 'stop' | 'aborted' | 'max_turns' | 'error'): 'success' | 'aborted' | 'error' {
+function mapStopReason(
+  stopReason: 'stop' | 'aborted' | 'max_turns' | 'error',
+): 'success' | 'aborted' | 'error' {
   if (stopReason === 'stop') return 'success';
   if (stopReason === 'aborted') return 'aborted';
   return 'error';
