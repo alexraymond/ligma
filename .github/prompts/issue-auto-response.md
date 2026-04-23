@@ -1,4 +1,4 @@
-# Open CoDesign Issue Response Assistant
+# Ligma Issue Response Assistant
 
 Respond to newly opened GitHub issues with accurate, helpful initial responses.
 
@@ -19,11 +19,11 @@ gh issue view "$issue_number" -R "$repo" --json number,title,body,labels,author,
 Exit immediately if any:
 - Issue body is empty/whitespace only
 - Has label: `duplicate`, `spam`, or `bot-skip`
-- Already has a comment containing `*open-codesign Bot*`
+- Already has a comment containing `*ligma Bot*`
 
 ## Project Context
 
-Open CoDesign is an open-source AI design tool — Electron desktop app that turns prompts into HTML prototypes, slide decks, and marketing assets. Multi-model via `pi-ai`, BYOK, local-first.
+Ligma is an open-source AI design tool — Electron desktop app that turns prompts into HTML prototypes, slide decks, and marketing assets. Multi-model via `pi-ai`, BYOK, local-first.
 
 **Stack:** Electron 33+, React 19, TypeScript, Vite 6, Tailwind v4, better-sqlite3, pnpm + Turborepo, Biome.
 
@@ -66,7 +66,7 @@ Key docs: `CLAUDE.md`, `README.md`, `docs/VISION.md`, `docs/PRINCIPLES.md`, `doc
 
 ---
 
-*open-codesign Bot*
+*ligma Bot*
 ```
 
 ## Post to GitHub (MANDATORY)

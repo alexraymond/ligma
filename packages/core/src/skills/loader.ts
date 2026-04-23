@@ -262,7 +262,7 @@ export async function loadSkillsFromDir(
 
 export interface LoadAllSkillsOptions {
   builtinDir: string;
-  /** ~/.config/open-codesign/skills */
+  /** ~/.config/ligma/skills */
   userDir?: string | undefined;
   /** <project>/.codesign/skills */
   projectDir?: string | undefined;

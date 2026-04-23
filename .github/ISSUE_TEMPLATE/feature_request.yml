@@ -6,10 +6,10 @@ body:
   - type: markdown
     attributes:
       value: |
-        **Before filing:** search [existing issues](https://github.com/OpenCoworkAI/open-codesign/issues) and read
+        **Before filing:** search [existing issues](https://github.com/TODO-MORNING/ligma/issues) and read
         [`docs/VISION.md`](../blob/main/docs/VISION.md) and [`docs/ROADMAP.md`](../blob/main/docs/ROADMAP.md).
         If your idea contradicts a locked decision or anti-goal, open a
-        [Discussion](https://github.com/OpenCoworkAI/open-codesign/discussions) instead.
+        [Discussion](https://github.com/TODO-MORNING/ligma/discussions) instead.
 
   - type: textarea
     id: problem
@@ -55,7 +55,7 @@ body:
     attributes:
       label: Hard-constraints check
       description: >
-        Open CoDesign has a set of non-negotiable constraints (no bundled runtimes,
+        Ligma has a set of non-negotiable constraints (no bundled runtimes,
         BYOK only, local-first storage, MIT-compatible licenses, lazy-loaded heavy features).
         Please confirm you have reviewed them.
       options:

@@ -6,7 +6,7 @@
  * lands, the maintainer registers these handlers from `index.ts` and exposes them
  * via the preload bridge under `window.electronAPI.locale.{getSystem,getCurrent,set}`.
  *
- * Persistence is in its own file (`~/.config/open-codesign/locale.json`) so user
+ * Persistence is in its own file (`~/.config/ligma/locale.json`) so user
  * language can be read before the TOML config loader has finished — i18n needs to
  * boot synchronously enough to render the first frame.
  */

@@ -33,7 +33,7 @@ jobs:
   gate:
     name: Gate (lint · typecheck · test)
     runs-on: ubuntu-latest
-    if: github.repository == 'OpenCoworkAI/open-codesign'
+    if: github.repository == 'TODO-MORNING/ligma'
     env:
       RELEASE_REF: ${{ github.event_name == 'push' && github.ref || format('refs/tags/{0}', inputs.tag) }}
     steps:
@@ -70,7 +70,7 @@ jobs:
   changelog:
     name: Build changelog
     runs-on: ubuntu-latest
-    if: github.repository == 'OpenCoworkAI/open-codesign'
+    if: github.repository == 'TODO-MORNING/ligma'
     env:
       RELEASE_REF: ${{ github.event_name == 'push' && github.ref || format('refs/tags/{0}', inputs.tag) }}
     outputs:
@@ -283,7 +283,7 @@ jobs:
         with:
           path: .
           format: cyclonedx-json
-          output-file: dist/open-codesign-${{ github.event_name == 'push' && github.ref_name || inputs.tag }}-sbom.cdx.json
+          output-file: dist/ligma-${{ github.event_name == 'push' && github.ref_name || inputs.tag }}-sbom.cdx.json
 
       - name: Generate SHA256SUMS.txt
         working-directory: dist
@@ -302,7 +302,7 @@ jobs:
           name: provenance
           path: |
             dist/SHA256SUMS.txt
-            dist/open-codesign-*-sbom.cdx.json
+            dist/ligma-*-sbom.cdx.json
           if-no-files-found: error
           retention-days: 7
 
@@ -403,7 +403,7 @@ jobs:
           git push origin HEAD:main
 
   # ------------------------------------------------------------------
-  # Homebrew Cask bump — opens a PR against OpenCoworkAI/homebrew-tap
+  # Homebrew Cask bump — opens a PR against TODO-MORNING/homebrew-tap
   # with the new version + sha256 of the mac DMGs.
   # Skipped until HOMEBREW_TAP_TOKEN is set (see packaging/homebrew/README.md).
   # ------------------------------------------------------------------
@@ -429,8 +429,8 @@ jobs:
         uses: macauley/action-homebrew-bump-cask@v1
         with:
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
-          tap: OpenCoworkAI/homebrew-tap
-          cask: open-codesign
+          tap: TODO-MORNING/homebrew-tap
+          cask: ligma
           tag: ${{ github.ref_name }}
           force: false
 
@@ -461,6 +461,6 @@ jobs:
         # TODO: pin to commit SHA when flipping WINGET_PAT on (Scorecard).
         uses: vedantmgoyal9/winget-releaser@v2
         with:
-          identifier: OpenCoworkAI.OpenCoDesign
+          identifier: TODO-MORNING.Ligma
           installers-regex: '-x64-setup\.exe$|-arm64-setup\.exe$'
           token: ${{ secrets.WINGET_PAT }}

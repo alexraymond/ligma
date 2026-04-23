@@ -203,7 +203,7 @@ export async function completeViaClaudeCli(
         // Override Claude Code's default system prompt with ours, OR leave
         // empty so only our flattened messages drive behavior.
         systemPrompt: systemPrompt.length > 0 ? systemPrompt : '',
-        // Skip CLAUDE.md / settings.json discovery — open-codesign supplies
+        // Skip CLAUDE.md / settings.json discovery — ligma supplies
         // its own prompt and has no project-root semantics for design work.
         settingSources: [],
         // No built-in Claude Code tools at this layer. Tool calls live in

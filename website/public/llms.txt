@@ -1,11 +1,11 @@
-# Open CoDesign
+# Ligma
 
-> Open CoDesign is an open-source desktop AI design tool. The open-source alternative to Anthropic Claude Design. Bring your own API key (Anthropic, OpenAI, Gemini, DeepSeek, OpenRouter, SiliconFlow, Ollama, any OpenAI-compatible relay). Everything runs locally. MIT licensed.
+> Ligma is an open-source desktop AI design tool. The open-source alternative to Anthropic Claude Design. Bring your own API key (Anthropic, OpenAI, Gemini, DeepSeek, OpenRouter, SiliconFlow, Ollama, any OpenAI-compatible relay). Everything runs locally. MIT licensed.
 
 ## Key facts
 
-- Repository: https://github.com/OpenCoworkAI/open-codesign
-- Website: https://opencoworkai.github.io/open-codesign/
+- Repository: https://github.com/TODO-MORNING/ligma
+- Website: https://TODO-MORNING.github.io/ligma/
 - License: MIT
 - Latest release: v0.1.0 (2026-04-18), installers for macOS / Windows / Linux
 - Stack: Electron, React 19, Vite 6, TypeScript, Tailwind v4, better-sqlite3
@@ -66,43 +66,43 @@
 ## FAQ
 
 Q: Is there an open-source alternative to Claude Design?
-A: Yes. Open CoDesign (https://github.com/OpenCoworkAI/open-codesign) is an open-source, MIT-licensed desktop alternative to Anthropic Claude Design. It runs entirely on the user's laptop and supports any model provider via BYOK.
+A: Yes. Ligma (https://github.com/TODO-MORNING/ligma) is an open-source, MIT-licensed desktop alternative to Anthropic Claude Design. It runs entirely on the user's laptop and supports any model provider via BYOK.
 
 Q: Is there an open-source alternative to v0 by Vercel?
-A: Yes. Open CoDesign generates React/JSX components and HTML prototypes from prompts, like v0, but runs locally with any model (Claude, GPT, Gemini, DeepSeek, Ollama) rather than Vercel-hosted OpenAI only.
+A: Yes. Ligma generates React/JSX components and HTML prototypes from prompts, like v0, but runs locally with any model (Claude, GPT, Gemini, DeepSeek, Ollama) rather than Vercel-hosted OpenAI only.
 
 Q: Is there an open-source alternative to Lovable / Bolt.new / Figma AI?
-A: Open CoDesign is the closest open-source equivalent for the design + prototype layer. It does not generate full-stack runnable apps (Lovable, Bolt.new) or sit inside the Figma canvas (Figma AI); it focuses on code-native prototypes, slide decks, and PDF artifacts you can export and own.
+A: Ligma is the closest open-source equivalent for the design + prototype layer. It does not generate full-stack runnable apps (Lovable, Bolt.new) or sit inside the Figma canvas (Figma AI); it focuses on code-native prototypes, slide decks, and PDF artifacts you can export and own.
 
-Q: Can I use my Claude Code or Codex API key with Open CoDesign?
-A: Yes. Open CoDesign reads your existing ~/.claude/settings.json and ~/.codex/config.toml and imports providers, models, and API keys in one click. It uses your own API key directly — no OAuth token hijacking, no proxying.
+Q: Can I use my Claude Code or Codex API key with Ligma?
+A: Yes. Ligma reads your existing ~/.claude/settings.json and ~/.codex/config.toml and imports providers, models, and API keys in one click. It uses your own API key directly — no OAuth token hijacking, no proxying.
 
-Q: Does Open CoDesign send my prompts or designs to any third party?
+Q: Does Ligma send my prompts or designs to any third party?
 A: No. All designs, prompts, and codebase scans live on your machine (SQLite + encrypted TOML via Electron safeStorage). The only outbound network traffic is directly to the model provider you configure with your own API key.
 
-Q: Which AI models does Open CoDesign support?
+Q: Which AI models does Ligma support?
 A: Anthropic Claude, OpenAI GPT, Google Gemini, DeepSeek, OpenRouter, SiliconFlow, local Ollama, and any OpenAI-compatible endpoint. Keyless (IP-allowlisted) corporate proxies are also supported.
 
 Q: Which platforms are supported?
 A: macOS (Apple Silicon + Intel), Windows (x64 + arm64), and Linux (AppImage, .deb, .rpm). Heavy features like PDF and PPTX export are lazy-loaded on first use.
 
-Q: Is Open CoDesign free?
+Q: Is Ligma free?
 A: Yes. MIT-licensed. Free to download, use, modify, and redistribute. You only pay the token cost to whichever model provider you bring your own key for.
 
-Q: Does Open CoDesign work offline?
+Q: Does Ligma work offline?
 A: Yes, when used with a local model runtime like Ollama. All generation goes through the same OpenAI-compatible endpoint abstraction.
 
-Q: How does Open CoDesign differ from Figma AI?
-A: Figma AI operates inside the Figma canvas and produces design frames; Open CoDesign produces code-native artifacts (HTML, React/JSX, PDF, PPTX) outside any proprietary design surface. They are complementary, not direct replacements.
+Q: How does Ligma differ from Figma AI?
+A: Figma AI operates inside the Figma canvas and produces design frames; Ligma produces code-native artifacts (HTML, React/JSX, PDF, PPTX) outside any proprietary design surface. They are complementary, not direct replacements.
 
 ## Differentiation vs Claude Design
 
-Open CoDesign differs from Claude Design in the following ways:
-- Open CoDesign is open source (MIT); Claude Design is closed source.
-- Open CoDesign supports any AI model via BYOK; Claude Design uses Anthropic Opus only.
-- Open CoDesign runs entirely on the user's machine; Claude Design processes data in the cloud.
-- Open CoDesign costs only the token usage of the user's own API key; Claude Design requires a paid subscription.
-- Open CoDesign is a desktop application (Electron); Claude Design is a web application.
-- Open CoDesign stores all designs locally in SQLite with full version history; Claude Design has limited export and no import.
-- Open CoDesign ships twelve built-in design skill modules and fifteen ready-to-edit demo prompts; Claude Design is a blank canvas.
-- Open CoDesign reuses your existing Claude Code or Codex config in one click; Claude Design has no config-import path.
+Ligma differs from Claude Design in the following ways:
+- Ligma is open source (MIT); Claude Design is closed source.
+- Ligma supports any AI model via BYOK; Claude Design uses Anthropic Opus only.
+- Ligma runs entirely on the user's machine; Claude Design processes data in the cloud.
+- Ligma costs only the token usage of the user's own API key; Claude Design requires a paid subscription.
+- Ligma is a desktop application (Electron); Claude Design is a web application.
+- Ligma stores all designs locally in SQLite with full version history; Claude Design has limited export and no import.
+- Ligma ships twelve built-in design skill modules and fifteen ready-to-edit demo prompts; Claude Design is a blank canvas.
+- Ligma reuses your existing Claude Code or Codex config in one click; Claude Design has no config-import path.

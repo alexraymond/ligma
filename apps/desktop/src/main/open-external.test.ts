@@ -5,20 +5,20 @@ describe('isAllowedExternalUrl', () => {
   it('accepts /issues/new URL (Report flow)', () => {
     expect(
       isAllowedExternalUrl(
-        'https://github.com/OpenCoworkAI/open-codesign/issues/new?title=x&body=y',
+        'https://github.com/TODO-MORNING/ligma/issues/new?title=x&body=y',
       ),
     ).toBe(true);
   });
 
   it('accepts /releases URL (update banner)', () => {
     expect(
-      isAllowedExternalUrl('https://github.com/OpenCoworkAI/open-codesign/releases/tag/v0.1.0'),
+      isAllowedExternalUrl('https://github.com/TODO-MORNING/ligma/releases/tag/v0.1.0'),
     ).toBe(true);
   });
 
   it('rejects unrelated host', () => {
     expect(
-      isAllowedExternalUrl('https://evil.example.com/OpenCoworkAI/open-codesign/issues/new'),
+      isAllowedExternalUrl('https://evil.example.com/TODO-MORNING/ligma/issues/new'),
     ).toBe(false);
   });
 
@@ -27,11 +27,11 @@ describe('isAllowedExternalUrl', () => {
   });
 
   it('rejects non-https protocols', () => {
-    expect(isAllowedExternalUrl('http://github.com/OpenCoworkAI/open-codesign/issues/new')).toBe(
+    expect(isAllowedExternalUrl('http://github.com/TODO-MORNING/ligma/issues/new')).toBe(
       false,
     );
     expect(
-      isAllowedExternalUrl('file:///Users/attacker/OpenCoworkAI/open-codesign/issues/new'),
+      isAllowedExternalUrl('file:///Users/attacker/ligma/ligma/issues/new'),
     ).toBe(false);
   });
 
@@ -41,15 +41,15 @@ describe('isAllowedExternalUrl', () => {
   });
 
   it('rejects repo root and other paths like /pulls', () => {
-    expect(isAllowedExternalUrl('https://github.com/OpenCoworkAI/open-codesign')).toBe(false);
-    expect(isAllowedExternalUrl('https://github.com/OpenCoworkAI/open-codesign/pulls/1')).toBe(
+    expect(isAllowedExternalUrl('https://github.com/TODO-MORNING/ligma')).toBe(false);
+    expect(isAllowedExternalUrl('https://github.com/TODO-MORNING/ligma/pulls/1')).toBe(
       false,
     );
   });
 
   it('does not accept a prefix-smuggled path like /issuesFAKE', () => {
     // Exact "/issues" or "/issues/..." — not "/issuesEVIL/..."
-    expect(isAllowedExternalUrl('https://github.com/OpenCoworkAI/open-codesign/issuesEVIL/1')).toBe(
+    expect(isAllowedExternalUrl('https://github.com/TODO-MORNING/ligma/issuesEVIL/1')).toBe(
       false,
     );
   });

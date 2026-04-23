@@ -814,13 +814,13 @@ export async function generateViaAgent(
       ? async () => {
           try {
             const key = await input.getApiKey?.();
-            return key && key.length > 0 ? key : input.apiKey || 'open-codesign-keyless';
+            return key && key.length > 0 ? key : input.apiKey || 'ligma-keyless';
           } catch (err) {
             capturedGetApiKeyError = err;
             throw err;
           }
         }
-      : () => input.apiKey || 'open-codesign-keyless',
+      : () => input.apiKey || 'ligma-keyless',
   });
 
   if (deps.onEvent) {

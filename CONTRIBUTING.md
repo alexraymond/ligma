@@ -1,4 +1,4 @@
-# Contributing to Open CoDesign
+# Contributing to Ligma
 
 Thanks for considering a contribution. This project is in **pre-alpha**: the architecture is being shaped, the codebase is small, and we are deliberately keeping the surface area lean. The fastest way to help is to file thoughtful issues; the second fastest is to start a discussion before writing code.
 
@@ -7,14 +7,14 @@ Thanks for considering a contribution. This project is in **pre-alpha**: the arc
 - Read [`docs/VISION.md`](./docs/VISION.md) — locked product decisions
 - Read [`docs/PRINCIPLES.md`](./docs/PRINCIPLES.md) — CI-enforced engineering constraints
 - Read [`CLAUDE.md`](./CLAUDE.md) — repository conventions
-- Search existing [issues](https://github.com/OpenCoworkAI/open-codesign/issues) and [discussions](https://github.com/OpenCoworkAI/open-codesign/discussions) before opening a new one
+- Search existing [issues](https://github.com/TODO-MORNING/ligma/issues) and [discussions](https://github.com/TODO-MORNING/ligma/discussions) before opening a new one
 
 ## Filing an issue
 
 Use our issue templates:
 
-- **[Bug report](https://github.com/OpenCoworkAI/open-codesign/issues/new?template=bug_report.yml)** — reproduction steps, OS/version, and a diagnostics bundle (Settings → Storage → Export diagnostics) speed up triage significantly.
-- **[Feature request](https://github.com/OpenCoworkAI/open-codesign/issues/new?template=feature_request.yml)** — explain the *user problem* before proposing a solution, and confirm the proposal does not conflict with the [hard constraints](./CLAUDE.md).
+- **[Bug report](https://github.com/TODO-MORNING/ligma/issues/new?template=bug_report.yml)** — reproduction steps, OS/version, and a diagnostics bundle (Settings → Storage → Export diagnostics) speed up triage significantly.
+- **[Feature request](https://github.com/TODO-MORNING/ligma/issues/new?template=feature_request.yml)** — explain the *user problem* before proposing a solution, and confirm the proposal does not conflict with the [hard constraints](./CLAUDE.md).
 
 ## Submitting a PR
 

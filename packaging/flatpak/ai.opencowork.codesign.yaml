@@ -1,20 +1,20 @@
 # Flathub submission template — manual process; Flathub does not accept
 # auto-bumps via PR from external repos. When we cut a release:
-#   1. Fork flathub/flathub and create a branch `new-pr/ai.opencowork.codesign`.
-#   2. Copy this manifest there as `ai.opencowork.codesign.yaml`.
+#   1. Fork flathub/flathub and create a branch `new-pr/com.ligma.app`.
+#   2. Copy this manifest there as `com.ligma.app.yaml`.
 #   3. Update `tag` + `commit` under `sources` to the new v*.*.* tag SHA.
 #   4. Update sha256 of the AppImage under `modules.sources` (the
 #      extra-data hash; use `sha256sum` on the AppImage).
 #   5. Open PR to flathub/flathub; respond to reviewer feedback in the PR.
 #
 # Docs: https://docs.flathub.org/docs/for-app-authors/submission
-app-id: ai.opencowork.codesign
+app-id: com.ligma.app
 runtime: org.freedesktop.Platform
 runtime-version: '23.08'
 sdk: org.freedesktop.Sdk
 base: org.electronjs.Electron2.BaseApp
 base-version: '23.08'
-command: open-codesign
+command: ligma
 separate-locales: false
 finish-args:
   - --share=ipc
@@ -24,30 +24,30 @@ finish-args:
   - --share=network
   - --device=dri
   - --filesystem=home
-  - --filesystem=xdg-config/open-codesign:create
+  - --filesystem=xdg-config/ligma:create
   - --talk-name=org.freedesktop.Notifications
 modules:
-  - name: open-codesign
+  - name: ligma
     buildsystem: simple
     build-commands:
       - install -Dm755 apply_extra /app/bin/apply_extra
-      - install -Dm755 open-codesign.sh /app/bin/open-codesign
-      - install -Dm644 ai.opencowork.codesign.desktop /app/share/applications/ai.opencowork.codesign.desktop
-      - install -Dm644 ai.opencowork.codesign.png /app/share/icons/hicolor/512x512/apps/ai.opencowork.codesign.png
+      - install -Dm755 ligma.sh /app/bin/ligma
+      - install -Dm644 com.ligma.app.desktop /app/share/applications/com.ligma.app.desktop
+      - install -Dm644 com.ligma.app.png /app/share/icons/hicolor/512x512/apps/com.ligma.app.png
     sources:
       - type: extra-data
-        filename: open-codesign.AppImage
-        url: https://github.com/OpenCoworkAI/open-codesign/releases/download/v0.1.3/open-codesign-0.1.3-x64.AppImage
+        filename: ligma.AppImage
+        url: https://github.com/TODO-MORNING/ligma/releases/download/v0.1.3/ligma-0.1.3-x64.AppImage
         sha256: 6d832e4568d02b4e3e0387d31218c6084c7ee2ee9af41ea5ccf819c10b771fba
         size: 149590498
       - type: script
         dest-filename: apply_extra
         commands:
-          - chmod +x open-codesign.AppImage
-          - ./open-codesign.AppImage --appimage-extract
+          - chmod +x ligma.AppImage
+          - ./ligma.AppImage --appimage-extract
           - mv squashfs-root/* .
-          - rm open-codesign.AppImage
+          - rm ligma.AppImage
       - type: script
-        dest-filename: open-codesign.sh
+        dest-filename: ligma.sh
         commands:
-          - 'exec zypak-wrapper /app/extra/open-codesign "$@"'
+          - 'exec zypak-wrapper /app/extra/ligma "$@"'

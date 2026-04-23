@@ -20,7 +20,7 @@ export function useUpdateWiring(store: StoreApi<UpdateState> | null): void {
       const typed = info as { version?: string };
       const version = typed.version ?? '';
       if (!version || !isValidVersion(version)) return;
-      const releaseUrl = `https://github.com/OpenCoworkAI/open-codesign/releases/tag/v${version}`;
+      const releaseUrl = `https://github.com/TODO-MORNING/ligma/releases/tag/v${version}`;
       store.getState().setAvailable({ version, releaseUrl });
     });
 

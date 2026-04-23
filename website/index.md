@@ -1,23 +1,23 @@
 ---
 layout: home
-title: Open CoDesign
+title: Ligma
 titleTemplate: Open-Source AI Design Tool — BYOK, Local-First, MIT
-description: Open CoDesign is an open-source desktop AI design tool — a self-hosted alternative to Claude Design. Bring your own API key (Anthropic, OpenAI, Gemini, DeepSeek, Ollama). Everything runs locally. MIT licensed.
+description: Ligma is an open-source desktop AI design tool — a self-hosted alternative to Claude Design. Bring your own API key (Anthropic, OpenAI, Gemini, DeepSeek, Ollama). Everything runs locally. MIT licensed.
 
 hero:
-  name: Open CoDesign
+  name: Ligma
   text: Design with intent.
   tagline: An open-source desktop AI design tool. Bring your own model, keep everything local — a self-hosted alternative to Claude Design, built for teams who can't afford subscription lock-in.
   image:
     src: /logo-hero.png
-    alt: Open CoDesign — open-source AI design tool
+    alt: Ligma — open-source AI design tool
   actions:
     - theme: brand
       text: Download for macOS
-      link: https://github.com/OpenCoworkAI/open-codesign/releases
+      link: https://github.com/TODO-MORNING/ligma/releases
     - theme: alt
       text: Star on GitHub
-      link: https://github.com/OpenCoworkAI/open-codesign
+      link: https://github.com/TODO-MORNING/ligma
     - theme: alt
       text: Quickstart (90 s)
       link: /quickstart
@@ -28,7 +28,7 @@ features:
     details: Anthropic, OpenAI, Gemini, DeepSeek, OpenRouter, SiliconFlow, local Ollama, or any OpenAI-compatible relay — including keyless (IP-allowlisted) proxies. Switch providers in Settings. We don't proxy, we don't charge per token.
   - icon: ⚡
     title: Import in one click
-    details: Already using Claude Code or Codex? Open CoDesign reads your existing config — providers, models, API keys — and brings it all in with a single click.
+    details: Already using Claude Code or Codex? Ligma reads your existing config — providers, models, API keys — and brings it all in with a single click.
   - icon: 🏡
     title: Your laptop is the cloud
     details: Designs, prompts, codebase scans — SQLite + encrypted TOML on disk. No mandatory account, no telemetry by default. 100% local.
@@ -116,7 +116,7 @@ import { withBase } from 'vitepress'
   </figure>
   <figure>
     <img :src="withBase('/screenshots/hub-examples.png')" alt="Built-in example library — fifteen ready-to-run design briefs" />
-    <figcaption><b>Fifteen demo briefs.</b> Landing, dashboard, pricing, pitch deck, chat UI — one click to see Open CoDesign in action.</figcaption>
+    <figcaption><b>Fifteen demo briefs.</b> Landing, dashboard, pricing, pitch deck, chat UI — one click to see Ligma in action.</figcaption>
   </figure>
   <figure>
     <img :src="withBase('/screenshots/add-provider-menu.png')" alt="Add provider menu — Claude Code, Codex, custom, and presets" />
@@ -148,7 +148,7 @@ import { withBase } from 'vitepress'
 
 |                       | Open source    | Models             | Runs locally | Pricing             |
 | --------------------- | :------------: | :----------------: | :----------: | :-----------------: |
-| **Open CoDesign**     | **MIT**        | **Any (BYOK)**     | **✓**        | **Token cost only** |
+| **Ligma**     | **MIT**        | **Any (BYOK)**     | **✓**        | **Token cost only** |
 | Claude Design         | ✗ Closed       | Opus only          | ✗            | Subscription        |
 | v0 by Vercel          | ✗ Closed       | Curated            | ✗            | Subscription        |
 | Lovable               | ✗ Closed       | Curated            | ✗            | Subscription        |
@@ -170,13 +170,13 @@ import { withBase } from 'vitepress'
 <div class="codesign-community">
   <div class="community-card">
     <h3>GitHub</h3>
-    <p class="community-hint">Bug reports, feature requests, and async discussion all happen in Issues. Security issues → <a href="https://github.com/OpenCoworkAI/open-codesign/blob/main/SECURITY.md">SECURITY.md</a>.</p>
-    <p class="community-cta"><a href="https://github.com/OpenCoworkAI/open-codesign/issues" class="community-button">Open Issues →</a></p>
+    <p class="community-hint">Bug reports, feature requests, and async discussion all happen in Issues. Security issues → <a href="https://github.com/TODO-MORNING/ligma/blob/main/SECURITY.md">SECURITY.md</a>.</p>
+    <p class="community-cta"><a href="https://github.com/TODO-MORNING/ligma/issues" class="community-button">Open Issues →</a></p>
   </div>
   <div class="community-card">
     <h3>WeChat (中文社群)</h3>
-    <p class="community-hint">Chinese-speaking users chat in our WeChat group — the QR lives in the <a href="/open-codesign/zh/#社群">Chinese landing page</a>. Codes rotate every 7 days; we refresh in-repo.</p>
-    <p class="community-cta"><a href="/open-codesign/zh/#社群" class="community-button">View QR →</a></p>
+    <p class="community-hint">Chinese-speaking users chat in our WeChat group — the QR lives in the <a href="/ligma/zh/#社群">Chinese landing page</a>. Codes rotate every 7 days; we refresh in-repo.</p>
+    <p class="community-cta"><a href="/ligma/zh/#社群" class="community-button">View QR →</a></p>
   </div>
 </div>
 
@@ -186,7 +186,7 @@ import { withBase } from 'vitepress'
 
 ### Ready to design without the lock-in?
 
-<a href="/open-codesign/quickstart" class="cta-primary">Get started in 90 seconds →</a>
-<a href="https://github.com/OpenCoworkAI/open-codesign" class="cta-secondary">View on GitHub</a>
+<a href="/ligma/quickstart" class="cta-primary">Get started in 90 seconds →</a>
+<a href="https://github.com/TODO-MORNING/ligma" class="cta-secondary">View on GitHub</a>
 
 </div>

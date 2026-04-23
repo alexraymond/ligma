@@ -1,32 +1,32 @@
 ---
-title: Open CoDesign vs Claude Design
-description: Comparison of Open CoDesign — an open-source, self-hosted, BYOK desktop AI design tool — against Anthropic Claude Design. Feature matrix, tradeoffs, and when each is the right choice.
+title: Ligma vs Claude Design
+description: Comparison of Ligma — an open-source, self-hosted, BYOK desktop AI design tool — against Anthropic Claude Design. Feature matrix, tradeoffs, and when each is the right choice.
 head:
   - - meta
     - property: og:title
-      content: Open CoDesign vs Claude Design — Feature Comparison
+      content: Ligma vs Claude Design — Feature Comparison
   - - meta
     - property: og:description
-      content: Honest side-by-side of Open CoDesign (open-source, self-hosted, BYOK) and Anthropic Claude Design. When to pick each.
+      content: Honest side-by-side of Ligma (open-source, self-hosted, BYOK) and Anthropic Claude Design. When to pick each.
 ---
 
-# Open CoDesign vs Claude Design
+# Ligma vs Claude Design
 
 Both tools turn prompts into polished designs. They make different trade-offs. This page exists so you can decide quickly which one fits your workflow.
 
-[Download Open CoDesign →](https://github.com/OpenCoworkAI/open-codesign/releases) · [Quickstart (90 s)](./quickstart)
+[Download Ligma →](https://github.com/TODO-MORNING/ligma/releases) · [Quickstart (90 s)](./quickstart)
 
 ## At a glance
 
-Claude Design is a hosted web app by Anthropic that runs Claude Opus on their infrastructure. Open CoDesign is an MIT-licensed desktop app you run on your own machine with whichever model provider you already use.
+Claude Design is a hosted web app by Anthropic that runs Claude Opus on their infrastructure. Ligma is an MIT-licensed desktop app you run on your own machine with whichever model provider you already use.
 
 Pick **Claude Design** if you want zero setup, are happy on an Anthropic subscription, and don't need model flexibility or offline use.
 
-Pick **Open CoDesign** if you want BYOK cost control, any model beyond Claude, on-device privacy, local version history, or multiple export formats.
+Pick **Ligma** if you want BYOK cost control, any model beyond Claude, on-device privacy, local version history, or multiple export formats.
 
 ## Feature matrix
 
-|                         | Open CoDesign (open-source) | Claude Design |
+|                         | Ligma (open-source) | Claude Design |
 | ----------------------- | :-------------------------: | :-----------: |
 | License                 | **MIT**                     | Closed        |
 | Runs on                 | **Your laptop (macOS / Windows / Linux)** | Cloud (browser) |
@@ -43,7 +43,7 @@ Pick **Open CoDesign** if you want BYOK cost control, any model beyond Claude, o
 | Responsive frames       | **Phone · tablet · desktop** | Limited      |
 | Price                   | **Free (BYOK token cost)**  | Subscription  |
 
-## Why someone would choose Open CoDesign
+## Why someone would choose Ligma
 
 - **BYOK means cost control.** Ship drafts on a cheap model (DeepSeek, local Ollama, GPT-4o-mini), polish on Claude Opus only when it matters.
 - **Data stays on-device.** Your prompts, designs, and any codebase scans never leave your laptop unless you send them to a model provider yourself.
@@ -60,19 +60,19 @@ Pick **Open CoDesign** if you want BYOK cost control, any model beyond Claude, o
 
 Both are reasonable answers. Use what fits.
 
-## Is Open CoDesign a fork of Claude Design?
+## Is Ligma a fork of Claude Design?
 
-No. Open CoDesign is an independent, clean-room open-source project built by OpenCoworkAI. It shares no code with Anthropic's Claude Design. The name "Claude Design" belongs to Anthropic; Open CoDesign is an independent alternative, not affiliated with Anthropic.
+No. Ligma is an independent, clean-room open-source project built by TODO-MORNING. It shares no code with Anthropic's Claude Design. The name "Claude Design" belongs to Anthropic; Ligma is an independent alternative, not affiliated with Anthropic.
 
-## Install Open CoDesign
+## Install Ligma
 
-- [Pre-built installer](https://github.com/OpenCoworkAI/open-codesign/releases) — macOS DMG, Windows EXE, Linux AppImage
+- [Pre-built installer](https://github.com/TODO-MORNING/ligma/releases) — macOS DMG, Windows EXE, Linux AppImage
 - [90-second Quickstart](./quickstart) — from prompt to export
 - [Build from source](./quickstart#build-from-source) — Node 22 LTS + pnpm 9.15+
 
 ## FAQ
 
 - **Is it really free?** Yes. You pay only the token cost to whichever model provider you bring.
-- **Does it send anything to the cloud?** Only the prompts you send to your own model provider. Nothing goes to OpenCoworkAI or a shared backend.
+- **Does it send anything to the cloud?** Only the prompts you send to your own model provider. Nothing goes to TODO-MORNING or a shared backend.
 - **Can I use it with Ollama?** Yes. Any OpenAI-compatible endpoint works, keyless proxies included.
 - **License?** MIT. Fork it, ship it, sell it.

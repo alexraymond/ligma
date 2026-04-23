@@ -1,5 +1,5 @@
 /**
- * i18n entry point for open-codesign.
+ * i18n entry point for ligma.
  *
  * Design notes:
  * - Two locales out of the gate: `en` and `zh-CN`. Adding a third means adding

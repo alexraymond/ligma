@@ -108,7 +108,7 @@ cd "$REPO_ROOT"
   echo
   echo "1. Run the golden-path smoke: \`cd ~/ligma && git checkout overnight && pnpm i && pnpm dev\`"
   echo "2. Verify window title says **Ligma** and a prompt → streamed response works end-to-end."
-  echo "3. Check \`rg -i 'open.codesign|opencoworkai' ~/ligma\` returns hits only in \`LICENSE\`."
+  echo "3. Check \`rg -i 'open.codesign|todo-morning' ~/ligma\` returns hits only in \`LICENSE\`."
   echo "4. Review TODO-MORNING notes above."
   echo "5. Decide: create GitHub repo + push, commit final palette, tag v0.1.0."
 } > "$OUT"

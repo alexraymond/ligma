@@ -233,7 +233,7 @@ export async function complete(
   if (!opts.apiKey && opts.allowKeyless !== true) {
     throw new CodesignError('Missing API key', ERROR_CODES.PROVIDER_AUTH_MISSING);
   }
-  const apiKey = opts.apiKey || 'open-codesign-keyless';
+  const apiKey = opts.apiKey || 'ligma-keyless';
 
   const pi = (await import('@mariozechner/pi-ai')) as unknown as {
     getModel: (provider: string, modelId: string) => PiModel | undefined;

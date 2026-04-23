@@ -63,7 +63,7 @@ describe('readPersisted()', () => {
     try {
       await readPersisted();
       expect(readFileMock).toHaveBeenLastCalledWith(
-        '/tmp/xdg-test-home/open-codesign/preferences.json',
+        '/tmp/xdg-test-home/ligma/preferences.json',
         'utf8',
       );
     } finally {
