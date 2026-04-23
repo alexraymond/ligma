@@ -516,7 +516,14 @@ export function coerceUsageSnapshot(result: {
   };
 }
 
-function readInitialTheme(): Theme {
+/**
+ * Ligma reskin defaults the theme to `'dark'` when there's no persisted
+ * preference (no `window`, no `localStorage`, or a missing key). A previously
+ * stored `'light'` / `'dark'` value wins. Exported for tests — the default
+ * flip is an acceptance-criterion behavior, so a regression must be caught
+ * at unit level rather than relying on visual inspection.
+ */
+export function readInitialTheme(): Theme {
   if (typeof window === 'undefined') return 'dark';
   try {
     const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
@@ -527,7 +534,13 @@ function readInitialTheme(): Theme {
   return 'dark';
 }
 
-function applyThemeClass(theme: Theme): void {
+/**
+ * Mirrors the pre-mount script in `index.html`: `.light` is the opt-in
+ * class, `.dark` is the default state that also stays applied as an
+ * explicit class so any selector targeting `.dark` continues to work.
+ * Exported for tests.
+ */
+export function applyThemeClass(theme: Theme): void {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
   // Dark is the default (:root tokens). Light is opt-in via `.light`.
