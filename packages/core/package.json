@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@mariozechner/pi-agent-core": "^0.67.68",
-    "@mariozechner/pi-ai": "^0.67.68",
+    "@mariozechner/pi-ai": "^0.69.0",
     "@ligma/artifacts": "workspace:*",
     "@ligma/providers": "workspace:*",
     "@ligma/shared": "workspace:*",

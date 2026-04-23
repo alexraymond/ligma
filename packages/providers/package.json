@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.2.117",
-    "@mariozechner/pi-ai": "^0.67.68",
+    "@mariozechner/pi-ai": "^0.69.0",
     "@ligma/shared": "workspace:*"
   },
   "devDependencies": {
