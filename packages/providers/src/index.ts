@@ -428,8 +428,8 @@ export {
 export { completeWithRetry, classifyError, sleepWithAbort } from './retry';
 export type { CompleteWithRetryOptions, RetryReason } from './retry';
 
-export { completeViaClaudeCli } from './claude-cli/sdk-runtime';
-export type { ClaudeCliCompleteOptions } from './claude-cli/sdk-runtime';
+export { completeViaClaudeCli, prewarmClaudeExecutable } from './claude-cli/sdk-runtime';
+export type { ClaudeCliCompleteOptions, ClaudeCliLogger } from './claude-cli/sdk-runtime';
 
 export { injectSkillsIntoMessages, formatSkillsForPrompt, filterActive } from './skill-injector';
 

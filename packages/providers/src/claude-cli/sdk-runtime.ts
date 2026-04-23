@@ -17,15 +17,40 @@ import { CodesignError, ERROR_CODES } from '@open-codesign/shared';
 import type { GenerateOptions, GenerateResult } from '../index';
 
 /**
+ * Minimal logger shape used for heartbeat / truncation diagnostics. Matches
+ * the `CoreLogger` surface used by packages/core so main can inject its
+ * electron-log scope here without an adapter. Peer-shape instead of an
+ * import to keep the providers package free of a core dependency.
+ */
+export interface ClaudeCliLogger {
+  warn: (event: string, data?: Record<string, unknown>) => void;
+}
+
+/**
  * The SDK ships per-platform native binaries as optional deps, which pnpm +
  * electron-vite bundling strips. Instead of fighting the packaging, point
  * the SDK at the user's already-installed `claude` CLI — the same one the
- * subscription auth lives on. Resolved lazily and cached so we only pay the
- * `which` syscall once per process. Uses execFile (no shell) so no
- * injection surface even though the argv is static today.
+ * subscription auth lives on.
+ *
+ * Path resolution happens exactly once per process via `prewarmClaudeExecutable()`
+ * which main should call during boot. `completeViaClaudeCli` accepts the
+ * resolved path as a parameter so individual requests never pay the
+ * `which` syscall.
+ *
+ * Uses execFile (no shell) so no injection surface even though the argv is
+ * static today.
  */
 let cachedClaudePath: string | null | undefined;
-function resolveClaudeExecutable(): string | null {
+
+/**
+ * Resolve `claude` via `which` and memoise the result for the process
+ * lifetime. Idempotent: safe to call from boot-init or test setup. Returns
+ * `null` when the CLI is not on PATH.
+ *
+ * This is the ONLY function that should ever shell out to `which claude`.
+ * `completeViaClaudeCli()` receives the resolved path as an argument.
+ */
+export function prewarmClaudeExecutable(): string | null {
   if (cachedClaudePath !== undefined) return cachedClaudePath;
   try {
     const raw = execFileSync('which', ['claude'], {
@@ -39,6 +64,14 @@ function resolveClaudeExecutable(): string | null {
   }
   return cachedClaudePath;
 }
+
+/** Test-only helpers to reset the cache. Not part of the public module
+ *  surface — callers should go through `prewarmClaudeExecutable()`. */
+export const resolveClaudeExecutableForTest = {
+  reset(): void {
+    cachedClaudePath = undefined;
+  },
+};
 
 interface SdkAssistantBlock {
   type: string;
@@ -87,6 +120,32 @@ export interface ClaudeCliCompleteOptions {
   userImages?: GenerateOptions['userImages'];
   signal?: AbortSignal;
   maxTokens?: number;
+  /**
+   * Absolute path to the `claude` CLI, typically resolved once at process
+   * boot via `prewarmClaudeExecutable()`. When omitted, this falls back to
+   * the process-lifetime cache populated by the same prewarm helper.
+   * Omitting the path is supported for test paths and back-compat callers
+   * but is NOT the hot-path contract — main should always pass the prewarmed
+   * value.
+   */
+  claudePath?: string | null;
+  /**
+   * Tool allow-list forwarded to the Agent SDK. Default `[]` keeps the
+   * provider as a single non-streaming completion with no tool loop. W2
+   * (agent runtime) populates this with whitelisted tool names once the
+   * MCP bridge is wired up.
+   */
+  allowedTools?: string[];
+  /**
+   * Injected for heartbeat + truncation diagnostics. Matches the
+   * `CoreLogger.warn` shape; omit in tests that don't care about logs.
+   */
+  logger?: ClaudeCliLogger;
+  /**
+   * Heartbeat window (ms). If no SDK event arrives within this many ms, the
+   * logger's `warn` is called with `{ sinceLastEventMs }`. Defaults to 5000.
+   */
+  heartbeatMs?: number;
 }
 
 function splitSystemAndTurns(messages: ChatMessage[]): {
@@ -139,6 +198,8 @@ async function* buildPromptStream(
   };
 }
 
+const DEFAULT_HEARTBEAT_MS = 5000;
+
 /**
  * Single non-streaming completion via Claude Code subscription. Lazy-imports
  * the SDK so the bundle isn't loaded unless a user actually selects this
@@ -172,7 +233,9 @@ export async function completeViaClaudeCli(
     }) => AsyncIterable<SdkEvent>;
   };
 
-  const claudePath = resolveClaudeExecutable();
+  // Prefer the caller-supplied path; fall back to the process-lifetime cache
+  // from `prewarmClaudeExecutable()`. Never shells out from the hot path.
+  const claudePath = opts.claudePath !== undefined ? opts.claudePath : prewarmClaudeExecutable();
   if (claudePath === null) {
     throw new CodesignError(
       'Claude Code CLI not found on PATH. Install with `npm i -g @anthropic-ai/claude-code` and run `claude` once to sign in.',
@@ -194,6 +257,20 @@ export async function completeViaClaudeCli(
   let outputTokens = 0;
   let costUsd = 0;
   let errored: SdkResultEvent | null = null;
+  let sawAssistantEvent = false;
+
+  const heartbeatMs = opts.heartbeatMs ?? DEFAULT_HEARTBEAT_MS;
+  let lastEventAt = Date.now();
+  // The heartbeat is a Node.js interval timer; we null-check + clear in
+  // finally so an early return / throw can't orphan it.
+  const heartbeat: ReturnType<typeof setInterval> = setInterval(() => {
+    const sinceLastEventMs = Date.now() - lastEventAt;
+    if (sinceLastEventMs < heartbeatMs) return;
+    opts.logger?.warn('claude-cli.stream.heartbeat', {
+      sinceLastEventMs,
+      modelId: opts.modelId,
+    });
+  }, heartbeatMs);
 
   try {
     for await (const event of sdk.query({
@@ -203,23 +280,25 @@ export async function completeViaClaudeCli(
         // Override Claude Code's default system prompt with ours, OR leave
         // empty so only our flattened messages drive behavior.
         systemPrompt: systemPrompt.length > 0 ? systemPrompt : '',
-        // Skip CLAUDE.md / settings.json discovery — open-codesign supplies
-        // its own prompt and has no project-root semantics for design work.
+        // Skip CLAUDE.md / settings.json discovery — ligma supplies its own
+        // prompt and has no project-root semantics for design work.
         settingSources: [],
-        // No built-in Claude Code tools at this layer. Tool calls live in
-        // the agent path once MCP bridging lands.
-        allowedTools: [],
+        // Tool allow-list is a caller-supplied hand-off. Default `[]` keeps
+        // this a single-turn completion; W2 populates it with whitelisted
+        // tool names via the MCP bridge.
+        allowedTools: opts.allowedTools ?? [],
         // Opus 4.7 with extended thinking burns turn budget on internal
         // reasoning before the final text block lands, and multi-artifact
-        // design generations stretch further still. With `allowedTools: []`
-        // no real tool loop can spin up, so the effective cap is wall time
-        // via the caller's AbortSignal — not turn count. Set high.
+        // design generations stretch further still. Effective cap is wall
+        // time via the caller's AbortSignal — not turn count. Set high.
         maxTurns: 100,
         abortController: controller,
         pathToClaudeCodeExecutable: claudePath,
       },
     })) {
+      lastEventAt = Date.now();
       if (isAssistantEvent(event)) {
+        sawAssistantEvent = true;
         for (const block of event.message.content) {
           if (block.type === 'text' && typeof block.text === 'string') {
             textChunks.push(block.text);
@@ -235,6 +314,7 @@ export async function completeViaClaudeCli(
       }
     }
   } finally {
+    clearInterval(heartbeat);
     if (opts.signal) opts.signal.removeEventListener('abort', onAbort);
   }
 
@@ -242,6 +322,17 @@ export async function completeViaClaudeCli(
     throw new CodesignError(
       `Claude Code SDK returned ${errored.subtype}${errored.result ? `: ${errored.result}` : ''}`,
       ERROR_CODES.PROVIDER_ERROR,
+    );
+  }
+
+  // Stream-truncation detection. Real completion must deliver at least one
+  // assistant event containing text; anything less means the upstream pipe
+  // closed early (network blip, SDK subprocess crash, sub2api proxy 502,
+  // etc.) — surface it so the caller can retry or report.
+  if (!sawAssistantEvent || textChunks.length === 0) {
+    throw new CodesignError(
+      'Claude Code stream ended with no assistant output.',
+      ERROR_CODES.PROVIDER_STREAM_TRUNCATED,
     );
   }
 
