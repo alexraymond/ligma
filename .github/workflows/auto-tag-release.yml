@@ -1,0 +1,74 @@
+name: Auto-tag release on version bump
+
+# Fires whenever `apps/desktop/package.json` is updated on main. If its
+# `version` differs from the latest `vX.Y.Z` tag (and no `vX.Y.Z` tag
+# already exists for the new version), creates + pushes the tag. That
+# tag push in turn triggers .github/workflows/release.yml which builds
+# and publishes the installers + electron-updater manifests.
+#
+# Guards:
+#  - Only runs on direct pushes to main (never on PRs).
+#  - Skips the tag create when the tag already exists on origin.
+#  - Skips if the head commit subject starts with `skip-tag:` — handled
+#    entirely in the `if:` expression (no shell interpolation of untrusted
+#    commit metadata) so there is no command-injection surface.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/desktop/package.json'
+
+concurrency:
+  group: auto-tag-release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    name: Tag if desktop version bumped
+    runs-on: ubuntu-latest
+    # Repo + opt-out gating happens here, at the YAML expression level, so
+    # commit metadata never reaches a shell unquoted.
+    if: >-
+      github.repository == 'alexraymond/ligma'
+      && !startsWith(github.event.head_commit.message, 'skip-tag:')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Default GITHUB_TOKEN + the `contents: write` permission above is
+          # enough to push annotated tags. No PAT required.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Read desktop version
+        id: version
+        run: |
+          version="$(node -p "require('./apps/desktop/package.json').version")"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Check tag already exists
+        id: exists
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q "${TAG}"; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create and push tag
+        if: steps.exists.outputs.exists == 'false'
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          # Bot identity so the tag push is attributable in the audit log.
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git tag -a "${TAG}" -m "Release ${TAG}"
+          git push origin "${TAG}"
+          echo "::notice title=Tag pushed::${TAG} — release workflow will start on the tag push"

@@ -127,15 +127,28 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # `latest-*.yml` + `.blockmap` files are electron-updater's feed +
+          # delta manifests. Without them attached to the GitHub Release, an
+          # installed Ligma cannot discover newer versions even though the
+          # in-app setupAutoUpdater() is wired up. Blockmaps enable binary
+          # diff downloads so users don't re-pull the whole installer.
           - os: macos-latest
-            artifact_glob: 'apps/desktop/release/*.dmg'
+            artifact_glob: |
+              apps/desktop/release/*.dmg
+              apps/desktop/release/*.dmg.blockmap
+              apps/desktop/release/latest-mac.yml
           - os: windows-latest
-            artifact_glob: 'apps/desktop/release/*.exe'
+            artifact_glob: |
+              apps/desktop/release/*.exe
+              apps/desktop/release/*.exe.blockmap
+              apps/desktop/release/latest.yml
           - os: ubuntu-latest
             artifact_glob: |
               apps/desktop/release/*.AppImage
+              apps/desktop/release/*.AppImage.blockmap
               apps/desktop/release/*.deb
               apps/desktop/release/*.rpm
+              apps/desktop/release/latest-linux.yml
     runs-on: ${{ matrix.os }}
     env:
       RELEASE_REF: ${{ github.event_name == 'push' && github.ref || format('refs/tags/{0}', inputs.tag) }}
