@@ -40,9 +40,22 @@ Designs, history, and codebase scans live on disk. No mandatory cloud sync. No t
 - **Local-first by default.** SQLite for design history, TOML for config, files stay on your machine unless you explicitly export.
 - **No bundled model runtimes.** No Ollama, llama.cpp, or Python shipped in the installer. System installs only.
 
-## Quickstart
+## Download
 
-Requires **Node 22 LTS** and **pnpm 9**. Signed installers ship later in the 0.1.x line; until then, running from source is the supported path.
+Grab a pre-built installer from the [**Releases page**](https://github.com/alexraymond/ligma/releases/latest):
+
+| Platform | Asset |
+|----------|-------|
+| macOS (Apple Silicon) | `Ligma-<version>-arm64.dmg` |
+| macOS (Intel)         | `Ligma-<version>-x64.dmg` |
+| Windows               | `Ligma-<version>-x64-setup.exe` |
+| Linux                 | `Ligma-<version>.AppImage` |
+
+Builds are currently **unsigned** — on first launch, macOS users right-click the app → **Open** to bypass Gatekeeper. Windows SmartScreen may show a "more info" warning; click through. Code-signing certificates are on the 0.2.x roadmap.
+
+## Quickstart (from source)
+
+Requires **Node 22 LTS** and **pnpm 9**.
 
 ```bash
 git clone https://github.com/alexraymond/ligma.git
