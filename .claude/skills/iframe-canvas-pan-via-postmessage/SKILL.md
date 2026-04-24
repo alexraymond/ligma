@@ -110,6 +110,28 @@ window.addEventListener('message', (ev) => {
 
 A common instinct is to set `cursor: grab` on the outer scroll container. That works for the brief moment before the pointer enters the iframe — then the iframe's own cursor takes over. The user sees a pointer arrow on the canvas they're supposed to pan, which breaks affordance. Set `document.body.style.cursor = 'grab'` inside the iframe's overlay.
 
+## Don't gate forwarding on a "pan mode"
+
+Tempting first design: "only forward wheel/drag when the user explicitly enters pan mode via a toolbar button". This always fails in practice:
+
+- **Mode propagation races first paint.** Parent posts `SET_MODE` on mount; the overlay's `message` listener installs 50–200ms later inside the iframe. The early post is dropped, `currentMode` stays at `'default'`, and the user clicks the button but the gate never opens.
+- **Users don't want to find a tool to pan.** Every serious design tool pans on trackpad/Space/middle-click by default. A Hand toolbar button is discoverable only in Figma's sidebar; muscle memory expects trackpad and Space to work unconditionally.
+
+**Do**: forward wheel always. Gate pointer pan on *modifier state* (Space held, middle button, etc.), not on a user-toggled mode. That makes the pan gesture disposition zero-latency and unambiguous. A "lock pan mode" toolbar button is fine as a secondary affordance, but must never be the only path.
+
+```js
+// Wheel: unconditional.
+document.addEventListener('wheel', forwardWheelAlways, { capture: true, passive: false });
+
+// Pointer: only when a pan-intent modifier is active at pointerdown time.
+function shouldStartPan(e) {
+  if (e.button === 1) return true;        // middle-click
+  if (spaceHeld) return true;             // Space+drag
+  if (currentMode === 'pan') return true; // optional explicit lock
+  return false;
+}
+```
+
 ## When the iframe's document already overflows
 
 If the inside of the iframe has `html { overflow: auto }` and the design is taller than the iframe, wheel events legitimately scroll the iframe's content. You have a choice:
