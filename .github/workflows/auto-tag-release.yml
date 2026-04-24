@@ -24,7 +24,13 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
+  # `contents: write` — push the tag.
+  # `actions: write` — dispatch release.yml via the GitHub API. Without it,
+  # `gh workflow run` returns HTTP 403 "Resource not accessible by integration"
+  # because the default GITHUB_TOKEN scope for workflows is read-only for
+  # the Actions surface.
   contents: write
+  actions: write
 
 jobs:
   tag:
