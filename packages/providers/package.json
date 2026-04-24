@@ -1,6 +1,6 @@
 {
   "name": "@ligma/providers",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "private": true,
   "type": "module",
   "main": "./src/index.ts",

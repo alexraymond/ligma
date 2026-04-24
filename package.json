@@ -1,6 +1,6 @@
 {
   "name": "ligma",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "private": true,
   "description": "Local-first AI design tool powered by Claude. Prompt to interactive prototype, slide deck, and marketing assets.",
   "license": "MIT",

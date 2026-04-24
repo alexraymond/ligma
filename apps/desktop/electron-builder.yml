@@ -66,10 +66,15 @@ linux:
   # which rpmbuild then refuses to read. Scoped to `linux.` so the macOS
   # `.app` bundle and Windows `.exe` keep their pretty "Ligma" name.
   executableName: ligma
-  # `vendor`, `synopsis`, and `description` are REQUIRED metadata for deb/rpm.
-  # `maintainer` is intentionally omitted — electron-builder injects a generic
-  # fallback into the built package metadata, and we don't want a personal or
-  # project email tracked in the repo.
+  # `vendor`, `synopsis`, `description`, and `maintainer` are REQUIRED
+  # metadata for deb/rpm packaging with electron-builder 26.x. The build
+  # crashes at FpmTarget.computeFpmMetaInfoOptions with "Please specify
+  # author 'email' in the application package.json" if `maintainer` is
+  # missing (the old "generic fallback" behaviour is gone as of 26.x).
+  # Use a GitHub noreply alias so no personal email is tracked in the
+  # repo — `<numeric-id>+<login>@users.noreply.github.com` is the
+  # canonical bot-safe form.
+  maintainer: 'alexraymond <alexraymond@users.noreply.github.com>'
   vendor: alexraymond
   # `synopsis` is the deb `Description:` one-liner and the rpm `Summary:`
   # field. Debian convention says no trailing period — lintian emits
