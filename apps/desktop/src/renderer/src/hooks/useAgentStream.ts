@@ -162,21 +162,26 @@ export function useAgentStream(): void {
         toolName,
         toolCallId: event.toolCallId,
       });
+      const payload = {
+        toolName,
+        ...(event.command !== undefined ? { command: event.command } : {}),
+        args: event.args ?? {},
+        status: 'running' as const,
+        startedAt: new Date().toISOString(),
+        verbGroup: event.verbGroup ?? 'Working',
+        ...(event.toolCallId !== undefined ? { toolCallId: event.toolCallId } : {}),
+      };
+      // Surface the tool IMMEDIATELY in the store's pendingToolCalls so the
+      // sidebar + preview banner show activity without waiting for the DB
+      // round-trip. The persisted row that follows will dedupe on toolCallId.
+      useCodesignStore.setState((s) => ({ pendingToolCalls: [...s.pendingToolCalls, payload] }));
       // DB row rather than an in-memory shadow. Capture seq via promise so
       // the result handler can patch the same row even if it lands before
       // the append round-trip completes.
       const seqPromise = appendChatMessage({
         designId,
         kind: 'tool_call',
-        payload: {
-          toolName,
-          ...(event.command !== undefined ? { command: event.command } : {}),
-          args: event.args ?? {},
-          status: 'running',
-          startedAt: new Date().toISOString(),
-          verbGroup: event.verbGroup ?? 'Working',
-          ...(event.toolCallId !== undefined ? { toolCallId: event.toolCallId } : {}),
-        },
+        payload,
       }).then((row) => row?.seq ?? null);
       if (current) {
         current.pendingTools.push({
@@ -191,6 +196,17 @@ export function useAgentStream(): void {
     const handleToolCallResult = (event: AgentStreamEvent) => {
       const current = inFlight.current;
       const designId = event.designId;
+      // Pop the live banner entry no matter what the in-flight ref state is
+      // (defensive: if turn_start never fired we still want the sidebar to
+      // drain its running-tool chip).
+      useCodesignStore.setState((s) => {
+        const next = s.pendingToolCalls.filter((p) =>
+          event.toolCallId !== undefined && p.toolCallId !== undefined
+            ? p.toolCallId !== event.toolCallId
+            : p.toolName !== (event.toolName ?? 'unknown'),
+        );
+        return next.length === s.pendingToolCalls.length ? s : { pendingToolCalls: next };
+      });
       if (!current) return;
       const idx = current.pendingTools.findIndex(
         (p) =>
@@ -235,6 +251,7 @@ export function useAgentStream(): void {
         message: event.message,
         code: event.code,
       });
+      useCodesignStore.setState({ pendingToolCalls: [] });
       setStreamingAssistantText(null);
       inFlight.current = null;
       void appendChatMessage({
@@ -260,6 +277,10 @@ export function useAgentStream(): void {
     };
 
     const handleAgentEnd = (event: AgentStreamEvent) => {
+      // Any tools still showing "running" at run end would stick forever
+      // (their result event never arrived). Drain the live tray — the
+      // persisted DB rows are the source of truth once the run is done.
+      useCodesignStore.setState({ pendingToolCalls: [] });
       // Flush any throttled fs_updated payload synchronously so the preview
       // store reflects the final html before we read it back for persistence.
       const slot = fsThrottle.current;

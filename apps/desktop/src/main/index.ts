@@ -679,33 +679,25 @@ function registerIpcHandlers(db: Database | null): void {
     return { errors };
   });
 
-  ipcMain.handle(
-    'codesign:save-clipboard-image',
-    async (_e, raw: { bytes: ArrayBuffer | Uint8Array; mimeType: string }) => {
-      // Guard: limit to 20MB and to image/*. The renderer already filters,
-      // but the main process must not trust the renderer.
-      const MAX_BYTES = 20 * 1024 * 1024;
-      const buffer = Buffer.from(raw.bytes as ArrayBuffer);
-      if (buffer.byteLength === 0 || buffer.byteLength > MAX_BYTES) {
-        throw new Error(`Clipboard image rejected: size ${buffer.byteLength} out of range`);
-      }
-      const mime = typeof raw.mimeType === 'string' ? raw.mimeType : '';
-      if (!mime.startsWith('image/')) {
-        throw new Error(`Clipboard image rejected: mime "${mime}" is not image/*`);
-      }
-      const ext =
-        mime
-          .slice('image/'.length)
-          .split(';')[0]
-          ?.replace(/[^a-z0-9]/gi, '') || 'png';
-      const dir = join(app.getPath('temp'), 'ligma-pastes');
-      await mkdir(dir, { recursive: true });
-      const name = `paste-${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;
-      const path = join(dir, name);
-      await writeFile(path, buffer);
-      return { path, name, size: buffer.byteLength };
-    },
-  );
+  ipcMain.handle('codesign:save-clipboard-image', async () => {
+    // Read directly from the system clipboard instead of receiving bytes
+    // across the contextBridge: Electron's Chromium sandbox can drop
+    // ArrayBuffer transfers in rare cases, and this path also works for
+    // pastes originating outside of a DOM event (future shortcut, menu).
+    const img = clipboard.readImage();
+    if (img.isEmpty()) return null;
+    const buffer = img.toPNG();
+    const MAX_BYTES = 20 * 1024 * 1024;
+    if (buffer.byteLength === 0 || buffer.byteLength > MAX_BYTES) {
+      throw new Error(`Clipboard image rejected: size ${buffer.byteLength} out of range`);
+    }
+    const dir = join(app.getPath('temp'), 'ligma-pastes');
+    await mkdir(dir, { recursive: true });
+    const name = `paste-${Date.now()}-${crypto.randomUUID().slice(0, 8)}.png`;
+    const path = join(dir, name);
+    await writeFile(path, buffer);
+    return { path, name, size: buffer.byteLength };
+  });
 
   ipcMain.handle('codesign:pick-input-files', async () => {
     const result = mainWindow
@@ -847,6 +839,7 @@ function registerIpcHandlers(db: Database | null): void {
         attachments: payload.attachments,
         referenceUrl: payload.referenceUrl,
         designSystem: resolveDesignSystemForGenerate(db, payload.designId, cfg.designSystem),
+        workspace: payload.workspace,
       });
 
       logIpc.info('generate', {
@@ -861,6 +854,7 @@ function registerIpcHandlers(db: Database | null): void {
         attachmentCount: payload.attachments.length,
         hasReferenceUrl: payload.referenceUrl !== undefined,
         hasDesignSystem: promptContext.designSystem !== null,
+        hasWorkspace: payload.workspace !== undefined,
         baseUrl: baseUrl ?? '<default>',
       });
 
@@ -967,6 +961,7 @@ function registerIpcHandlers(db: Database | null): void {
         attachments: payload.attachments,
         referenceUrl: payload.referenceUrl,
         designSystem: resolveDesignSystemForGenerate(db, payload.designId, cfg.designSystem),
+        workspace: payload.workspace,
       });
 
       logIpc.info('generate', {
@@ -981,6 +976,7 @@ function registerIpcHandlers(db: Database | null): void {
         attachmentCount: payload.attachments.length,
         hasReferenceUrl: payload.referenceUrl !== undefined,
         hasDesignSystem: promptContext.designSystem !== null,
+        hasWorkspace: payload.workspace !== undefined,
         baseUrl: baseUrl ?? '<default>',
       });
 

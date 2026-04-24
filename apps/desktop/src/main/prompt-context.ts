@@ -1,11 +1,12 @@
-import { open } from 'node:fs/promises';
-import { extname } from 'node:path';
+import { open, readdir, stat } from 'node:fs/promises';
+import { basename, extname, join, relative, sep } from 'node:path';
 import type { AttachmentContext, ReferenceUrlContext } from '@ligma/core';
 import {
   CodesignError,
   ERROR_CODES,
   type LocalInputFile,
   type StoredDesignSystem,
+  type WorkspaceContext,
 } from '@ligma/shared';
 
 const TEXT_EXTS = new Set([
@@ -279,14 +280,130 @@ export interface PreparedPromptContext {
   referenceUrl: ReferenceUrlContext | null;
 }
 
+const WORKSPACE_IGNORES = new Set([
+  '.cache',
+  '.git',
+  '.next',
+  '.nuxt',
+  '.output',
+  '.parcel-cache',
+  '.svelte-kit',
+  '.turbo',
+  '.venv',
+  '.vite',
+  '__pycache__',
+  'build',
+  'coverage',
+  'dist',
+  'node_modules',
+  'out',
+  'target',
+  'tmp',
+  'vendor',
+]);
+const WORKSPACE_MAX_ENTRIES = 400;
+const WORKSPACE_MAX_DEPTH = 4;
+const WORKSPACE_KEY_FILES = [
+  'README.md',
+  'readme.md',
+  'package.json',
+  'pyproject.toml',
+  'Cargo.toml',
+  'go.mod',
+  'index.html',
+  'src/App.tsx',
+  'src/app.tsx',
+  'src/main.tsx',
+  'src/index.ts',
+  'src/index.tsx',
+];
+
+async function walkWorkspace(root: string): Promise<{ tree: string[]; truncated: boolean }> {
+  const out: string[] = [];
+  let truncated = false;
+
+  async function visit(dir: string, depth: number): Promise<void> {
+    if (out.length >= WORKSPACE_MAX_ENTRIES) {
+      truncated = true;
+      return;
+    }
+    if (depth > WORKSPACE_MAX_DEPTH) return;
+    let entries: import('node:fs').Dirent[];
+    try {
+      entries = await readdir(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    // Depth-first, alphabetical — keeps the listing predictable for the model.
+    entries.sort((a, b) => a.name.localeCompare(b.name));
+    for (const entry of entries) {
+      if (out.length >= WORKSPACE_MAX_ENTRIES) {
+        truncated = true;
+        return;
+      }
+      if (entry.name.startsWith('.') && entry.name !== '.env.example') continue;
+      if (WORKSPACE_IGNORES.has(entry.name)) continue;
+      const abs = join(dir, entry.name);
+      const rel = relative(root, abs).split(sep).join('/');
+      if (entry.isDirectory()) {
+        out.push(`${rel}/`);
+        await visit(abs, depth + 1);
+      } else if (entry.isFile()) {
+        out.push(rel);
+      }
+    }
+  }
+
+  await visit(root, 0);
+  return { tree: out, truncated };
+}
+
+async function readKeyWorkspaceFile(
+  root: string,
+  relPath: string,
+): Promise<AttachmentContext | null> {
+  const abs = join(root, relPath);
+  try {
+    const info = await stat(abs);
+    if (!info.isFile() || info.size === 0) return null;
+    return await readAttachment({ path: abs, name: basename(relPath), size: info.size });
+  } catch {
+    return null;
+  }
+}
+
+async function buildWorkspaceContext(
+  workspace: WorkspaceContext | undefined,
+): Promise<AttachmentContext[]> {
+  if (!workspace || !workspace.cwd) return [];
+  const root = workspace.cwd;
+  const { tree, truncated } = await walkWorkspace(root);
+  if (tree.length === 0) return [];
+  const truncatedSuffix = truncated ? '+ (truncated)' : '';
+  const header = `Workspace root: ${root}\nListing (${tree.length}${truncatedSuffix} entries, depth ≤ ${WORKSPACE_MAX_DEPTH}):\n${tree.join('\n')}`;
+  const treeAttachment: AttachmentContext = {
+    name: 'WORKSPACE.tree',
+    path: root,
+    excerpt: header.slice(0, MAX_ATTACHMENT_CHARS),
+    note: 'Read-only snapshot of the user-selected workspace directory. Use it to infer project structure and name files consistently with existing code.',
+  };
+  const readable = await Promise.all(
+    WORKSPACE_KEY_FILES.map((rel) => readKeyWorkspaceFile(root, rel)),
+  );
+  const keyAttachments = readable.filter((a): a is AttachmentContext => a !== null);
+  return [treeAttachment, ...keyAttachments];
+}
+
 export async function preparePromptContext(input: {
   attachments?: LocalInputFile[] | undefined;
   referenceUrl?: string | undefined;
   designSystem?: StoredDesignSystem | null | undefined;
+  workspace?: WorkspaceContext | undefined;
 }): Promise<PreparedPromptContext> {
-  const attachments = await Promise.all(
-    (input.attachments ?? []).map((file) => readAttachment(file)),
-  );
+  const [userAttachments, workspaceAttachments] = await Promise.all([
+    Promise.all((input.attachments ?? []).map((file) => readAttachment(file))),
+    buildWorkspaceContext(input.workspace),
+  ]);
   const referenceUrl =
     typeof input.referenceUrl === 'string' && input.referenceUrl.trim().length > 0
       ? await inspectReferenceUrl(input.referenceUrl.trim())
@@ -294,7 +411,7 @@ export async function preparePromptContext(input: {
 
   return {
     designSystem: input.designSystem ?? null,
-    attachments,
+    attachments: [...workspaceAttachments, ...userAttachments],
     referenceUrl,
   };
 }

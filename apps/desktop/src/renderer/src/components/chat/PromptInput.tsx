@@ -134,22 +134,21 @@ export const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(funct
     }
   }
 
-  async function handlePaste(e: ClipboardEvent<HTMLTextAreaElement>): Promise<void> {
+  function handlePaste(e: ClipboardEvent<HTMLTextAreaElement>): void {
     const data = e.clipboardData;
     if (!data) return;
-    const images: File[] = [];
-    for (const item of Array.from(data.items)) {
-      if (item.kind === 'file' && item.type.startsWith('image/')) {
-        const f = item.getAsFile();
-        if (f) images.push(f);
+    let hasImage = false;
+    for (const item of Array.from(data.items ?? [])) {
+      if (item.kind === 'file' && item.type.startsWith('image/')) hasImage = true;
+    }
+    if (!hasImage) {
+      for (const f of Array.from(data.files ?? [])) {
+        if (f.type.startsWith('image/')) hasImage = true;
       }
     }
-    if (images.length === 0) return;
+    if (!hasImage) return;
     e.preventDefault();
-    for (const file of images) {
-      const bytes = await file.arrayBuffer();
-      await addClipboardImage(bytes, file.type);
-    }
+    void addClipboardImage();
   }
 
   const canSend = prompt.trim().length > 0 && !isGenerating;

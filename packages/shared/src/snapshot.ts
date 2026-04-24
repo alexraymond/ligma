@@ -109,6 +109,9 @@ export interface ChatAppendInput {
 export interface ChatUserPayload {
   text: string;
   attachedSkills?: string[];
+  /** Files sent with THIS message — shown as chips beneath the user bubble so
+   *  the user can see what the agent was given as context on each turn. */
+  attachments?: Array<{ name: string; path: string; size: number }>;
 }
 export interface ChatAssistantTextPayload {
   text: string;

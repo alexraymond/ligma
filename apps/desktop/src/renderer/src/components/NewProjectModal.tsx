@@ -168,14 +168,10 @@ export function NewProjectModal(): ReactElement | null {
     }
   }
 
-  async function onPromptPaste(e: ClipboardEvent<HTMLTextAreaElement>) {
-    const images = extractPastedImages(e.clipboardData);
-    if (images.length === 0) return;
+  function onPromptPaste(e: ClipboardEvent<HTMLTextAreaElement>) {
+    if (!clipboardHasImage(e.clipboardData)) return;
     e.preventDefault();
-    for (const img of images) {
-      const bytes = await img.file.arrayBuffer();
-      await addClipboardImage(bytes, img.file.type);
-    }
+    void addClipboardImage();
   }
 
   function onUrlChange(e: ChangeEvent<HTMLInputElement>) {
@@ -508,16 +504,17 @@ export function NewProjectModal(): ReactElement | null {
   );
 }
 
-function extractPastedImages(data: DataTransfer | null): Array<{ file: File }> {
-  if (!data) return [];
-  const out: Array<{ file: File }> = [];
-  for (const item of Array.from(data.items)) {
-    if (item.kind !== 'file') continue;
-    if (!item.type.startsWith('image/')) continue;
-    const f = item.getAsFile();
-    if (f) out.push({ file: f });
+function clipboardHasImage(data: DataTransfer | null): boolean {
+  if (!data) return false;
+  for (const item of Array.from(data.items ?? [])) {
+    if (item.kind === 'file' && item.type.startsWith('image/')) return true;
   }
-  return out;
+  for (const f of Array.from(data.files ?? [])) {
+    if (f.type.startsWith('image/')) return true;
+  }
+  // macOS screenshots / screen captures announce "Files" in types without
+  // populating items in some cases; fall back to the types list.
+  return Array.from(data.types ?? []).some((t) => t.startsWith('image/'));
 }
 
 function Row({

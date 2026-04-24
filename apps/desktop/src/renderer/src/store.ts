@@ -361,11 +361,11 @@ interface CodesignState {
   exportActive: (format: ExportFormat) => Promise<void>;
 
   pickInputFiles: () => Promise<void>;
-  /** Persist a clipboard-pasted image to a temp file and append it to
-   *  `inputFiles` so it rides the existing attachment pipeline. Returns
-   *  the saved file for UI use (toast/preview). No-op + returns null if
-   *  the IPC bridge is unavailable or the save fails. */
-  addClipboardImage: (bytes: ArrayBuffer, mimeType: string) => Promise<LocalInputFile | null>;
+  /** Read an image off the system clipboard, persist it to a temp file,
+   *  and append it to `inputFiles` so it rides the existing attachment
+   *  pipeline. Returns the saved file or null if the clipboard has no
+   *  image. */
+  addClipboardImage: () => Promise<LocalInputFile | null>;
   removeInputFile: (path: string) => void;
   clearInputFiles: () => void;
   setReferenceUrl: (value: string) => void;
@@ -1477,10 +1477,11 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     set((s) => ({ inputFiles: uniqueFiles([...s.inputFiles, ...files]) }));
   },
 
-  async addClipboardImage(bytes, mimeType) {
+  async addClipboardImage() {
     if (!window.codesign?.saveClipboardImage) return null;
     try {
-      const file = await window.codesign.saveClipboardImage(bytes, mimeType);
+      const file = await window.codesign.saveClipboardImage();
+      if (!file) return null;
       set((s) => ({ inputFiles: uniqueFiles([...s.inputFiles, file]) }));
       return file;
     } catch (err) {
@@ -1632,11 +1633,26 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     // receives the prompt through runGenerate, but the chat UI reads as one
     // continuous run instead of a second user bubble.
     if (designIdAtStart && !input.silent) {
+      // Snapshot the attachments that will be sent with THIS prompt so the
+      // chat history makes it obvious which files were used as context for
+      // each turn (paperclip chips render below the bubble).
+      const snapshotAttachments = request.attachments.map((a) => ({
+        name: a.name,
+        path: a.path,
+        size: a.size,
+      }));
       void get().appendChatMessage({
         designId: designIdAtStart,
         kind: 'user',
-        payload: { text: request.prompt },
+        payload: {
+          text: request.prompt,
+          ...(snapshotAttachments.length > 0 ? { attachments: snapshotAttachments } : {}),
+        },
       });
+      // Drain the attachment tray once the message carries its own snapshot,
+      // so the next prompt starts empty instead of silently re-sending the
+      // same files.
+      if (snapshotAttachments.length > 0) set({ inputFiles: [] });
     }
 
     if (!input.silent) {
@@ -2877,6 +2893,38 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     set((s) => ({
       currentFilePathByDesign: { ...s.currentFilePathByDesign, [designId]: path },
     }));
+    // Swap the preview iframe to the picked file. Without this the pool keeps
+    // showing whatever `previewHtml` was last set to (normally the latest
+    // turn), so clicking turn-02 / turn-03 tabs would appear to load the
+    // same content as index.html.
+    void (async () => {
+      if (!window.codesign?.files) return;
+      try {
+        const row = await window.codesign.files.read(designId, path);
+        if (!row || typeof row.content !== 'string') return;
+        const state = get();
+        const pool = recordPreviewInPool(
+          state.previewHtmlByDesign,
+          state.recentDesignIds,
+          designId,
+          row.content,
+        );
+        const patch: Partial<CodesignState> = {
+          previewHtmlByDesign: pool.cache,
+          recentDesignIds: pool.recent,
+        };
+        if (state.currentDesignId === designId) {
+          patch.previewHtml = row.content;
+        }
+        set(patch);
+      } catch (err) {
+        rendererLogger.warn('store', '[files] setCurrentFilePath read failed', {
+          designId,
+          path,
+          message: err instanceof Error ? err.message : String(err),
+        });
+      }
+    })();
   },
 
   setFidelity(designId: string, fidelity: 'wireframe' | 'highFidelity' | null) {

@@ -426,12 +426,53 @@ function PreviewSlot({
     );
   }
 
+  // Paper-sketchbook label: handwritten caption pinned at the top-left of the
+  // canvas (outside the iframe so it doesn't get overwritten by model output).
+  // Shows the active file name so it's obvious which turn is currently open.
+  const captionNode = active ? <FrameCaption /> : null;
+
   // When natural-sizing, don't force h-full w-full — let the wrapper report
   // its intrinsic size so the ancestor scroll container handles overflow.
   const outerClass = useNaturalCanvas ? '' : 'h-full w-full';
   return (
     <div hidden={!active} className={outerClass}>
+      {captionNode}
       {body}
+    </div>
+  );
+}
+
+function FrameCaption(): React.ReactElement | null {
+  const currentDesignId = useCodesignStore((s) => s.currentDesignId);
+  const currentFilePathByDesign = useCodesignStore((s) => s.currentFilePathByDesign);
+  const path = currentDesignId ? currentFilePathByDesign[currentDesignId] : undefined;
+  const label = path ?? 'index.html';
+  // Pinned at top-left, rotated a touch so it reads as a hand-written margin
+  // note; pointer-events-none so it never blocks iframe clicks. Uses Kalam
+  // (the hand font) to match the sketchbook aesthetic.
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute z-10"
+      style={{
+        top: 12,
+        left: 12,
+        transform: 'rotate(-1.5deg)',
+        fontFamily: 'var(--font-hand)',
+        fontSize: 14,
+        fontStyle: 'italic',
+        color: 'var(--color-accent)',
+        background: 'var(--color-paper-card)',
+        padding: '2px 10px',
+        border: '1px dashed var(--color-accent)',
+        boxShadow: 'var(--shadow-tape)',
+        maxWidth: 280,
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      }}
+    >
+      {label}
     </div>
   );
 }

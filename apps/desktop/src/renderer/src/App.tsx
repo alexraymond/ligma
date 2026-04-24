@@ -254,10 +254,15 @@ export function App() {
             </div>
           ) : null}
           {workspaceMounted ? (
-            <div hidden={view !== 'workspace'} className="h-full flex flex-col">
-              <div className="flex-1 min-h-0 flex relative">
+            <div hidden={view !== 'workspace'} className="h-full flex flex-col overflow-hidden">
+              <div className="flex-1 min-h-0 flex relative overflow-hidden">
                 {isResizing && <div className="absolute inset-0 z-20 cursor-col-resize" />}
-                <div className="relative shrink-0" style={{ width: sidebarWidth }}>
+                {/* Sidebar lives in its own stacking column OUTSIDE the canvas
+                    pan/zoom transform and the preview iframe's scroll area.
+                    `overflow-hidden` on the parent + `min-w-0` on the canvas
+                    column keeps oversize artboards from pushing this column
+                    sideways as the user pans. */}
+                <div className="relative shrink-0 overflow-hidden" style={{ width: sidebarWidth }}>
                   <Sidebar prompt={prompt} setPrompt={setPrompt} onSubmit={submit} />
                   <div
                     role="separator"
@@ -267,7 +272,7 @@ export function App() {
                     style={{ transform: 'translateX(50%)' }}
                   />
                 </div>
-                <div className="flex flex-col min-h-0 flex-1 min-w-0">
+                <div className="flex flex-col min-h-0 flex-1 min-w-0 overflow-hidden">
                   <PreviewPane onPickStarter={(p) => setPrompt(p)} />
                 </div>
               </div>

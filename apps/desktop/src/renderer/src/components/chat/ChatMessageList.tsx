@@ -110,13 +110,18 @@ export function ChatMessageList({
     flush();
 
     if (msg.kind === 'user') {
-      const p = msg.payload as { text?: string; attachedSkills?: string[] };
+      const p = msg.payload as {
+        text?: string;
+        attachedSkills?: string[];
+        attachments?: Array<{ name: string; path: string; size: number }>;
+      };
       items.push({
         key: `u-${msg.seq}`,
         node: (
           <UserMessage
             text={p?.text ?? ''}
             {...(p?.attachedSkills ? { attachedSkills: p.attachedSkills } : {})}
+            {...(p?.attachments && p.attachments.length > 0 ? { attachments: p.attachments } : {})}
           />
         ),
       });
@@ -175,6 +180,20 @@ export function ChatMessageList({
       {pendingToolCalls && pendingToolCalls.length > 0 && (
         <div key="pending-tools" className="space-y-[var(--space-1)]">
           {(() => {
+            // Dedupe: the persisted tool_call row (from the DB) and the live
+            // pendingToolCalls entry share a toolCallId. When both are present
+            // (brief overlap between DB write and store push), render only the
+            // persisted row so a running tool never shows twice.
+            const persistedIds = new Set<string>();
+            for (const m of messages) {
+              if (m.kind !== 'tool_call') continue;
+              const id = (m.payload as ChatToolCallPayload | null)?.toolCallId;
+              if (id) persistedIds.add(id);
+            }
+            const visible = pendingToolCalls.filter(
+              (c) => !(c.toolCallId && persistedIds.has(c.toolCallId)),
+            );
+            if (visible.length === 0) return null;
             const groups: React.ReactNode[] = [];
             let pendingBucket: ChatToolCallPayload[] = [];
             const flushPending = (idx: number): void => {
@@ -182,8 +201,8 @@ export function ChatMessageList({
               groups.push(<WorkingCard key={`p-cluster-${idx}`} calls={pendingBucket} />);
               pendingBucket = [];
             };
-            for (let i = 0; i < pendingToolCalls.length; i += 1) {
-              const c = pendingToolCalls[i];
+            for (let i = 0; i < visible.length; i += 1) {
+              const c = visible[i];
               if (!c) continue;
               if (c.toolName === 'set_todos') {
                 flushPending(i);
@@ -192,7 +211,7 @@ export function ChatMessageList({
               }
               pendingBucket.push(c);
             }
-            flushPending(pendingToolCalls.length);
+            flushPending(visible.length);
             return groups;
           })()}
         </div>
