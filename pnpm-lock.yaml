@@ -201,6 +201,8 @@ importers:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@22.19.17)(happy-dom@20.9.0)(lightningcss@1.32.0)
 
+  packages/deez: {}
+
   packages/exporters:
     dependencies:
       '@ligma/shared':
@@ -250,6 +252,8 @@ importers:
       vitest:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@22.19.17)(happy-dom@20.9.0)(lightningcss@1.32.0)
+
+  packages/nuts: {}
 
   packages/providers:
     dependencies:
@@ -344,6 +348,9 @@ importers:
         version: 5.2.8
       '@fontsource-variable/jetbrains-mono':
         specifier: ^5.1.0
+        version: 5.2.8
+      '@fontsource/kalam':
+        specifier: ^5.2.8
         version: 5.2.8
     devDependencies:
       '@testing-library/react':
@@ -1403,6 +1410,9 @@ packages:
 
   '@fontsource-variable/jetbrains-mono@5.2.8':
     resolution: {integrity: sha512-WBA9elru6Jdp5df2mES55wuOO0WIrn3kpXnI4+W2ek5u3ZgLS9XS4gmIlcQhiZOWEKl95meYdvK7xI+ETLCq/Q==}
+
+  '@fontsource/kalam@5.2.8':
+    resolution: {integrity: sha512-9WDYPX1llS28xRjrqAoz3IOLeaBhCtL3HCtNanYnF1fthFPmSD5aESL6s7C1SJxAlxq/qzTlpIpw4S1W9+q3OA==}
 
   '@google/genai@1.50.1':
     resolution: {integrity: sha512-YbkX7H9+1Pt8wOt7DDREy8XSoiL6fRDzZQRyaVBarFf8MR3zHGqVdvM4cLbDXqPhxqvegZShgfxb8kw9C7YhAQ==}
@@ -6495,6 +6505,8 @@ snapshots:
   '@fontsource-variable/inter@5.2.8': {}
 
   '@fontsource-variable/jetbrains-mono@5.2.8': {}
+
+  '@fontsource/kalam@5.2.8': {}
 
   '@google/genai@1.50.1(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))':
     dependencies:

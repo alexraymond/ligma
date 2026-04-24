@@ -113,9 +113,8 @@ export interface ReportableErrorToastSpec {
 }
 
 export type Theme = 'light' | 'dark';
-export type AppView = 'hub' | 'workspace' | 'settings';
+export type AppView = 'hub' | 'designSystems' | 'workspace' | 'settings';
 export type SettingsTab = 'models' | 'appearance' | 'storage' | 'diagnostics' | 'advanced';
-export type HubTab = 'recent' | 'your' | 'examples' | 'designSystems';
 export type InteractionMode = 'default' | 'comment' | 'artboard-select' | 'artboard-move';
 
 export interface CanvasSize {
@@ -218,6 +217,7 @@ interface CodesignState {
   currentDesignId: string | null;
   designsLoaded: boolean;
   designsViewOpen: boolean;
+  newProjectModalOpen: boolean;
   designToDelete: Design | null;
   designToRename: Design | null;
 
@@ -227,7 +227,6 @@ interface CodesignState {
   /** When non-null, Settings reads this on mount to auto-select the tab
    *  then calls clearSettingsTab() so future opens are unbiased. */
   settingsTab: SettingsTab | null;
-  hubTab: HubTab;
   previewViewport: PreviewViewport;
   toasts: Toast[];
   iframeErrors: string[];
@@ -362,6 +361,11 @@ interface CodesignState {
   exportActive: (format: ExportFormat) => Promise<void>;
 
   pickInputFiles: () => Promise<void>;
+  /** Persist a clipboard-pasted image to a temp file and append it to
+   *  `inputFiles` so it rides the existing attachment pipeline. Returns
+   *  the saved file for UI use (toast/preview). No-op + returns null if
+   *  the IPC bridge is unavailable or the save fails. */
+  addClipboardImage: (bytes: ArrayBuffer, mimeType: string) => Promise<LocalInputFile | null>;
   removeInputFile: (path: string) => void;
   clearInputFiles: () => void;
   setReferenceUrl: (value: string) => void;
@@ -397,8 +401,16 @@ interface CodesignState {
    *  the hint (Settings falls back to its own default tab). */
   openSettingsTab: (tab: SettingsTab) => void;
   clearSettingsTab: () => void;
-  setHubTab: (tab: HubTab) => void;
   setPreviewViewport: (viewport: PreviewViewport) => void;
+  /** Home prompt entry: create a new design, switch to workspace, and send
+   *  the prompt through the normal generation pipeline. Optional chips
+   *  (fidelity, designSystemId) propagate via the existing per-design maps.
+   *  `fidelity === null` leaves the per-design value alone (auto). */
+  submitHomePrompt: (input: {
+    prompt: string;
+    fidelity?: 'wireframe' | 'highFidelity' | null;
+    designSystemId?: string | null;
+  }) => Promise<void>;
 
   loadDesigns: () => Promise<void>;
   ensureCurrentDesign: () => Promise<void>;
@@ -410,6 +422,8 @@ interface CodesignState {
   softDeleteDesign: (id: string) => Promise<void>;
   openDesignsView: () => void;
   closeDesignsView: () => void;
+  openNewProjectModal: () => void;
+  closeNewProjectModal: () => void;
   requestDeleteDesign: (design: Design | null) => void;
   requestRenameDesign: (design: Design | null) => void;
 
@@ -637,34 +651,30 @@ export function coerceUsageSnapshot(result: {
  * at unit level rather than relying on visual inspection.
  */
 export function readInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'dark';
+  if (typeof window === 'undefined') return 'light';
   try {
     const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
     if (stored === 'light' || stored === 'dark') return stored;
   } catch {
     // localStorage unavailable
   }
-  return 'dark';
+  return 'light';
 }
 
 /**
- * Mirrors the pre-mount script in `index.html`: `.light` is the opt-in
- * class, `.dark` is the default state that also stays applied as an
- * explicit class so any selector targeting `.dark` continues to work.
- * Exported for tests.
+ * Mirrors the pre-mount script in `index.html`: paper (light) is the
+ * `:root` default, `.dark` is the nocturne opt-in. Only the dark class
+ * is toggled — light leaves :root untouched. Exported for tests.
  */
 export function applyThemeClass(theme: Theme): void {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
-  // Dark is the default (:root tokens). Light is opt-in via `.light`.
-  // Keep `.dark` too for any third-party selectors that may target it.
-  if (theme === 'light') {
-    root.classList.add('light');
-    root.classList.remove('dark');
-  } else {
-    root.classList.remove('light');
+  if (theme === 'dark') {
     root.classList.add('dark');
+  } else {
+    root.classList.remove('dark');
   }
+  root.classList.remove('light');
 }
 
 function persistTheme(theme: Theme): void {
@@ -1377,8 +1387,11 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
   useNewLoop: readInitialUseNewLoop(),
   view: 'hub' as AppView,
   previousView: 'hub' as AppView,
+  // Note: hubTab was retired with the paper-sketchbook redesign. The home
+  // wall is now a single scrolling page with date-grouped cards; Design
+  // Systems is reachable via the left rail as its own view; Examples folds
+  // into the home wall as an empty-state starter row.
   settingsTab: null as SettingsTab | null,
-  hubTab: 'recent' as HubTab,
   previewViewport: 'desktop' as PreviewViewport,
   toasts: [],
   iframeErrors: [],
@@ -1387,6 +1400,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
   currentDesignId: null,
   designsLoaded: false,
   designsViewOpen: false,
+  newProjectModalOpen: false,
   designToDelete: null,
   designToRename: null,
 
@@ -1461,6 +1475,22 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     const files = await window.codesign.pickInputFiles();
     if (files.length === 0) return;
     set((s) => ({ inputFiles: uniqueFiles([...s.inputFiles, ...files]) }));
+  },
+
+  async addClipboardImage(bytes, mimeType) {
+    if (!window.codesign?.saveClipboardImage) return null;
+    try {
+      const file = await window.codesign.saveClipboardImage(bytes, mimeType);
+      set((s) => ({ inputFiles: uniqueFiles([...s.inputFiles, file]) }));
+      return file;
+    } catch (err) {
+      get().pushToast({
+        variant: 'error',
+        title: 'Could not paste image',
+        description: err instanceof Error ? err.message : String(err),
+      });
+      return null;
+    }
   },
 
   removeInputFile(path) {
@@ -1992,12 +2022,36 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     set({ settingsTab: null });
   },
 
-  setHubTab(tab) {
-    set({ hubTab: tab });
-  },
-
   setPreviewViewport(viewport) {
     set({ previewViewport: viewport });
+  },
+
+  async submitHomePrompt(input) {
+    const trimmed = input.prompt.trim();
+    if (trimmed.length === 0) return;
+    if (get().isGenerating) return;
+    // Bootstrap a new design, switch focus, then send through the normal
+    // pipeline. If createNewDesign fails (e.g. another run is in flight) it
+    // surfaces a toast and we bail — the home prompt box stays intact so
+    // the user doesn't lose what they typed.
+    const created = await get().createNewDesign();
+    if (!created) return;
+    // Apply optional chips via the existing setters so the per-design maps
+    // and any side effects (IPC link, etc.) stay consistent.
+    if (input.fidelity !== undefined) {
+      get().setFidelity(created.id, input.fidelity);
+    }
+    if (input.designSystemId !== undefined) {
+      const dsId: string | null = input.designSystemId;
+      try {
+        await window.codesign?.designSystems.linkToDesign(created.id, dsId);
+      } catch {
+        // Linking failures are non-fatal — the user can attach a design
+        // system later from the sidebar. The prompt still runs.
+      }
+    }
+    get().setView('workspace');
+    await get().sendPrompt({ prompt: trimmed });
   },
 
   async loadDesigns() {
@@ -2302,6 +2356,12 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
   },
   closeDesignsView() {
     set({ designsViewOpen: false });
+  },
+  openNewProjectModal() {
+    set({ newProjectModalOpen: true });
+  },
+  closeNewProjectModal() {
+    set({ newProjectModalOpen: false });
   },
   requestDeleteDesign(design) {
     set({ designToDelete: design });

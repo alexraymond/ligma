@@ -1,5 +1,5 @@
 import { mkdirSync } from 'node:fs';
-import { stat } from 'node:fs/promises';
+import { mkdir, stat, writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -678,6 +678,34 @@ function registerIpcHandlers(db: Database | null): void {
     const errors = await sharedRuntimeVerifier((raw as { artifact: string }).artifact);
     return { errors };
   });
+
+  ipcMain.handle(
+    'codesign:save-clipboard-image',
+    async (_e, raw: { bytes: ArrayBuffer | Uint8Array; mimeType: string }) => {
+      // Guard: limit to 20MB and to image/*. The renderer already filters,
+      // but the main process must not trust the renderer.
+      const MAX_BYTES = 20 * 1024 * 1024;
+      const buffer = Buffer.from(raw.bytes as ArrayBuffer);
+      if (buffer.byteLength === 0 || buffer.byteLength > MAX_BYTES) {
+        throw new Error(`Clipboard image rejected: size ${buffer.byteLength} out of range`);
+      }
+      const mime = typeof raw.mimeType === 'string' ? raw.mimeType : '';
+      if (!mime.startsWith('image/')) {
+        throw new Error(`Clipboard image rejected: mime "${mime}" is not image/*`);
+      }
+      const ext =
+        mime
+          .slice('image/'.length)
+          .split(';')[0]
+          ?.replace(/[^a-z0-9]/gi, '') || 'png';
+      const dir = join(app.getPath('temp'), 'ligma-pastes');
+      await mkdir(dir, { recursive: true });
+      const name = `paste-${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;
+      const path = join(dir, name);
+      await writeFile(path, buffer);
+      return { path, name, size: buffer.byteLength };
+    },
+  );
 
   ipcMain.handle('codesign:pick-input-files', async () => {
     const result = mainWindow

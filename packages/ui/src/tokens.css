@@ -1,71 +1,100 @@
 /**
- * Design tokens for Ligma.
- * Dark-first surfaces, muted-teal accent, editorial warmth tempered by
- * cooler chrome. All values are CSS custom properties — never hardcode.
+ * Design tokens for Ligma — paper-sketchbook aesthetic.
  *
- * Theme default is DARK (see :root below). The `.light` class on
- * `document.documentElement` opts a user back into the light palette.
+ * Light is the default (`:root`). It renders as warm cream paper with a
+ * blue graph-paper grid and red-pencil accents — the core Ligma visual
+ * identity. Users can opt into a nocturne variant by adding the `.dark`
+ * class to `document.documentElement`, which keeps the sketchbook feel
+ * but swaps paper for deep leather-bound surfaces with a warm cream
+ * pencil on top.
+ *
+ * Never hard-code colors downstream — route through these tokens so a
+ * future palette adjustment doesn't require touching every component.
  */
 
 :root {
-  /* TODO: final Ligma palette — accent is a placeholder muted teal (#2EB5A8). */
-  /* Surface — warm dark (dark-first) */
-  --color-background: oklch(0.18 0.015 220);
-  --color-background-secondary: oklch(0.22 0.015 220);
-  --color-surface: oklch(0.22 0.015 220);
-  --color-surface-hover: oklch(0.26 0.018 220);
-  --color-surface-active: oklch(0.29 0.018 220);
-  --color-surface-muted: oklch(0.22 0.015 220);
-  /* alias used by some components */
-  --color-surface-elevated: oklch(0.26 0.018 220);
+  /* === Paper surfaces === */
+  --color-paper: #f2ecdc;
+  --color-paper-card: #fbf6e8;
+  --color-paper-shade: #e9e1c8;
+
+  /* === Pencil ink === */
+  --color-pencil: #2a2620;
+  --color-pencil-muted: #5b5344;
+  --color-pencil-faint: #8e8575;
+
+  /* === Red pencil (accent) === */
+  --color-red: #c72a2a;
+  --color-red-deep: #9d1e1e;
+
+  /* === Graph paper grid === */
+  --color-grid: rgba(58, 110, 162, 0.28);
+  --color-grid-major: rgba(58, 110, 162, 0.52);
+
+  /* === Dashed rule separators === */
+  --color-rule: rgba(42, 38, 32, 0.32);
+  --color-rule-subtle: rgba(42, 38, 32, 0.16);
+
+  /* === Back-compat aliases (components still read these) === */
+  --color-background: var(--color-paper);
+  --color-background-secondary: var(--color-paper-shade);
+  --color-surface: var(--color-paper-card);
+  --color-surface-hover: color-mix(in srgb, var(--color-paper-card) 70%, var(--color-paper-shade));
+  --color-surface-active: var(--color-paper-shade);
+  --color-surface-muted: var(--color-paper-shade);
+  --color-surface-elevated: var(--color-paper-card);
   /* Artifact iframe background — user-generated content defaults to white in
      both themes; artifacts ship their own styles and should not inherit app theme. */
   --color-artifact-bg: #ffffff;
 
-  /* Border */
-  --color-border: oklch(0.3 0.012 220);
-  --color-border-muted: oklch(0.27 0.01 220);
-  --color-border-subtle: oklch(0.24 0.01 220);
-  --color-border-strong: oklch(0.4 0.015 225);
+  --color-border: var(--color-rule);
+  --color-border-muted: var(--color-rule-subtle);
+  --color-border-subtle: rgba(42, 38, 32, 0.08);
+  --color-border-strong: var(--color-pencil);
 
-  /* Accent — Ligma placeholder muted teal (#2EB5A8) */
-  /* TODO: final Ligma palette */
-  --color-accent: #2eb5a8;
-  --color-accent-hover: #3dcabd;
-  --color-accent-muted: oklch(0.4 0.07 190);
-  --color-accent-soft: oklch(0.72 0.11 190 / 0.14);
-  --color-accent-tint: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
-  --color-focus-ring: oklch(0.72 0.11 190 / 0.35);
-  --color-on-accent: oklch(0.14 0.01 220);
+  --color-accent: var(--color-red);
+  --color-accent-hover: var(--color-red-deep);
+  --color-accent-muted: rgba(199, 42, 42, 0.55);
+  --color-accent-soft: rgba(199, 42, 42, 0.18);
+  --color-accent-tint: color-mix(in srgb, var(--color-red) 6%, var(--color-paper-card));
+  --color-focus-ring: rgba(199, 42, 42, 0.35);
+  --color-on-accent: var(--color-paper-card);
 
-  /* Text — cool off-white on dark */
-  --color-text-primary: oklch(0.95 0.01 220);
-  --color-text-secondary: oklch(0.72 0.015 220);
-  --color-text-muted: oklch(0.55 0.012 220);
+  --color-text-primary: var(--color-pencil);
+  --color-text-secondary: var(--color-pencil-muted);
+  --color-text-muted: var(--color-pencil-faint);
+  --color-text-tertiary: var(--color-pencil-faint);
 
-  /* Semantic */
-  --color-success: #6b9c6e;
-  --color-warning: #d4a04a;
-  --color-error: #d96050;
-  --color-mcp: #6a8aab;
+  /* === Semantic (kept warm, readable on paper) === */
+  --color-success: #4f7a52;
+  --color-warning: #b8862a;
+  --color-error: #b04030;
+  --color-mcp: #4a6b8a;
+  --color-toast-success: #4f7a52;
+  --color-toast-error: #b04030;
+  --color-overlay: rgba(42, 38, 32, 0.45);
 
-  /* Feedback */
-  --color-toast-success: #6b9c6e;
-  --color-toast-error: #d96050;
-  --color-overlay: oklch(0 0 0 / 0.6);
-
-  /* Shadow — cool-tinted, three discrete levels */
-  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.3);
-  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.25), 0 4px 16px oklch(0 0 0 / 0.35);
-  --shadow-elevated: 0 2px 4px oklch(0 0 0 / 0.3), 0 12px 32px oklch(0 0 0 / 0.5);
+  /* === Shadows — warm-tinted, gentle === */
+  --shadow-soft: 2px 3px 0 rgba(110, 85, 55, 0.13), 0 1px 2px rgba(80, 55, 25, 0.05);
+  --shadow-card: 2px 3px 0 rgba(110, 85, 55, 0.13), 0 8px 18px rgba(80, 55, 25, 0.1);
+  --shadow-elevated: 2px 3px 0 rgba(110, 85, 55, 0.18), 0 12px 32px rgba(80, 55, 25, 0.18);
   --shadow-inset-soft: inset 0 0 0 1px var(--color-border-subtle);
+  --shadow-tape: 0 1px 2px rgba(0, 0, 0, 0.12);
+  --shadow-tilt-badge: 1.5px 2px 0 rgba(120, 60, 30, 0.28);
 
-  /* Typography — Ligma stack (Inter body, Fraunces display kept for headings) */
-  --font-display: "Fraunces Variable", "Times New Roman", serif;
-  --font-sans: "Inter Variable", "Geist Variable", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+  /* Phone device (preview frame) */
+  --color-phone-body: oklch(0.22 0.005 280);
+  --color-phone-island: oklch(0.08 0 0);
 
-  /* Extended type scale */
+  /* === Typography — Fraunces body, Caveat handwriting, Mono numerals === */
+  --font-display: "Fraunces Variable", Georgia, serif;
+  --font-sans: "Fraunces Variable", "Inter Variable", Georgia, serif;
+  /* Kalam is a print-style hand font — chosen over Caveat because its
+     letters don't run together at chip/plaque sizes. Weights 300/400/700
+     are loaded via @fontsource/kalam in packages/ui/src/fonts.ts. */
+  --font-hand: "Kalam", "Patrick Hand", "Segoe Print", cursive;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+
   --font-size-display-2xl: 48px;
   --font-size-display-xl: 36px;
   --font-size-display-lg: 28px;
@@ -75,7 +104,6 @@
   --font-size-body-xs: 11px;
   --font-size-mono: 13px;
 
-  /* Type scale — strict 8 sizes (kept for back-compat) */
   --text-2xs: 10px;
   --text-xs: 12px;
   --text-sm: 13px;
@@ -85,27 +113,25 @@
   --text-xl: 28px;
   --text-2xl: 36px;
 
-  /* Line height */
   --leading-heading: 1.2;
   --leading-ui: 1.4;
   --leading-body: 1.6;
   --leading-snug: 1.5;
 
-  /* Letter spacing */
   --tracking-heading: -0.01em;
   --tracking-tight: -0.005em;
   --tracking-normal: 0;
   --tracking-wide: 0.04em;
   --tracking-label: 0.08em;
 
-  /* Control sizes */
+  /* === Control sizing === */
   --size-control-xs: 30px;
   --size-control-sm: 32px;
   --size-control-md: 40px;
   --size-control-lg: 48px;
   --size-accent-stripe: 3px;
 
-  /* Spacing — strict 4-px scale */
+  /* === Spacing (4-px scale) === */
   --space-0_5: 2px;
   --space-1: 4px;
   --space-1_5: 6px;
@@ -120,60 +146,43 @@
   --space-16: 64px;
   --space-content: 24px;
 
-  /* Icon sizes */
   --size-icon-xs: 12px;
   --size-icon-sm: 14px;
   --size-icon-md: 16px;
   --size-input-height: 40px;
 
-  /* Titlebar (Electron frameless window) — Ligma reskin tightens vertical rhythm. */
-  --size-titlebar-height: 84px;
-  --size-titlebar-pad-left: 72px; /* clears macOS traffic-light buttons */
+  /* Titlebar (Electron frameless window) — sketchbook uses a thinner strip. */
+  --size-titlebar-height: 54px;
+  /* Clears macOS traffic-light buttons under titleBarStyle: 'hiddenInset'.
+     Buttons span x ~12–80; 100px gives comfortable breathing room so the
+     Ligma wordmark doesn't read as glued to the green button. */
+  --size-titlebar-pad-left: 100px;
 
-  /* Chip / file-token max width */
+  /* Left rail width (Home / Design Systems / Settings) */
+  --size-rail-width: 56px;
+
   --size-chip-max: 180px;
-
-  /* Minimum width for menus, popovers, and stage panels */
   --size-stage-min: 200px;
-
-  /* Compact menu width (zoom dropdown, narrow option pickers) */
   --size-menu-compact: 6rem;
-
-  /* Hub sidebar (Designs hub left rail) */
   --size-hub-sidebar: 360px;
-
-  /* Modal widths */
   --size-modal-md: 560px;
-
-  /* Grid card minimum (project / artifact cards) */
   --size-card-min: 240px;
-
-  /* Reading-width caps for prose / descriptions */
   --size-prose-narrow: 60ch;
-
-  /* Card hover lift offset */
   --lift-card-hover: 1px;
-
-  /* Press feedback scale */
   --scale-hover-up: 1.04;
   --scale-press-down: 0.96;
 
-  /* Radius — slightly larger, friendlier */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 14px;
-  --radius-2xl: 18px;
+  /* === Radius — the sketchbook aesthetic keeps edges slightly crisp === */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 14px;
   --radius-full: 9999px;
   --radius-phone: 44px;
 
-  /* Border width */
   --border-width-strong: 8px;
   --border-width-phone-bezel: 3px;
-
-  /* Phone body — slightly lighter than dark bg so the device still reads as an object. */
-  --color-phone-body: oklch(0.32 0.005 280);
-  --color-phone-island: oklch(0.05 0 0);
 
   /* Preview viewport sizes */
   --size-preview-mobile-width: 375px;
@@ -187,7 +196,7 @@
   --size-preview-desktop-width: 1440px;
   --size-preview-desktop-height: 900px;
 
-  /* Motion — subtle, editorial */
+  /* === Motion === */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 120ms;
   --duration-faster: 150ms;
@@ -197,7 +206,8 @@
   --transition-fast: all var(--duration-fast) var(--ease-out);
 }
 
-/* Display headings use Fraunces — Ligma bumps weight one step from 500 → 600. */
+/* Display headings use Fraunces semibold — matches the paper aesthetic's
+   editorial feel without overwhelming the handwritten accents. */
 h1,
 h2,
 h3,
@@ -206,7 +216,7 @@ h3,
   font-weight: 600;
 }
 
-/* Monospaced numbers and code */
+/* Monospaced numerals + code */
 code,
 kbd,
 pre,
@@ -216,51 +226,52 @@ pre,
   font-feature-settings: "tnum";
 }
 
-/* Light theme (opt-in via `.light` on documentElement). Dark is the default. */
-.light {
-  --color-background: oklch(0.98 0.012 80);
-  --color-background-secondary: oklch(0.96 0.015 75);
-  --color-surface: oklch(0.99 0.008 80);
-  --color-surface-hover: oklch(0.96 0.015 75);
-  --color-surface-active: oklch(0.94 0.018 72);
-  --color-surface-muted: oklch(0.96 0.015 75);
-  --color-surface-elevated: oklch(0.99 0.008 80);
-  --color-artifact-bg: #ffffff;
+/* Handwriting utility — for margin annotations, plaques, timestamps. */
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 500;
+}
 
-  --color-border: oklch(0.88 0.012 70);
-  --color-border-muted: oklch(0.91 0.01 72);
-  --color-border-subtle: oklch(0.94 0.008 74);
-  --color-border-strong: oklch(0.78 0.015 65);
+/* === Nocturne — opt-in via `.dark` on documentElement ===
+   Keeps the sketchbook feel: red pencil stays red, Caveat/Fraunces unchanged.
+   Only the surface/text layer swaps to a leather-bound notebook vibe. */
+.dark {
+  --color-paper: #1a1410;
+  --color-paper-card: #231b14;
+  --color-paper-shade: #140f0b;
 
-  /* TODO: final Ligma palette */
-  --color-accent: #2eb5a8;
-  --color-accent-hover: #249c91;
-  --color-accent-muted: oklch(0.9 0.04 190);
-  --color-accent-soft: oklch(0.95 0.02 190 / 0.5);
-  --color-accent-tint: color-mix(in srgb, var(--color-accent) 4%, var(--color-surface));
-  --color-focus-ring: oklch(0.62 0.1 190 / 0.3);
-  --color-on-accent: oklch(0.99 0 0);
+  --color-pencil: #f2ecdc;
+  --color-pencil-muted: #b8ae97;
+  --color-pencil-faint: #7d7360;
 
-  --color-text-primary: oklch(0.22 0.02 220);
-  --color-text-secondary: oklch(0.5 0.018 220);
-  --color-text-muted: oklch(0.65 0.012 220);
+  --color-red: #e5453e;
+  --color-red-deep: #c72a2a;
 
-  --color-success: #4f7a52;
-  --color-warning: #b8862a;
-  --color-error: #b04030;
-  --color-mcp: #4a6b8a;
+  --color-grid: rgba(220, 180, 110, 0.1);
+  --color-grid-major: rgba(220, 180, 110, 0.18);
 
-  --color-toast-success: #4f7a52;
-  --color-toast-error: #b04030;
-  --color-overlay: oklch(0.22 0.025 50 / 0.45);
+  --color-rule: rgba(242, 236, 220, 0.24);
+  --color-rule-subtle: rgba(242, 236, 220, 0.1);
 
-  --color-phone-body: oklch(0.22 0.005 280);
-  --color-phone-island: oklch(0.08 0 0);
+  --color-accent-muted: rgba(229, 69, 62, 0.55);
+  --color-accent-soft: rgba(229, 69, 62, 0.2);
+  --color-accent-tint: color-mix(in srgb, var(--color-red) 10%, var(--color-paper-card));
+  --color-focus-ring: rgba(229, 69, 62, 0.45);
 
-  --shadow-soft: 0 1px 2px oklch(0.3 0.02 220 / 0.04);
-  --shadow-card: 0 1px 2px oklch(0.3 0.02 220 / 0.04), 0 4px 16px oklch(0.3 0.02 220 / 0.06);
-  --shadow-elevated: 0 2px 4px oklch(0.3 0.02 220 / 0.05), 0 12px 32px oklch(0.3 0.02 220 / 0.1);
-  --shadow-inset-soft: inset 0 0 0 1px var(--color-border-subtle);
+  --color-success: #8ab78f;
+  --color-warning: #e5c07a;
+  --color-error: #e5453e;
+  --color-mcp: #7a9bc2;
+  --color-toast-success: #8ab78f;
+  --color-toast-error: #e5453e;
+  --color-overlay: rgba(0, 0, 0, 0.55);
+
+  --shadow-soft: 2px 3px 0 rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-card: 2px 3px 0 rgba(0, 0, 0, 0.45), 0 8px 18px rgba(0, 0, 0, 0.45);
+  --shadow-elevated: 2px 3px 0 rgba(0, 0, 0, 0.55), 0 12px 32px rgba(0, 0, 0, 0.55);
+
+  --color-phone-body: oklch(0.32 0.005 280);
+  --color-phone-island: oklch(0.05 0 0);
 }
 
 /* Global focus-visible style — every interactive element inherits unless overridden. */

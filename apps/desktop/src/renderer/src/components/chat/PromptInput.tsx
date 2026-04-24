@@ -2,6 +2,7 @@ import { useT } from '@ligma/i18n';
 import { Tooltip } from '@ligma/ui';
 import { ArrowUp, Square } from 'lucide-react';
 import {
+  type ClipboardEvent,
   type FormEvent,
   type KeyboardEvent,
   type ReactNode,
@@ -65,6 +66,7 @@ export const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(funct
   const t = useT();
   const taRef = useRef<HTMLTextAreaElement>(null);
   const generationStage = useCodesignStore((s) => s.generationStage);
+  const addClipboardImage = useCodesignStore((s) => s.addClipboardImage);
 
   const runningLabel = isGenerating
     ? (() => {
@@ -132,6 +134,24 @@ export const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(funct
     }
   }
 
+  async function handlePaste(e: ClipboardEvent<HTMLTextAreaElement>): Promise<void> {
+    const data = e.clipboardData;
+    if (!data) return;
+    const images: File[] = [];
+    for (const item of Array.from(data.items)) {
+      if (item.kind === 'file' && item.type.startsWith('image/')) {
+        const f = item.getAsFile();
+        if (f) images.push(f);
+      }
+    }
+    if (images.length === 0) return;
+    e.preventDefault();
+    for (const file of images) {
+      const bytes = await file.arrayBuffer();
+      await addClipboardImage(bytes, file.type);
+    }
+  }
+
   const canSend = prompt.trim().length > 0 && !isGenerating;
   const sendDisabledReason = isGenerating
     ? t('disabledReason.generatingInProgress')
@@ -153,6 +173,7 @@ export const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(funct
             resizeTextarea(e.currentTarget);
           }}
           onKeyDown={handleKeyDown}
+          onPaste={(e) => void handlePaste(e)}
           placeholder={t('chat.placeholderRich')}
           rows={1}
           className="codesign-prompt-textarea block w-full resize-none appearance-none border-0 bg-transparent px-[14px] pt-[12px] pb-[44px] text-[14px] leading-[1.55] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] shadow-none outline-none focus:outline-none focus:ring-0 min-h-[24px] overflow-y-auto"

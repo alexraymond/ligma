@@ -941,6 +941,63 @@
     "casestudy": "Create a one-page customer case study for a B2B fintech. Hero with client name, three large metrics with deltas, a CFO pull quote, a three-step 'How we did it' section, and a logo strip. Dark theme, serif headings, monospace numerals.",
     "animation": "Build a showcase page with six organic CSS loading animations. Each in its own card: blob morph, leaf sway, ink drop, breathing circle, soft pulse, ribbon weave. Warm cream background, muted pastels, pure CSS/SVG only."
   },
+  "rail": {
+    "aria": "Primary navigation",
+    "home": "Home",
+    "designSystems": "Design systems",
+    "settings": "Settings"
+  },
+  "newProject": {
+    "title": "Start a new project",
+    "promptPlaceholder": "Describe the design, prototype, or deck you want to make. The more detail, the better the first draft.",
+    "workspace": {
+      "label": "Workspace",
+      "pick": "Pick a folder…",
+      "clear": "Clear workspace"
+    },
+    "designSystem": {
+      "label": "Design system",
+      "none": "None"
+    },
+    "fidelity": {
+      "label": "Fidelity"
+    },
+    "files": {
+      "label": "Attachments",
+      "pick": "Attach files…"
+    },
+    "url": {
+      "label": "Reference URL",
+      "placeholder": "https://…"
+    },
+    "hint": "Enter to add a line · ⌘↵ to start",
+    "submit": "Start designing",
+    "ctaButton": "New project"
+  },
+  "home": {
+    "prompt": {
+      "placeholder": "Describe a design…",
+      "addAttachment": "Add attachment",
+      "templates": "templates"
+    },
+    "chip": {
+      "workspace": "workspace",
+      "fidelity": "fidelity",
+      "designSystem": "design-system",
+      "none": "none",
+      "auto": "auto",
+      "wireframe": "wireframe",
+      "highFidelity": "high-fidelity"
+    },
+    "bucket": {
+      "today": "Today",
+      "yesterday": "Yesterday"
+    },
+    "empty": {
+      "hint": "Describe what you want to design above — Ligma will sketch the first draft and pin it right here."
+    },
+    "marginScribble": "↑ start with a prompt, iterate on the canvas"
+  },
   "hub": {
     "newDesign": "New design",
     "newDesignCardTitle": "Start a new design",

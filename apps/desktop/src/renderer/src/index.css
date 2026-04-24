@@ -13,6 +13,76 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Paper surface — warm cream + blue graph-paper grid + corner warm glow + noise.
+ * Applied to the root app shell so every view inherits the sketchbook grain.
+ * The ::after noise layer uses SVG turbulence at mix-blend-mode: multiply.
+ * Scoped behind .ligma-surface-paper so the artifact iframe can opt out. */
+.ligma-surface-paper {
+  position: relative;
+  background-color: var(--color-paper);
+  background-image: linear-gradient(to right, var(--color-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px),
+    linear-gradient(to right, var(--color-grid-major) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-grid-major) 1px, transparent 1px),
+    radial-gradient(ellipse 900px 500px at 102% 0%, rgba(200, 160, 100, 0.12), transparent 60%),
+    radial-gradient(ellipse 700px 400px at 0% 100%, rgba(190, 150, 80, 0.09), transparent 60%);
+  background-size: 22px 22px, 22px 22px, 110px 110px, 110px 110px, auto, auto;
+}
+.dark .ligma-surface-paper,
+.ligma-surface-paper.dark {
+  background-image: linear-gradient(to right, var(--color-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px),
+    linear-gradient(to right, var(--color-grid-major) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-grid-major) 1px, transparent 1px),
+    radial-gradient(ellipse 900px 500px at 102% 0%, rgba(100, 70, 40, 0.18), transparent 60%),
+    radial-gradient(ellipse 700px 400px at 0% 100%, rgba(80, 55, 25, 0.14), transparent 60%);
+}
+.ligma-surface-paper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence baseFrequency='0.88' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.18  0 0 0 0 0.13  0 0 0 0 0.08  0 0 0 0.07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+.dark .ligma-surface-paper::after {
+  opacity: 0.35;
+  mix-blend-mode: screen;
+}
+
+/* Caret blink used by the home prompt bar. */
+@keyframes ligma-caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+.ligma-caret {
+  display: inline-block;
+  width: 2px;
+  height: 20px;
+  background: var(--color-red);
+  animation: ligma-caret-blink 1.05s steps(2, start) infinite;
+}
+
+/* Red-pencil oval — wraps the active rail slot and the Today rubric label.
+ * Rendered as an ::after pseudo, slightly rotated, with a hand-drawn feel. */
+.ligma-pencil-oval {
+  position: relative;
+  display: inline-flex;
+  padding: 4px 14px 6px;
+}
+.ligma-pencil-oval::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1.8px solid var(--color-red);
+  border-radius: 62% 38% 56% 44% / 55% 62% 38% 45%;
+  transform: rotate(-1.2deg);
+  pointer-events: none;
+}
+
 h1,
 h2,
 h3,

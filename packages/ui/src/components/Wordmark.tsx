@@ -1,8 +1,8 @@
 /**
- * Ligma brand wordmark — logomark + word, optional pre-alpha pill.
+ * Ligma brand wordmark — paper-sketchbook aesthetic. Word mark in Fraunces
+ * with an optional red-handwritten version pill rotated like a red-pen
+ * margin note. No logomark by design — the typography is the brand.
  */
-
-import logoSrc from '../assets/ligma.svg';
 
 interface WordmarkProps {
   badge?: string;
@@ -10,49 +10,38 @@ interface WordmarkProps {
 }
 
 export function Wordmark({ badge, size = 'md' }: WordmarkProps) {
-  const markPx = size === 'sm' ? 36 : 88;
-  const fontSize = size === 'sm' ? '16px' : '30px';
-  const badgeSize = size === 'sm' ? '8px' : '10px';
-  const gap = size === 'sm' ? '8px' : '16px';
-  const badgeMarginTop = size === 'sm' ? '4px' : '10px';
+  const fontSize = size === 'sm' ? '20px' : '27px';
+  const badgeSize = size === 'sm' ? '16px' : '20px';
+  const gap = size === 'sm' ? '10px' : '12px';
   return (
-    <span className="inline-flex items-center leading-none" style={{ gap }}>
-      <img
-        src={logoSrc}
-        alt=""
-        width={markPx}
-        height={markPx}
-        className="shrink-0"
-        draggable={false}
-      />
-      <span className="flex flex-col">
+    <span className="inline-flex items-baseline leading-none" style={{ gap }}>
+      <span
+        className="leading-none"
+        style={{
+          fontFamily: 'var(--font-display)',
+          fontSize,
+          fontWeight: 600,
+          letterSpacing: '-0.025em',
+          color: 'var(--color-text-primary)',
+        }}
+      >
+        Ligma
+      </span>
+      {badge ? (
         <span
-          className="leading-none"
+          className="leading-none inline-block"
           style={{
-            fontFamily: 'var(--font-display)',
-            fontSize,
+            fontFamily: 'var(--font-hand)',
+            fontSize: badgeSize,
             fontWeight: 600,
-            letterSpacing: '-0.03em',
-            color: '#142d4c',
+            color: 'var(--color-accent)',
+            transform: 'rotate(-5deg)',
+            transformOrigin: 'left bottom',
           }}
         >
-          Ligma
+          {badge}
         </span>
-        {badge ? (
-          <span
-            className="font-medium uppercase leading-none"
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: badgeSize,
-              letterSpacing: '0.12em',
-              color: '#9a8a7c',
-              marginTop: badgeMarginTop,
-            }}
-          >
-            {badge}
-          </span>
-        ) : null}
-      </span>
+      ) : null}
     </span>
   );
 }

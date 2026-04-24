@@ -1,12 +1,10 @@
 /**
- * Covers the two theme helpers that encode the Ligma "dark-by-default"
- * acceptance criterion:
- *   - readInitialTheme()  — default flip from 'light' to 'dark'
- *   - applyThemeClass()   — class application on documentElement
- *
- * Blocker 2 from the QA review: the default flip in both SSR/no-window and
- * missing-localStorage branches had no behavioural test, so a future refactor
- * could silently revert it. Same for the `.light` / `.dark` class dance.
+ * Covers the two theme helpers that encode the Ligma "light-by-default"
+ * acceptance criterion (paper-sketchbook rebrand flipped the prior dark
+ * default):
+ *   - readInitialTheme()  — default = 'light' when no persisted value
+ *   - applyThemeClass()   — toggles only the `.dark` class on documentElement;
+ *                           light leaves `:root` untouched
  *
  * Desktop vitest runs in the default (node) environment — no happy-dom / no
  * jsdom — so we stub `window` and `document` manually via `vi.stubGlobal`.
@@ -50,15 +48,15 @@ describe('readInitialTheme', () => {
     vi.unstubAllGlobals();
   });
 
-  it("returns 'dark' when `window` is undefined (SSR / node)", () => {
+  it("returns 'light' when `window` is undefined (SSR / node)", () => {
     // biome-ignore lint/suspicious/noExplicitAny: deliberate undefined global
     vi.stubGlobal('window', undefined as any);
-    expect(readInitialTheme()).toBe('dark');
+    expect(readInitialTheme()).toBe('light');
   });
 
-  it("returns 'dark' when window exists and localStorage has no theme key", () => {
+  it("returns 'light' when window exists and localStorage has no theme key", () => {
     vi.stubGlobal('window', { localStorage: makeStorage() });
-    expect(readInitialTheme()).toBe('dark');
+    expect(readInitialTheme()).toBe('light');
   });
 
   it("returns 'light' when localStorage has 'light' stored", () => {
@@ -75,18 +73,18 @@ describe('readInitialTheme', () => {
     expect(readInitialTheme()).toBe('dark');
   });
 
-  it("returns 'dark' on unrecognised stored values (e.g. legacy keys)", () => {
+  it("returns 'light' on unrecognised stored values (e.g. legacy keys)", () => {
     vi.stubGlobal('window', {
       localStorage: makeStorage({ [THEME_STORAGE_KEY]: 'sepia' }),
     });
-    expect(readInitialTheme()).toBe('dark');
+    expect(readInitialTheme()).toBe('light');
   });
 
-  it("returns 'dark' when localStorage.getItem throws", () => {
+  it("returns 'light' when localStorage.getItem throws", () => {
     const storage = makeStorage();
     storage.setThrowOnGet(true);
     vi.stubGlobal('window', { localStorage: storage });
-    expect(readInitialTheme()).toBe('dark');
+    expect(readInitialTheme()).toBe('light');
   });
 });
 
@@ -130,11 +128,12 @@ describe('applyThemeClass', () => {
     }).not.toThrow();
   });
 
-  it("adds `.light` and removes `.dark` for 'light'", () => {
+  it("removes both `.dark` and `.light` for 'light' (paper is the :root default)", () => {
     root.classList.add('dark');
+    root.classList.add('light');
     applyThemeClass('light');
-    expect(root.classList.contains('light')).toBe(true);
     expect(root.classList.contains('dark')).toBe(false);
+    expect(root.classList.contains('light')).toBe(false);
   });
 
   it("adds `.dark` and removes `.light` for 'dark'", () => {
@@ -155,12 +154,12 @@ describe('applyThemeClass', () => {
 
   it('flips cleanly between light and dark', () => {
     applyThemeClass('light');
-    expect(root.classList.contains('light')).toBe(true);
+    expect(root.classList.contains('dark')).toBe(false);
     applyThemeClass('dark');
     expect(root.classList.contains('dark')).toBe(true);
     expect(root.classList.contains('light')).toBe(false);
     applyThemeClass('light');
-    expect(root.classList.contains('light')).toBe(true);
     expect(root.classList.contains('dark')).toBe(false);
+    expect(root.classList.contains('light')).toBe(false);
   });
 });
