@@ -120,6 +120,7 @@ export interface Preferences {
   checkForUpdatesOnStartup: boolean;
   dismissedUpdateVersion: string;
   diagnosticsLastReadTs: number;
+  skipPermissions: boolean;
 }
 
 /**

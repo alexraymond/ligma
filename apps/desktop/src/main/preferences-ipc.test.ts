@@ -52,6 +52,7 @@ describe('readPersisted()', () => {
       checkForUpdatesOnStartup: true,
       dismissedUpdateVersion: '',
       diagnosticsLastReadTs: 0,
+      skipPermissions: false,
     });
   });
 
@@ -195,7 +196,7 @@ describe('readPersisted()', () => {
       schemaVersion: number;
       diagnosticsLastReadTs: number;
     };
-    expect(written.schemaVersion).toBe(5);
+    expect(written.schemaVersion).toBe(6);
     expect(written.diagnosticsLastReadTs).toBe(result.diagnosticsLastReadTs);
     expect(written.diagnosticsLastReadTs).toBeGreaterThanOrEqual(before);
     expect(written.diagnosticsLastReadTs).toBeLessThanOrEqual(after);

@@ -394,6 +394,8 @@
       "beta": "Beta",
       "checkForUpdatesOnStartup": "Check for updates on startup",
       "checkForUpdatesOnStartupHint": "Automatically check for a new release 30 seconds after launch.",
+      "skipPermissions": "Skip permission prompts",
+      "skipPermissionsHint": "Auto-approve every tool call without showing a modal. The workspace folder boundary is still enforced — the agent cannot read or write outside the scope you chose. Disable any time.",
       "timeout": "Generation timeout",
       "timeoutHint": "Seconds before a generation request is aborted.",
       "timeoutSeconds": "{{value}} s",

@@ -866,8 +866,15 @@ function registerIpcHandlers(db: Database | null): void {
         // Build the permission bridge only when (a) a window exists to host
         // the modal, and (b) the wire is `claude-cli` — other providers
         // have no SDK tool loop here, so the callback would never fire.
-        const canUseTool =
-          senderWindow !== null && active.wire === 'claude-cli'
+        // If the user has opted into `skipPermissions` in preferences, drop
+        // the callback entirely so the SDK auto-allows every tool without
+        // any IPC round-trip. The SDK still scopes tools to cwd /
+        // additionalDirectories, so this only bypasses the modal, not the
+        // filesystem boundary.
+        const prefs = await readPreferences();
+        const canUseTool = prefs.skipPermissions
+          ? undefined
+          : senderWindow !== null && active.wire === 'claude-cli'
             ? (req: PermissionRequest) => requestPermission(req, { window: senderWindow })
             : undefined;
         const result = await runGenerate(

@@ -1931,6 +1931,7 @@ function AdvancedTab() {
     checkForUpdatesOnStartup: true,
     dismissedUpdateVersion: '',
     diagnosticsLastReadTs: 0,
+    skipPermissions: false,
   });
 
   useEffect(() => {
@@ -1998,6 +1999,33 @@ function AdvancedTab() {
           type="checkbox"
           checked={prefs.checkForUpdatesOnStartup}
           onChange={(e) => void updatePref({ checkForUpdatesOnStartup: e.target.checked })}
+          className="h-4 w-4 accent-[var(--color-accent)]"
+        />
+      </Row>
+
+      <Row
+        label={t('settings.advanced.skipPermissions')}
+        hint={t('settings.advanced.skipPermissionsHint')}
+      >
+        <input
+          type="checkbox"
+          checked={prefs.skipPermissions}
+          onChange={(e) => {
+            const next = e.target.checked;
+            // Confirm-on-enable so users don't flip YOLO mode by accident.
+            // Disabling is always silent.
+            if (
+              next &&
+              !window.confirm(
+                'Skip all tool-permission prompts?\n\n' +
+                  'The agent will be allowed to read, edit, and run tools inside the current workspace without asking each time. The workspace boundary is still enforced by the SDK — the agent cannot escape the folder you picked.\n\n' +
+                  'Turn this off any time from Settings → Advanced.',
+              )
+            ) {
+              return;
+            }
+            void updatePref({ skipPermissions: next });
+          }}
           className="h-4 w-4 accent-[var(--color-accent)]"
         />
       </Row>

@@ -887,28 +887,64 @@ async function persistArtifactSnapshot(
 
 /**
  * Rebuild the agent-facing history from chat_messages (single source of truth
- * for the sidebar chat). Only user + assistant_text rows contribute — tool_call
- * / artifact_delivered / error are dropped because the agent re-reads live file
- * state via text_editor.view(). seedFromSnapshots first so legacy designs with
- * only snapshot-era user prompts get backfilled. Falls back to [] when designId
- * is null or IPC is unavailable (renderer tests).
+ * for the sidebar chat). User + assistant_text rows flow through verbatim;
+ * tool_call rows are collapsed into a short assistant-prefix summary that
+ * lands alongside the assistant's prose for the same turn. Carrying the
+ * tool memory across turns lets the model see "I already tried X" instead
+ * of re-attempting work from scratch. seedFromSnapshots first so legacy
+ * designs with only snapshot-era user prompts get backfilled. Falls back
+ * to [] when designId is null or IPC is unavailable (renderer tests).
  */
+function summarizeToolCall(payload: unknown): string | null {
+  if (payload === null || typeof payload !== 'object') return null;
+  const p = payload as {
+    toolName?: string;
+    command?: string;
+    args?: Record<string, unknown>;
+    status?: string;
+  };
+  const verb = p.command ?? p.toolName;
+  if (typeof verb !== 'string' || verb.length === 0) return null;
+  const args = p.args ?? {};
+  const path = typeof args['path'] === 'string' ? (args['path'] as string) : null;
+  const name = typeof args['name'] === 'string' ? (args['name'] as string) : null;
+  const url = typeof args['url'] === 'string' ? (args['url'] as string) : null;
+  const target = path ?? name ?? url ?? '';
+  const status = p.status === 'error' ? ' (error)' : '';
+  return target ? `[tool] ${verb} · ${target}${status}` : `[tool] ${verb}${status}`;
+}
+
 async function buildHistoryFromChat(designId: string | null): Promise<ChatMessage[]> {
   if (!designId || !window.codesign) return [];
   try {
     await window.codesign.chat.seedFromSnapshots(designId);
     const rows = await window.codesign.chat.list(designId);
     const out: ChatMessage[] = [];
+    let pendingToolSummaries: string[] = [];
+    const flushTools = () => {
+      if (pendingToolSummaries.length === 0) return;
+      out.push({ role: 'assistant', content: pendingToolSummaries.join('\n') });
+      pendingToolSummaries = [];
+    };
     for (const row of rows) {
       if (row.kind === 'user') {
+        flushTools();
         const text = (row.payload as { text?: string } | null)?.text;
         if (typeof text === 'string' && text.length > 0) out.push({ role: 'user', content: text });
       } else if (row.kind === 'assistant_text') {
         const text = (row.payload as { text?: string } | null)?.text;
-        if (typeof text === 'string' && text.length > 0)
-          out.push({ role: 'assistant', content: text });
+        if (typeof text === 'string' && text.length > 0) {
+          const prefix =
+            pendingToolSummaries.length > 0 ? `${pendingToolSummaries.join('\n')}\n\n` : '';
+          out.push({ role: 'assistant', content: `${prefix}${text}` });
+          pendingToolSummaries = [];
+        }
+      } else if (row.kind === 'tool_call') {
+        const summary = summarizeToolCall(row.payload);
+        if (summary) pendingToolSummaries.push(summary);
       }
     }
+    flushTools();
     return out;
   } catch {
     return [];
@@ -1618,7 +1654,9 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     // Cap cross-generate history to the most recent turns. The agent re-reads
     // the current HTML via text_editor.view() when needed, so older prose in
     // history offers diminishing value and pushes us toward the token ceiling.
-    const HISTORY_CAP = 12;
+    // 24 turns covers a long back-and-forth session without becoming
+    // token-heavy (most user/assistant turns are < 400 tokens).
+    const HISTORY_CAP = 24;
     // chat_messages is the single source of truth for agent history. Fixes
     // the race where a broken session + "继续" made the agent see a stale or
     // empty history from a legacy mirror and drift off-task.

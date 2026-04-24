@@ -17,7 +17,7 @@ import { getLogger } from './logger';
 
 const logger = getLogger('preferences-ipc');
 
-const SCHEMA_VERSION = 5;
+const SCHEMA_VERSION = 6;
 // v1 → v2: raise the abandoned 120s timeout default (which aborted real
 // agentic runs mid-loop) to 600s. Values that happen to equal the old
 // default are treated as unmigrated defaults, not user intent.
@@ -41,6 +41,13 @@ export interface Preferences {
    *  Persisted so the unread-error badge doesn't flash every historical
    *  error after a restart. */
   diagnosticsLastReadTs: number;
+  /** When true, the main process auto-approves every tool-permission
+   *  request without showing the modal. Intended for trusted workspaces
+   *  where the user accepts that the agent can freely read/write files
+   *  within the scope the SDK already restricts it to (cwd + additional
+   *  dirs). The toggle is surfaced in Settings → Advanced with a
+   *  first-time warning dialog. Defaults to false — explicit opt-in. */
+  skipPermissions: boolean;
 }
 
 interface PreferencesFile extends Preferences {
@@ -57,6 +64,7 @@ const DEFAULTS: Preferences = {
   checkForUpdatesOnStartup: true,
   dismissedUpdateVersion: '',
   diagnosticsLastReadTs: 0,
+  skipPermissions: false,
 };
 
 /** Deterministic parse of the on-disk preferences file. No clock reads: the
@@ -92,6 +100,10 @@ function parsePersistedFile(parsed: Partial<PreferencesFile>): Preferences {
       typeof parsed.diagnosticsLastReadTs === 'number' && parsed.diagnosticsLastReadTs >= 0
         ? parsed.diagnosticsLastReadTs
         : DEFAULTS.diagnosticsLastReadTs,
+    skipPermissions:
+      typeof parsed.skipPermissions === 'boolean'
+        ? parsed.skipPermissions
+        : DEFAULTS.skipPermissions,
   };
 }
 
@@ -189,6 +201,12 @@ function parsePreferences(raw: unknown): Partial<Preferences> {
       );
     }
     out.diagnosticsLastReadTs = r['diagnosticsLastReadTs'];
+  }
+  if (r['skipPermissions'] !== undefined) {
+    if (typeof r['skipPermissions'] !== 'boolean') {
+      throw new CodesignError('skipPermissions must be a boolean', ERROR_CODES.IPC_BAD_INPUT);
+    }
+    out.skipPermissions = r['skipPermissions'];
   }
   return out;
 }
