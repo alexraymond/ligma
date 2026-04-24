@@ -71,4 +71,17 @@ jobs:
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git tag -a "${TAG}" -m "Release ${TAG}"
           git push origin "${TAG}"
-          echo "::notice title=Tag pushed::${TAG} — release workflow will start on the tag push"
+
+      # GitHub intentionally blocks workflows triggered by a GITHUB_TOKEN
+      # push from triggering other workflows (recursion prevention), so the
+      # `on: push: tags` trigger in release.yml would silently no-op. Invoke
+      # it explicitly via workflow_dispatch using the tag we just created
+      # — that channel is exempt from the recursion rule.
+      - name: Trigger release workflow
+        if: steps.exists.outputs.exists == 'false'
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run release.yml --ref "${TAG}" -f tag="${TAG}" -f draft=false
+          echo "::notice title=Release dispatched::${TAG} — watch .github/workflows/release.yml"
