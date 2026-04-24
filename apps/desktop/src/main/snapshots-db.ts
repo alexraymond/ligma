@@ -773,7 +773,7 @@ export function seedChatFromSnapshots(db: Database, designId: string): number {
       appendChatMessage(db, {
         designId,
         kind: 'artifact_delivered',
-        payload: { createdAt: s.created_at },
+        payload: { createdAt: s.created_at, filename: s.file_path ?? 'index.html' },
         snapshotId: s.id,
       });
       inserted += 1;

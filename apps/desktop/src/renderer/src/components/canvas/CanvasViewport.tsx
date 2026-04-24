@@ -121,6 +121,7 @@ export function CanvasViewport({ children }: CanvasViewportProps) {
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
+      data-canvas-viewport
       className="h-full w-full overflow-auto"
       style={{ touchAction: 'pan-x pan-y' }}
     >

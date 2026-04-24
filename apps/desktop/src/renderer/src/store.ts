@@ -116,7 +116,26 @@ export type Theme = 'light' | 'dark';
 export type AppView = 'hub' | 'workspace' | 'settings';
 export type SettingsTab = 'models' | 'appearance' | 'storage' | 'diagnostics' | 'advanced';
 export type HubTab = 'recent' | 'your' | 'examples' | 'designSystems';
-export type InteractionMode = 'default' | 'comment';
+export type InteractionMode = 'default' | 'comment' | 'artboard-select' | 'artboard-move';
+
+export interface CanvasSize {
+  width: number;
+  height: number;
+}
+
+export interface ArtboardCodeView {
+  designId: string;
+  label: string;
+  viewport: string;
+  outerHTML: string;
+}
+
+export interface ArtboardOffset {
+  x: number;
+  y: number;
+}
+
+export type ArtboardOffsetsByLabel = Record<string, ArtboardOffset>;
 
 export type PreviewViewport = 'desktop' | 'tablet' | 'mobile';
 
@@ -219,6 +238,25 @@ interface CodesignState {
   selectedElement: SelectedElement | null;
   previewZoom: number;
   interactionMode: InteractionMode;
+
+  /** Natural content size (CSS pixels) of the active design's canvas body,
+   *  reported by the in-iframe overlay via CANVAS_SIZE postMessage. Keyed by
+   *  designId so background pool slots keep their last measurement. Used to
+   *  size the iframe element so the parent CanvasViewport's overflow-auto
+   *  handles pan via native trackpad scroll. */
+  canvasSizeByDesign: Record<string, CanvasSize>;
+
+  /** When set, a read-only drawer displays the outerHTML of the clicked
+   *  artboard. Cleared when the user dismisses the drawer or switches
+   *  designs. Only meaningful while interactionMode === 'artboard-select'
+   *  or immediately after a selection. */
+  artboardCodeView: ArtboardCodeView | null;
+
+  /** Per-design, per-label translation offsets applied by the in-iframe
+   *  overlay as CSS `transform: translate3d(...)`. Populated by drags in
+   *  `artboard-move` mode. The parent re-sends the full map to the iframe
+   *  on mount / design switch so reloads preserve user-placed positions. */
+  artboardOffsetsByDesign: Record<string, ArtboardOffsetsByLabel>;
 
   // Sidebar v2 chat state
   chatMessages: ChatMessageRow[];
@@ -336,7 +374,15 @@ interface CodesignState {
   /** Reset the preview canvas to 100% zoom. Called by the CanvasViewport
    *  reset chip and by the "fit to window" action. */
   resetPreviewView: () => void;
+  /** Compute a zoom that fits the active design's canvas within the supplied
+   *  viewport size and apply it. No-op if no canvas size is known yet. */
+  fitPreviewToViewport: (viewportWidth: number, viewportHeight: number) => void;
   setInteractionMode: (mode: InteractionMode) => void;
+  setCanvasSize: (designId: string, size: CanvasSize) => void;
+  openArtboardCode: (view: ArtboardCodeView) => void;
+  closeArtboardCode: () => void;
+  setArtboardOffset: (designId: string, label: string, offset: ArtboardOffset) => void;
+  resetArtboardOffsets: (designId: string) => void;
 
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
@@ -786,15 +832,29 @@ async function persistArtifactSnapshot(
     // Mirror the freshly-persisted HTML into the virtual FS so the Files
     // panel and the canvas tab bar have a live view of every file the
     // agent has produced. Failure here is non-fatal — the snapshot row
-    // above is the source of truth; the FS copy is a cache.
+    // above is the source of truth; the FS copy is a cache. Use upsert so
+    // re-generating a file that already exists quietly replaces content
+    // instead of throwing at the IPC layer.
+    //
+    // Archival copy: every turn also writes to `turn-<seq>.html` (never
+    // overwritten) so users can compare previous generations side-by-side
+    // in the Files panel and extract a specific variant without digging
+    // into SQLite snapshots. `seq` comes from the chat_messages count for
+    // this design — the next assistant row is one past the current count.
     try {
-      if (window.codesign.files) {
+      if (window.codesign.files?.upsert) {
+        await window.codesign.files.upsert(designId, filePath, artifact.content);
+        if (filePath === 'index.html') {
+          const chatRows = await window.codesign.chat?.list(designId).catch(() => []);
+          const turnCount = (chatRows ?? []).filter((r) => r.kind === 'artifact_delivered').length;
+          const archivePath = `turn-${String(turnCount + 1).padStart(2, '0')}.html`;
+          await window.codesign.files.upsert(designId, archivePath, artifact.content).catch(() => {
+            /* archival is best-effort; the snapshot row is the source of truth */
+          });
+        }
+      } else if (window.codesign.files) {
+        // Older preload without upsert — keep the create+fallback dance.
         await window.codesign.files.create(designId, filePath, artifact.content).catch(async () => {
-          // Row already exists — fall back to the rename-then-replace
-          // dance via delete + create so `UNIQUE(design_id, path)`
-          // doesn't fire. In practice the text-editor tool keeps the
-          // row fresh during the run; this branch only trips on first
-          // generate of a new file.
           await window.codesign?.files?.delete(designId, filePath);
           await window.codesign?.files?.create(designId, filePath, artifact.content);
         });
@@ -1045,7 +1105,7 @@ function applyGenerateSuccess(
         void get().appendChatMessage({
           designId,
           kind: 'artifact_delivered',
-          payload: { createdAt: new Date().toISOString() },
+          payload: { createdAt: new Date().toISOString(), filename: targetPath },
         });
       }
     }
@@ -1336,6 +1396,9 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
   selectedElement: null,
   previewZoom: 100,
   interactionMode: 'default' as InteractionMode,
+  canvasSizeByDesign: {},
+  artboardCodeView: null,
+  artboardOffsetsByDesign: {},
 
   chatMessages: [],
   chatLoaded: false,
@@ -1831,12 +1894,68 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     set({ previewZoom: 100 });
   },
 
+  fitPreviewToViewport(viewportWidth, viewportHeight) {
+    const state = get();
+    const id = state.currentDesignId;
+    if (!id) return;
+    const size = state.canvasSizeByDesign[id];
+    if (!size || size.width <= 0 || size.height <= 0) return;
+    const margin = 48;
+    const availW = Math.max(1, viewportWidth - margin);
+    const availH = Math.max(1, viewportHeight - margin);
+    const pctW = (availW / size.width) * 100;
+    const pctH = (availH / size.height) * 100;
+    const fit = Math.floor(Math.min(pctW, pctH));
+    const clamped = Math.min(400, Math.max(25, fit));
+    set({ previewZoom: clamped });
+  },
+
   setInteractionMode(mode) {
     if (mode === 'default') {
+      set({ interactionMode: mode, selectedElement: null, commentBubble: null });
+    } else if (mode === 'artboard-select' || mode === 'artboard-move') {
       set({ interactionMode: mode, selectedElement: null, commentBubble: null });
     } else {
       set({ interactionMode: mode });
     }
+  },
+
+  setCanvasSize(designId, size) {
+    const state = get();
+    const existing = state.canvasSizeByDesign[designId];
+    if (existing && existing.width === size.width && existing.height === size.height) return;
+    set({
+      canvasSizeByDesign: { ...state.canvasSizeByDesign, [designId]: size },
+    });
+  },
+
+  openArtboardCode(view) {
+    set({ artboardCodeView: view });
+  },
+
+  closeArtboardCode() {
+    set({ artboardCodeView: null });
+  },
+
+  setArtboardOffset(designId, label, offset) {
+    set((state) => {
+      const forDesign = state.artboardOffsetsByDesign[designId] ?? {};
+      return {
+        artboardOffsetsByDesign: {
+          ...state.artboardOffsetsByDesign,
+          [designId]: { ...forDesign, [label]: offset },
+        },
+      };
+    });
+  },
+
+  resetArtboardOffsets(designId) {
+    set((state) => {
+      if (!state.artboardOffsetsByDesign[designId]) return {};
+      const next = { ...state.artboardOffsetsByDesign };
+      delete next[designId];
+      return { artboardOffsetsByDesign: next };
+    });
   },
 
   setTheme(theme) {

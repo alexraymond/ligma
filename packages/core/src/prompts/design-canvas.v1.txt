@@ -152,3 +152,4 @@ When there are multiple artboards in a section, their combined width can exceed 
 - The canvas stylesheet block is present verbatim.
 - No content lives directly under `<body>` outside a section.
 - Each artboard's inner content is sized to its declared viewport.
+

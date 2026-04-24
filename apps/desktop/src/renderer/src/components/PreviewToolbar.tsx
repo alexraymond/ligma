@@ -1,5 +1,5 @@
 import { useT } from '@ligma/i18n';
-import { Download, MessageSquare } from 'lucide-react';
+import { Code2, Download, Maximize2, MessageSquare, Move, RotateCcw } from 'lucide-react';
 import { type ReactElement, useEffect, useRef, useState } from 'react';
 import type { ExportFormat } from '../../../preload/index';
 import type { PreviewViewport } from '../store';
@@ -26,6 +26,9 @@ export function PreviewToolbar(): ReactElement {
   const resetPreviewView = useCodesignStore((s) => s.resetPreviewView);
   const interactionMode = useCodesignStore((s) => s.interactionMode);
   const setInteractionMode = useCodesignStore((s) => s.setInteractionMode);
+  const fitPreviewToViewport = useCodesignStore((s) => s.fitPreviewToViewport);
+  const currentDesignId = useCodesignStore((s) => s.currentDesignId);
+  const canvasSizeByDesign = useCodesignStore((s) => s.canvasSizeByDesign);
   const [open, setOpen] = useState(false);
   const [zoomOpen, setZoomOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -55,8 +58,24 @@ export function PreviewToolbar(): ReactElement {
     return () => clearTimeout(timeout);
   }, [toastMessage, dismissToast]);
 
+  const artboardOffsetsByDesign = useCodesignStore((s) => s.artboardOffsetsByDesign);
+  const resetArtboardOffsets = useCodesignStore((s) => s.resetArtboardOffsets);
+
   const disabled = !previewHtml;
   const commentActive = interactionMode === 'comment';
+  const artboardSelectActive = interactionMode === 'artboard-select';
+  const artboardMoveActive = interactionMode === 'artboard-move';
+  const knownCanvasSize = currentDesignId ? canvasSizeByDesign[currentDesignId] : undefined;
+  const fitDisabled = disabled || !knownCanvasSize;
+  const hasArtboardOffsets =
+    currentDesignId !== null &&
+    Object.keys(artboardOffsetsByDesign[currentDesignId] ?? {}).length > 0;
+
+  const handleFit = () => {
+    const el = document.querySelector('[data-canvas-viewport]') as HTMLElement | null;
+    if (!el) return;
+    fitPreviewToViewport(el.clientWidth, el.clientHeight);
+  };
   const exportItems: ExportItem[] = [
     {
       format: 'html',
@@ -97,6 +116,61 @@ export function PreviewToolbar(): ReactElement {
           {toastMessage}
         </output>
       )}
+
+      <button
+        type="button"
+        disabled={disabled}
+        aria-pressed={artboardMoveActive}
+        title="Drag artboards to rearrange them on the canvas"
+        onClick={() => setInteractionMode(artboardMoveActive ? 'default' : 'artboard-move')}
+        className={`inline-flex items-center gap-[6px] h-[26px] px-[10px] text-[12px] transition-[background-color,color,transform] duration-[var(--duration-faster)] active:scale-[var(--scale-press-down)] disabled:opacity-40 disabled:pointer-events-none ${
+          artboardMoveActive
+            ? 'text-[var(--color-accent)]'
+            : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]'
+        }`}
+      >
+        <Move className="w-3.5 h-3.5" aria-hidden="true" />
+        Move
+      </button>
+
+      {hasArtboardOffsets && !disabled ? (
+        <button
+          type="button"
+          onClick={() => currentDesignId && resetArtboardOffsets(currentDesignId)}
+          title="Reset artboard layout"
+          className="inline-flex items-center justify-center h-[26px] w-[26px] text-[var(--color-text-muted)] hover:text-[var(--color-accent)] transition-colors"
+          aria-label="Reset artboard layout"
+        >
+          <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
+        </button>
+      ) : null}
+
+      <button
+        type="button"
+        disabled={disabled}
+        aria-pressed={artboardSelectActive}
+        title="Click an artboard to view its source HTML"
+        onClick={() => setInteractionMode(artboardSelectActive ? 'default' : 'artboard-select')}
+        className={`inline-flex items-center gap-[6px] h-[26px] px-[10px] text-[12px] transition-[background-color,color,transform] duration-[var(--duration-faster)] active:scale-[var(--scale-press-down)] disabled:opacity-40 disabled:pointer-events-none ${
+          artboardSelectActive
+            ? 'text-[var(--color-accent)]'
+            : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]'
+        }`}
+      >
+        <Code2 className="w-3.5 h-3.5" aria-hidden="true" />
+        Code
+      </button>
+
+      <button
+        type="button"
+        disabled={fitDisabled}
+        title="Fit canvas to viewport"
+        onClick={handleFit}
+        className="inline-flex items-center gap-[6px] h-[26px] px-[10px] text-[12px] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] disabled:opacity-40 disabled:pointer-events-none transition-[background-color,color,transform] duration-[var(--duration-faster)] active:scale-[var(--scale-press-down)]"
+      >
+        <Maximize2 className="w-3.5 h-3.5" aria-hidden="true" />
+        Fit
+      </button>
 
       <button
         type="button"

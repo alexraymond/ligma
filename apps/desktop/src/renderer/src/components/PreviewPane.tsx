@@ -1,9 +1,15 @@
 import { useT } from '@ligma/i18n';
 import {
+  type ArtboardMovedMessage,
+  type ArtboardSelectedMessage,
+  type CanvasSizeMessage,
   type ElementRectsMessage,
   type IframeErrorMessage,
   type OverlayMessage,
   buildSrcdoc,
+  isArtboardMovedMessage,
+  isArtboardSelectedMessage,
+  isCanvasSizeMessage,
   isElementRectsMessage,
   isIframeErrorMessage,
   isOverlayMessage,
@@ -18,6 +24,7 @@ import { FilesTabView } from './FilesTabView';
 import { PhoneFrame } from './PhoneFrame';
 import { PreviewToolbar } from './PreviewToolbar';
 import { TweakPanel } from './TweakPanel';
+import { ArtboardCodeDrawer } from './canvas/ArtboardCodeDrawer';
 import { CanvasViewport } from './canvas/CanvasViewport';
 import { CommentBubble } from './comment/CommentBubble';
 import { PinOverlay } from './comment/PinOverlay';
@@ -88,12 +95,21 @@ export function stablePreviewSourceKey(source: string): string {
     );
 }
 
-export type AllowedPreviewMessageType = 'ELEMENT_SELECTED' | 'IFRAME_ERROR' | 'ELEMENT_RECTS';
+export type AllowedPreviewMessageType =
+  | 'ELEMENT_SELECTED'
+  | 'IFRAME_ERROR'
+  | 'ELEMENT_RECTS'
+  | 'CANVAS_SIZE'
+  | 'ARTBOARD_SELECTED'
+  | 'ARTBOARD_MOVED';
 
 export interface PreviewMessageHandlers {
   onElementSelected: (msg: OverlayMessage) => void;
   onIframeError: (msg: IframeErrorMessage) => void;
   onElementRects: (msg: ElementRectsMessage) => void;
+  onCanvasSize: (msg: CanvasSizeMessage) => void;
+  onArtboardSelected: (msg: ArtboardSelectedMessage) => void;
+  onArtboardMoved: (msg: ArtboardMovedMessage) => void;
 }
 
 export type PreviewMessageOutcome =
@@ -131,6 +147,24 @@ export function handlePreviewMessage(
         return { status: 'handled', type: 'ELEMENT_RECTS' };
       }
       return { status: 'rejected', reason: 'shape', type: envelope.type };
+    case 'CANVAS_SIZE':
+      if (isCanvasSizeMessage(data)) {
+        handlers.onCanvasSize(data);
+        return { status: 'handled', type: 'CANVAS_SIZE' };
+      }
+      return { status: 'rejected', reason: 'shape', type: envelope.type };
+    case 'ARTBOARD_SELECTED':
+      if (isArtboardSelectedMessage(data)) {
+        handlers.onArtboardSelected(data);
+        return { status: 'handled', type: 'ARTBOARD_SELECTED' };
+      }
+      return { status: 'rejected', reason: 'shape', type: envelope.type };
+    case 'ARTBOARD_MOVED':
+      if (isArtboardMovedMessage(data)) {
+        handlers.onArtboardMoved(data);
+        return { status: 'handled', type: 'ARTBOARD_MOVED' };
+      }
+      return { status: 'rejected', reason: 'shape', type: envelope.type };
     default:
       return { status: 'rejected', reason: 'unknown-type', type: envelope.type };
   }
@@ -139,12 +173,85 @@ export function handlePreviewMessage(
 const COMMENT_HINT_CLASS =
   'absolute left-[var(--space-5)] top-[var(--space-5)] z-10 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-[var(--space-3)] py-[var(--space-1)] text-[var(--text-xs)] text-[var(--color-text-secondary)] shadow-[var(--shadow-soft)] backdrop-blur';
 
+function latestToolSummary(
+  calls: ReadonlyArray<{
+    toolName: string;
+    command?: string;
+    args?: Record<string, unknown>;
+    status: string;
+  }>,
+): string | null {
+  // Surface the most recent running tool (or the last one that ran) so the
+  // user sees "edit index.html" / "view dashboard.html" during the silent
+  // long stretches of a generation. Mirrors WorkingCard's label logic
+  // without importing its internals.
+  if (!calls || calls.length === 0) return null;
+  const running =
+    [...calls].reverse().find((c) => c.status === 'running') ?? calls[calls.length - 1];
+  if (!running) return null;
+  const path = typeof running.args?.['path'] === 'string' ? (running.args['path'] as string) : null;
+  const name = typeof running.args?.['name'] === 'string' ? (running.args['name'] as string) : null;
+  const url = typeof running.args?.['url'] === 'string' ? (running.args['url'] as string) : null;
+  const verb = running.command ?? running.toolName;
+  const detail = path ?? name ?? url ?? '';
+  return detail ? `${verb} · ${detail}` : verb;
+}
+
+function StreamingBanner({
+  text,
+  stage,
+  latestTool,
+}: {
+  text: string;
+  stage: string;
+  latestTool: string | null;
+}): React.ReactElement {
+  const tail = text.length > 640 ? `…${text.slice(-640)}` : text;
+  return (
+    <div className="w-[72%] max-w-[900px] rounded-[var(--radius-lg)] border border-[var(--color-border-muted)] bg-[var(--color-surface)] shadow-[var(--shadow-soft)] p-[var(--space-5)] flex flex-col gap-[var(--space-3)]">
+      <div className="flex items-center gap-[var(--space-2)]">
+        <span
+          aria-hidden
+          className="inline-block w-[8px] h-[8px] rounded-full bg-[var(--color-accent)] animate-pulse"
+        />
+        <span
+          className="text-[11px] uppercase tracking-[var(--tracking-label)] text-[var(--color-text-muted)]"
+          style={{ fontFamily: 'var(--font-mono)' }}
+        >
+          {stage}
+        </span>
+        {latestTool ? (
+          <span
+            className="ml-auto text-[11px] text-[var(--color-text-secondary)] truncate max-w-[60%]"
+            style={{ fontFamily: 'var(--font-mono)' }}
+          >
+            {latestTool}
+          </span>
+        ) : null}
+      </div>
+      {tail.length > 0 ? (
+        <pre
+          className="m-0 max-h-[320px] overflow-y-auto whitespace-pre-wrap break-words text-[12px] leading-[1.55] text-[var(--color-text-secondary)]"
+          style={{ fontFamily: 'var(--font-mono)' }}
+        >
+          {tail}
+        </pre>
+      ) : (
+        <p className="m-0 text-[12px] text-[var(--color-text-muted)]">
+          Waiting for the first chunk from the model…
+        </p>
+      )}
+    </div>
+  );
+}
+
 interface PreviewSlotProps {
   designId: string;
   html: string;
   active: boolean;
   viewport: 'mobile' | 'tablet' | 'desktop';
   zoom: number;
+  canvasSize: { width: number; height: number } | undefined;
   showCommentUi: boolean;
   commentHintLabel: string;
   pinOverlay: React.ReactNode;
@@ -165,6 +272,7 @@ function PreviewSlot({
   active,
   viewport,
   zoom,
+  canvasSize,
   showCommentUi,
   commentHintLabel,
   pinOverlay,
@@ -187,6 +295,19 @@ function PreviewSlot({
   const scale = zoom / 100;
   const inversePct = `${10000 / zoom}%`;
 
+  // Canvas-sized path: the in-iframe overlay reports natural body
+  // scrollWidth/scrollHeight via CANVAS_SIZE. When present for a desktop
+  // viewport, size the iframe element itself to that natural size and apply
+  // zoom via transform: scale. The parent CanvasViewport (overflow-auto) then
+  // provides native trackpad pan over the overflowing area — no Space+drag
+  // required. Mobile/tablet keep their device-frame sizing.
+  const useNaturalCanvas =
+    !isMobile &&
+    viewport === 'desktop' &&
+    canvasSize !== undefined &&
+    canvasSize.width > 0 &&
+    canvasSize.height > 0;
+
   const rawIframe = (
     <iframe
       ref={setRef}
@@ -207,17 +328,38 @@ function PreviewSlot({
         // re-broadcasts after load has confirmed the overlay is live.
         onIframeLoaded(designId);
       }}
+      style={
+        useNaturalCanvas && canvasSize
+          ? { width: canvasSize.width, height: canvasSize.height }
+          : undefined
+      }
       className={
-        isMobile
-          ? 'block w-full h-full bg-transparent border-0'
-          : 'w-full h-full bg-transparent border-0'
+        useNaturalCanvas
+          ? 'block bg-transparent border-0'
+          : isMobile
+            ? 'block w-full h-full bg-transparent border-0'
+            : 'w-full h-full bg-transparent border-0'
       }
     />
   );
-  const iframe =
-    zoom === 100 ? (
-      rawIframe
-    ) : (
+  let iframe: React.ReactNode;
+  if (useNaturalCanvas && canvasSize) {
+    iframe = (
+      <div
+        className="origin-top-left"
+        style={{
+          transform: `scale(${scale})`,
+          width: canvasSize.width * scale,
+          height: canvasSize.height * scale,
+        }}
+      >
+        <div style={{ width: canvasSize.width, height: canvasSize.height }}>{rawIframe}</div>
+      </div>
+    );
+  } else if (zoom === 100) {
+    iframe = rawIframe;
+  } else {
+    iframe = (
       <div
         className="origin-top-left"
         style={{ transform: `scale(${scale})`, width: inversePct, height: inversePct }}
@@ -225,6 +367,7 @@ function PreviewSlot({
         {rawIframe}
       </div>
     );
+  }
 
   let body: React.ReactNode;
   if (isMobile) {
@@ -255,6 +398,22 @@ function PreviewSlot({
         </div>
       </div>
     );
+  } else if (useNaturalCanvas && canvasSize) {
+    // Inline-sized wrapper: parent CanvasViewport's overflow-auto relies on
+    // this element reporting its natural dimensions (width * scale / height
+    // * scale) so scroll/pan engages on overflow. No `h-full w-full` here.
+    body = (
+      <div
+        className="relative"
+        style={{ width: canvasSize.width * scale, height: canvasSize.height * scale }}
+      >
+        {showCommentUi && active ? (
+          <div className={COMMENT_HINT_CLASS}>{commentHintLabel}</div>
+        ) : null}
+        {iframe}
+        {active ? pinOverlay : null}
+      </div>
+    );
   } else {
     body = (
       <div className="h-full w-full relative">
@@ -267,8 +426,11 @@ function PreviewSlot({
     );
   }
 
+  // When natural-sizing, don't force h-full w-full — let the wrapper report
+  // its intrinsic size so the ancestor scroll container handles overflow.
+  const outerClass = useNaturalCanvas ? '' : 'h-full w-full';
   return (
-    <div hidden={!active} className="h-full w-full">
+    <div hidden={!active} className={outerClass}>
       {body}
     </div>
   );
@@ -301,6 +463,15 @@ export function PreviewPane({ onPickStarter }: PreviewPaneProps) {
   const applyLiveRects = useCodesignStore((s) => s.applyLiveRects);
   const clearLiveRects = useCodesignStore((s) => s.clearLiveRects);
   const liveRects = useCodesignStore((s) => s.liveRects);
+  const canvasSizeByDesign = useCodesignStore((s) => s.canvasSizeByDesign);
+  const setCanvasSize = useCodesignStore((s) => s.setCanvasSize);
+  const openArtboardCode = useCodesignStore((s) => s.openArtboardCode);
+  const streamingAssistantText = useCodesignStore((s) => s.streamingAssistantText);
+  const artboardOffsetsByDesign = useCodesignStore((s) => s.artboardOffsetsByDesign);
+  const setArtboardOffset = useCodesignStore((s) => s.setArtboardOffset);
+  const isGenerating = useCodesignStore((s) => s.isGenerating);
+  const generationStage = useCodesignStore((s) => s.generationStage);
+  const pendingToolCalls = useCodesignStore((s) => s.pendingToolCalls);
 
   // Active iframe ref consumed by TweakPanel (postMessage target) and by the
   // window.message guard. We re-point this whenever the active design changes
@@ -406,6 +577,23 @@ export function PreviewPane({ onPickStarter }: PreviewPaneProps) {
         onElementRects: (msg) => {
           applyLiveRects(msg.entries);
         },
+        onCanvasSize: (msg) => {
+          if (currentDesignId)
+            setCanvasSize(currentDesignId, { width: msg.width, height: msg.height });
+        },
+        onArtboardSelected: (msg) => {
+          if (!currentDesignId) return;
+          openArtboardCode({
+            designId: currentDesignId,
+            label: msg.label,
+            viewport: msg.viewport,
+            outerHTML: msg.outerHTML,
+          });
+        },
+        onArtboardMoved: (msg) => {
+          if (!currentDesignId) return;
+          setArtboardOffset(currentDesignId, msg.label, { x: msg.x, y: msg.y });
+        },
       });
 
       if (outcome.status === 'rejected' && outcome.reason === 'unknown-type') {
@@ -415,7 +603,32 @@ export function PreviewPane({ onPickStarter }: PreviewPaneProps) {
 
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
-  }, [pushIframeError, selectCanvasElement, openCommentBubble, previewZoom, applyLiveRects]);
+  }, [
+    pushIframeError,
+    selectCanvasElement,
+    openCommentBubble,
+    previewZoom,
+    applyLiveRects,
+    setCanvasSize,
+    openArtboardCode,
+    setArtboardOffset,
+    currentDesignId,
+  ]);
+
+  // Push the current design's artboard offsets into the iframe once the
+  // overlay is live. Re-broadcast on any change so parent-side edits
+  // (e.g. a "Reset layout" button) propagate without requiring a reload.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: iframeLoadTick and currentDesignId are deliberate re-triggers; iframeRef.current is a ref (not seen by the linter) and swaps when the active design changes.
+  useEffect(() => {
+    const win = iframeRef.current?.contentWindow;
+    if (!win || !currentDesignId) return;
+    const offsets = artboardOffsetsByDesign[currentDesignId] ?? {};
+    try {
+      win.postMessage({ __codesign: true, type: 'APPLY_ARTBOARD_OFFSETS', offsets }, '*');
+    } catch {
+      /* sandbox gone — retries happen on next render */
+    }
+  }, [artboardOffsetsByDesign, currentDesignId, iframeLoadTick]);
 
   // Pool entries: active design first (using the freshest in-memory
   // previewHtml), then any other recently-visited designs that still have a
@@ -515,6 +728,7 @@ export function PreviewPane({ onPickStarter }: PreviewPaneProps) {
               active={entry.id === currentDesignId}
               viewport={previewViewport}
               zoom={previewZoom}
+              canvasSize={canvasSizeByDesign[entry.id]}
               showCommentUi={showCommentUi}
               commentHintLabel={t('preview.commentModeHint')}
               pinOverlay={pinOverlay}
@@ -526,8 +740,20 @@ export function PreviewPane({ onPickStarter }: PreviewPaneProps) {
           ))}
           {!activeHasHtml ? (
             designHasContent ? (
-              <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-background)]">
-                <div className="w-[60%] max-w-[720px] aspect-[4/3] rounded-[var(--radius-lg)] bg-[linear-gradient(110deg,var(--color-background-secondary)_0%,rgba(0,0,0,0.03)_40%,var(--color-background-secondary)_80%)] animate-pulse" />
+              <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-background)] p-[var(--space-8)]">
+                {isGenerating ? (
+                  <StreamingBanner
+                    text={
+                      streamingAssistantText && streamingAssistantText.designId === currentDesignId
+                        ? streamingAssistantText.text
+                        : ''
+                    }
+                    stage={generationStage.toString().toUpperCase()}
+                    latestTool={latestToolSummary(pendingToolCalls)}
+                  />
+                ) : (
+                  <div className="w-[60%] max-w-[720px] aspect-[4/3] rounded-[var(--radius-lg)] bg-[linear-gradient(110deg,var(--color-background-secondary)_0%,rgba(0,0,0,0.03)_40%,var(--color-background-secondary)_80%)] animate-pulse" />
+                )}
               </div>
             ) : (
               <EmptyState onPickStarter={onPickStarter} />
@@ -554,6 +780,7 @@ export function PreviewPane({ onPickStarter }: PreviewPaneProps) {
         <div className="relative flex-1 overflow-hidden">
           {body}
           {previewHtml ? <TweakPanel iframeRef={iframeRef} /> : null}
+          <ArtboardCodeDrawer />
         </div>
         {commentBubble && interactionMode === 'comment'
           ? (() => {

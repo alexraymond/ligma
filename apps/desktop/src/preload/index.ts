@@ -502,6 +502,13 @@ const api = {
         path,
         content,
       }) as Promise<DesignFile>,
+    upsert: (designId: string, path: string, content = '') =>
+      ipcRenderer.invoke('files:v1:upsert', {
+        schemaVersion: 1,
+        designId,
+        path,
+        content,
+      }) as Promise<DesignFile>,
     rename: (designId: string, fromPath: string, toPath: string) =>
       ipcRenderer.invoke('files:v1:rename', {
         schemaVersion: 1,

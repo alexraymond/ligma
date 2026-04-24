@@ -30,6 +30,9 @@ export const OVERLAY_SCRIPT = `(function() {
 
   var watchedSelectors = [];
   var rectsFrameHandle = 0;
+  var canvasSizeFrameHandle = 0;
+  var lastCanvasW = 0;
+  var lastCanvasH = 0;
 
   function resolveSelector(sel) {
     if (!sel || typeof sel !== 'string') return null;
@@ -77,8 +80,81 @@ export const OVERLAY_SCRIPT = `(function() {
     }
   }
 
+  function measureAndPostCanvasSize() {
+    canvasSizeFrameHandle = 0;
+    var de = document.documentElement;
+    var bd = document.body;
+    var dew = de && typeof de.scrollWidth === 'number' ? de.scrollWidth : 0;
+    var deh = de && typeof de.scrollHeight === 'number' ? de.scrollHeight : 0;
+    var bdw = bd && typeof bd.scrollWidth === 'number' ? bd.scrollWidth : 0;
+    var bdh = bd && typeof bd.scrollHeight === 'number' ? bd.scrollHeight : 0;
+    var w = Math.max(dew, bdw);
+    var h = Math.max(deh, bdh);
+    // Skip when size is unknown / body not yet rendered.
+    if (w === 0 && h === 0) return;
+    if (w === lastCanvasW && h === lastCanvasH) return;
+    lastCanvasW = w;
+    lastCanvasH = h;
+    try {
+      window.parent.postMessage({
+        __codesign: true,
+        type: 'CANVAS_SIZE',
+        width: w,
+        height: h
+      }, '*');
+    } catch (err) { warnOnce('postMessage CANVAS_SIZE failed', err); }
+  }
+
+  function scheduleCanvasSize() {
+    if (canvasSizeFrameHandle) return;
+    try {
+      canvasSizeFrameHandle = window.requestAnimationFrame(measureAndPostCanvasSize);
+    } catch (_) {
+      measureAndPostCanvasSize();
+    }
+  }
+
+  function findArtboard(el) {
+    while (el && el.nodeType === 1) {
+      if (el.dataset && el.dataset.artboard !== undefined) return el;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  function applyArtboardOffsets() {
+    // Direct-DOM mutation avoids any attribute-selector escaping nightmare
+    // (labels can contain spaces, unicode mid-dots, quotes, etc.). We iterate
+    // the real artboards, read their label, apply the matching offset inline,
+    // and reset anything not in the map back to zero.
+    var nodes;
+    try { nodes = document.querySelectorAll('[data-artboard]'); }
+    catch (_) { return; }
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      var label = node.getAttribute('data-label') || '';
+      var off = artboardOffsetsByLabel[label];
+      try {
+        if (off) {
+          node.style.transform = 'translate3d(' + off.x + 'px,' + off.y + 'px,0)';
+          node.style.willChange = 'transform';
+          node.style.zIndex = String(off.z || 1);
+        } else {
+          node.style.transform = '';
+          node.style.willChange = '';
+          node.style.zIndex = '';
+        }
+      } catch (_) { /* inline style denied — skip this node */ }
+    }
+  }
+
   var HOVER_OUTLINE = '2px solid #c96442';
   var PINNED_OUTLINE = '2.5px solid #b5441a';
+  var ARTBOARD_HOVER_OUTLINE = '3px solid #4a7fbf';
+  var ARTBOARD_MOVE_OUTLINE = '3px dashed #4a7fbf';
+  var hoveredArtboard = null;
+  var moveState = null;
+  var artboardOffsetsByLabel = Object.create(null);
 
   function clearHover() {
     // Don't clear if this element is pinned — pinned takes precedence.
@@ -110,7 +186,32 @@ export const OVERLAY_SCRIPT = `(function() {
     return '/' + parts.join('/');
   }
 
+  function clearHoveredArtboard() {
+    if (hoveredArtboard) {
+      try { hoveredArtboard.style.outline = ''; } catch (_) {}
+      try { hoveredArtboard.style.cursor = ''; } catch (_) {}
+    }
+    hoveredArtboard = null;
+  }
   function onMouseOver(e) {
+    if (currentMode === 'artboard-select' || currentMode === 'artboard-move') {
+      if (moveState) return;
+      var ab = findArtboard(e.target);
+      if (ab === hoveredArtboard) return;
+      clearHoveredArtboard();
+      if (ab) {
+        hoveredArtboard = ab;
+        try {
+          ab.style.outline = currentMode === 'artboard-move'
+            ? ARTBOARD_MOVE_OUTLINE
+            : ARTBOARD_HOVER_OUTLINE;
+        } catch (_) {}
+        try {
+          ab.style.cursor = currentMode === 'artboard-move' ? 'grab' : 'pointer';
+        } catch (_) {}
+      }
+      return;
+    }
     if (currentMode !== 'comment') return;
     // Don't override pinned outline on hover-in of a different element.
     if (hovered && hovered !== pinned) {
@@ -122,10 +223,96 @@ export const OVERLAY_SCRIPT = `(function() {
     }
   }
   function onMouseOut() {
+    if (currentMode === 'artboard-select' || currentMode === 'artboard-move') {
+      if (!moveState) clearHoveredArtboard();
+      return;
+    }
     if (currentMode !== 'comment') return;
     clearHover();
   }
+
+  function onPointerDownMove(e) {
+    if (currentMode !== 'artboard-move') return;
+    var ab = findArtboard(e.target);
+    if (!ab) return;
+    var label = ab.getAttribute('data-label') || '';
+    if (!label) return;
+    var prev = artboardOffsetsByLabel[label] || { x: 0, y: 0, z: 1 };
+    moveState = {
+      label: label,
+      startX: e.clientX,
+      startY: e.clientY,
+      baseX: prev.x,
+      baseY: prev.y,
+    };
+    e.preventDefault();
+    e.stopPropagation();
+    try { document.body.style.cursor = 'grabbing'; } catch (_) {}
+    try { ab.style.cursor = 'grabbing'; } catch (_) {}
+    // Raise the dragged artboard above siblings for the duration.
+    artboardOffsetsByLabel[label] = { x: prev.x, y: prev.y, z: 100 };
+    applyArtboardOffsets();
+  }
+  function onPointerMoveMove(e) {
+    if (!moveState) return;
+    var dx = e.clientX - moveState.startX;
+    var dy = e.clientY - moveState.startY;
+    artboardOffsetsByLabel[moveState.label] = {
+      x: moveState.baseX + dx,
+      y: moveState.baseY + dy,
+      z: 100,
+    };
+    applyArtboardOffsets();
+    e.preventDefault();
+  }
+  function onPointerUpMove(e) {
+    if (!moveState) return;
+    var label = moveState.label;
+    var off = artboardOffsetsByLabel[label] || { x: 0, y: 0 };
+    moveState = null;
+    try { document.body.style.cursor = ''; } catch (_) {}
+    // Settle z back to 1 so the next drag can raise again.
+    artboardOffsetsByLabel[label] = { x: off.x, y: off.y, z: 1 };
+    applyArtboardOffsets();
+    try {
+      window.parent.postMessage({
+        __codesign: true,
+        type: 'ARTBOARD_MOVED',
+        label: label,
+        x: off.x,
+        y: off.y
+      }, '*');
+    } catch (err) { warnOnce('postMessage ARTBOARD_MOVED failed', err); }
+    e.preventDefault();
+  }
   function onClick(e) {
+    if (currentMode === 'artboard-move') {
+      // Suppress any click dispatched at the end of a drag — the move handler
+      // already committed the position via pointerup.
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    if (currentMode === 'artboard-select') {
+      var ab = findArtboard(e.target);
+      if (!ab) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var rect = ab.getBoundingClientRect();
+      var label = ab.getAttribute('data-label') || '';
+      var viewport = ab.getAttribute('data-viewport') || '';
+      try {
+        window.parent.postMessage({
+          __codesign: true,
+          type: 'ARTBOARD_SELECTED',
+          label: label,
+          viewport: viewport,
+          outerHTML: (ab.outerHTML || ''),
+          rect: { top: rect.top, left: rect.left, width: rect.width, height: rect.height }
+        }, '*');
+      } catch (err) { warnOnce('postMessage ARTBOARD_SELECTED failed', err); }
+      return;
+    }
     if (currentMode === 'comment') {
       e.preventDefault();
       e.stopPropagation();
@@ -190,13 +377,38 @@ export const OVERLAY_SCRIPT = `(function() {
     var data = ev.data;
     if (!data || data.__codesign !== true) return;
     if (data.type === 'SET_MODE') {
-      var next = data.mode === 'comment' ? 'comment' : 'default';
+      var next;
+      if (data.mode === 'comment') next = 'comment';
+      else if (data.mode === 'artboard-select') next = 'artboard-select';
+      else if (data.mode === 'artboard-move') next = 'artboard-move';
+      else next = 'default';
       if (next === currentMode) return;
       currentMode = next;
-      if (currentMode === 'default') {
+      if (currentMode !== 'comment') {
         clearHover();
         clearPinned();
       }
+      if (currentMode !== 'artboard-select' && currentMode !== 'artboard-move') {
+        clearHoveredArtboard();
+      }
+      return;
+    }
+    if (data.type === 'APPLY_ARTBOARD_OFFSETS') {
+      var payload = data.offsets;
+      if (typeof payload !== 'object' || payload === null) return;
+      artboardOffsetsByLabel = Object.create(null);
+      for (var key in payload) {
+        if (!Object.prototype.hasOwnProperty.call(payload, key)) continue;
+        var entry = payload[key];
+        if (!entry || typeof entry.x !== 'number' || typeof entry.y !== 'number') continue;
+        artboardOffsetsByLabel[key] = { x: entry.x, y: entry.y, z: 1 };
+      }
+      applyArtboardOffsets();
+      return;
+    }
+    if (data.type === 'RESET_ARTBOARD_OFFSETS') {
+      artboardOffsetsByLabel = Object.create(null);
+      applyArtboardOffsets();
       return;
     }
     if (data.type === 'CLEAR_PIN') {
@@ -256,6 +468,9 @@ export const OVERLAY_SCRIPT = `(function() {
     { evt: 'mouseover', fn: onMouseOver },
     { evt: 'mouseout', fn: onMouseOut },
     { evt: 'click', fn: onClick },
+    { evt: 'pointerdown', fn: onPointerDownMove },
+    { evt: 'pointermove', fn: onPointerMoveMove },
+    { evt: 'pointerup', fn: onPointerUpMove },
     { evt: 'submit', fn: function(e) { e.preventDefault(); } }
   ];
   function reattach() {
@@ -277,10 +492,23 @@ export const OVERLAY_SCRIPT = `(function() {
       try {
         // capture=true so scrolls on inner overflow containers also bubble in here
         window.addEventListener('scroll', scheduleRectsBroadcast, true);
-        window.addEventListener('resize', scheduleRectsBroadcast, false);
+        window.addEventListener('resize', function () {
+          scheduleRectsBroadcast();
+          scheduleCanvasSize();
+        }, false);
         window.__cs_scroll = true;
       } catch (err) { warnOnce('attach scroll/resize listener failed', err); }
     }
+    if (!window.__cs_canvas_observer && typeof MutationObserver === 'function') {
+      try {
+        var mo = new MutationObserver(function () { scheduleCanvasSize(); });
+        mo.observe(document.documentElement, { childList: true, subtree: true, attributes: true, characterData: true });
+        window.__cs_canvas_observer = mo;
+      } catch (err) { warnOnce('attach canvas MutationObserver failed', err); }
+    }
+    // Schedule an initial broadcast so the parent can size the iframe to
+    // content on first paint without waiting for any mutation.
+    scheduleCanvasSize();
   }
   reattach();
   try {
@@ -301,11 +529,19 @@ export const OVERLAY_SCRIPT = `(function() {
   // window.location = '/foo', location.assign('/x'), or window.open(...)
   // in button onclick handlers. None of those routes exist in the sandbox and
   // they'd all blank the preview. We no-op them once, idempotently.
+  // Also neutralize prompt/alert/confirm — Electron disables them in
+  // iframes, so generated UI that calls them raises "prompt() is not
+  // supported" and breaks the whole interaction. Returning "" / true / true
+  // lets the design continue to render, and the agent can be told to avoid
+  // these APIs in follow-up prompts.
   try {
     if (!window.__cs_navguard) {
       window.__cs_navguard = true;
       var nopNav = function() { /* navigation suppressed in preview sandbox */ };
       try { window.open = function() { return null; }; } catch (_) {}
+      try { window.prompt = function() { return ''; }; } catch (_) {}
+      try { window.alert = function() { /* suppressed */ }; } catch (_) {}
+      try { window.confirm = function() { return true; }; } catch (_) {}
       try {
         var loc = window.location;
         try { loc.assign = nopNav; } catch (_) {}
@@ -376,4 +612,87 @@ export function isElementRectsMessage(data: unknown): data is ElementRectsMessag
     }
   }
   return true;
+}
+
+export interface CanvasSizeMessage {
+  __codesign: true;
+  type: 'CANVAS_SIZE';
+  width: number;
+  height: number;
+}
+
+export function isCanvasSizeMessage(data: unknown): data is CanvasSizeMessage {
+  if (typeof data !== 'object' || data === null) return false;
+  const d = data as { __codesign?: boolean; type?: string; width?: unknown; height?: unknown };
+  return (
+    d.__codesign === true &&
+    d.type === 'CANVAS_SIZE' &&
+    typeof d.width === 'number' &&
+    typeof d.height === 'number' &&
+    Number.isFinite(d.width) &&
+    Number.isFinite(d.height) &&
+    d.width >= 0 &&
+    d.height >= 0
+  );
+}
+
+export interface ArtboardSelectedMessage {
+  __codesign: true;
+  type: 'ARTBOARD_SELECTED';
+  label: string;
+  viewport: string;
+  outerHTML: string;
+  rect: { top: number; left: number; width: number; height: number };
+}
+
+export interface ArtboardMovedMessage {
+  __codesign: true;
+  type: 'ARTBOARD_MOVED';
+  label: string;
+  x: number;
+  y: number;
+}
+
+export function isArtboardMovedMessage(data: unknown): data is ArtboardMovedMessage {
+  if (typeof data !== 'object' || data === null) return false;
+  const d = data as {
+    __codesign?: boolean;
+    type?: string;
+    label?: unknown;
+    x?: unknown;
+    y?: unknown;
+  };
+  return (
+    d.__codesign === true &&
+    d.type === 'ARTBOARD_MOVED' &&
+    typeof d.label === 'string' &&
+    typeof d.x === 'number' &&
+    typeof d.y === 'number' &&
+    Number.isFinite(d.x) &&
+    Number.isFinite(d.y)
+  );
+}
+
+export function isArtboardSelectedMessage(data: unknown): data is ArtboardSelectedMessage {
+  if (typeof data !== 'object' || data === null) return false;
+  const d = data as {
+    __codesign?: boolean;
+    type?: string;
+    label?: unknown;
+    viewport?: unknown;
+    outerHTML?: unknown;
+    rect?: unknown;
+  };
+  if (d.__codesign !== true || d.type !== 'ARTBOARD_SELECTED') return false;
+  if (typeof d.label !== 'string' || typeof d.viewport !== 'string') return false;
+  if (typeof d.outerHTML !== 'string') return false;
+  const r = d.rect as { top?: unknown; left?: unknown; width?: unknown; height?: unknown };
+  return (
+    typeof r === 'object' &&
+    r !== null &&
+    typeof r.top === 'number' &&
+    typeof r.left === 'number' &&
+    typeof r.width === 'number' &&
+    typeof r.height === 'number'
+  );
 }

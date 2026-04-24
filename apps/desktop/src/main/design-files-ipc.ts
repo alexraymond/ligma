@@ -17,6 +17,7 @@ import {
   deleteDesignFile,
   listDesignFiles,
   renameDesignFile,
+  upsertDesignFile,
   viewDesignFile,
 } from './snapshots-db';
 
@@ -71,6 +72,16 @@ export function registerDesignFilesIpc(db: Database): void {
     requireSchemaV1(r, 'files:v1:create');
     const content = typeof r['content'] === 'string' ? (r['content'] as string) : '';
     return createDesignFile(db, requireDesignId(r), requirePath(r), content);
+  });
+
+  ipcMain.handle('files:v1:upsert', (_e: unknown, raw: unknown): DesignFile => {
+    if (typeof raw !== 'object' || raw === null) {
+      throw new CodesignError('files:v1:upsert expects an object payload', 'IPC_BAD_INPUT');
+    }
+    const r = raw as Record<string, unknown>;
+    requireSchemaV1(r, 'files:v1:upsert');
+    const content = typeof r['content'] === 'string' ? (r['content'] as string) : '';
+    return upsertDesignFile(db, requireDesignId(r), requirePath(r), content);
   });
 
   ipcMain.handle('files:v1:rename', (_e: unknown, raw: unknown): DesignFile => {
