@@ -1,5 +1,5 @@
 import { useT } from '@ligma/i18n';
-import { Code2, Download, Hand, Maximize2, MessageSquare, Move, RotateCcw } from 'lucide-react';
+import { Code2, Download, Maximize2, MessageSquare, Move, RotateCcw } from 'lucide-react';
 import { type ReactElement, useEffect, useRef, useState } from 'react';
 import type { ExportFormat } from '../../../preload/index';
 import type { PreviewViewport } from '../store';
@@ -65,7 +65,6 @@ export function PreviewToolbar(): ReactElement {
   const commentActive = interactionMode === 'comment';
   const artboardSelectActive = interactionMode === 'artboard-select';
   const artboardMoveActive = interactionMode === 'artboard-move';
-  const panActive = interactionMode === 'pan';
   const knownCanvasSize = currentDesignId ? canvasSizeByDesign[currentDesignId] : undefined;
   const fitDisabled = disabled || !knownCanvasSize;
   const hasArtboardOffsets =
@@ -117,22 +116,6 @@ export function PreviewToolbar(): ReactElement {
           {toastMessage}
         </output>
       )}
-
-      <button
-        type="button"
-        disabled={disabled}
-        aria-pressed={panActive}
-        title="Pan the canvas — drag inside the preview, or use two-finger scroll. Hold Space for temporary pan."
-        onClick={() => setInteractionMode(panActive ? 'default' : 'pan')}
-        className={`inline-flex items-center gap-[6px] h-[26px] px-[10px] text-[12px] transition-[background-color,color,transform] duration-[var(--duration-faster)] active:scale-[var(--scale-press-down)] disabled:opacity-40 disabled:pointer-events-none ${
-          panActive
-            ? 'text-[var(--color-accent)]'
-            : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]'
-        }`}
-      >
-        <Hand className="w-3.5 h-3.5" aria-hidden="true" />
-        Pan
-      </button>
 
       <button
         type="button"

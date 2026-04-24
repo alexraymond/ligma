@@ -234,15 +234,30 @@ export const OVERLAY_SCRIPT = `(function() {
   // --- Canvas pan (iframe -> parent scroll) -------------------------------
   // The outer CanvasViewport uses overflow:auto on a parent div, but a
   // wheel / drag happening inside the iframe never reaches it (iframes are
-  // separate browsing contexts for event propagation). When the user is in
-  // pan mode, the overlay forwards wheel deltas and drag deltas up via
-  // postMessage so the parent can translate them into scrollLeft/scrollTop.
+  // separate browsing contexts for event propagation). We forward wheel and
+  // drag deltas up via postMessage so the parent can apply them to
+  // scrollLeft/scrollTop. Pan must be Figma-native: trackpad 2-finger
+  // scroll, Cmd+wheel zoom, Space+drag, middle-click drag — all "just
+  // work" without a tool mode toggle.
   var panDragState = null;
+  var spaceHeld = false;
+  // Track whether a form field is focused inside the iframe — if so, Space
+  // keydown is the user typing, not a pan gesture. We still forward wheel
+  // though (a text field doesn't need trackpad scroll to do anything
+  // special for design review).
+  function isFormFieldFocused() {
+    var el = document.activeElement;
+    if (!el) return false;
+    var tag = el.tagName;
+    return tag === 'INPUT' || tag === 'TEXTAREA' || el.isContentEditable;
+  }
+
   function onWheelPan(e) {
-    if (currentMode !== 'pan') return;
-    // Preventing default is important: otherwise Chrome tries to scroll the
-    // iframe's document (even when nothing inside overflows, it still emits
-    // a scroll event and on some platforms shows a rubber-band bounce).
+    // Always forward. Generated designs are artboards, not web pages — the
+    // expected mental model is Figma: wheel pans, Cmd+wheel zooms. If the
+    // parent receives a Cmd/Ctrl wheel it treats it as zoom (see
+    // CanvasViewport's onWheel), otherwise scroll. Forwarding both deltas
+    // keeps the iframe itself from rubber-banding (preventDefault below).
     e.preventDefault();
     e.stopPropagation();
     try {
@@ -251,11 +266,42 @@ export const OVERLAY_SCRIPT = `(function() {
         type: 'CANVAS_PAN_WHEEL',
         deltaX: e.deltaX,
         deltaY: e.deltaY,
+        ctrlKey: e.ctrlKey === true,
+        metaKey: e.metaKey === true,
       }, '*');
     } catch (err) { warnOnce('postMessage CANVAS_PAN_WHEEL failed', err); }
   }
+
+  function onPanKeyDown(e) {
+    if (e.code === 'Space' && !spaceHeld && !isFormFieldFocused()) {
+      spaceHeld = true;
+      try { document.body.style.cursor = 'grab'; } catch (_) {}
+      // Prevent default scroll-on-space AND prevent the Space from inserting
+      // a character if a non-form element happens to be focused.
+      e.preventDefault();
+    }
+  }
+  function onPanKeyUp(e) {
+    if (e.code === 'Space' && spaceHeld) {
+      spaceHeld = false;
+      if (!panDragState) {
+        try { document.body.style.cursor = ''; } catch (_) {}
+      }
+    }
+  }
+
+  function shouldStartPan(e) {
+    // Middle-click pans regardless of mode.
+    if (e.button === 1) return true;
+    // Space+drag pans regardless of mode.
+    if (spaceHeld) return true;
+    // Explicit pan mode (toolbar button) makes any primary drag pan.
+    if (currentMode === 'pan' && e.button === 0) return true;
+    return false;
+  }
+
   function onPanDown(e) {
-    if (currentMode !== 'pan') return;
+    if (!shouldStartPan(e)) return;
     panDragState = { id: e.pointerId, x: e.clientX, y: e.clientY };
     try { document.body.style.cursor = 'grabbing'; } catch (_) {}
     e.preventDefault();
@@ -280,7 +326,11 @@ export const OVERLAY_SCRIPT = `(function() {
   function onPanUp(e) {
     if (!panDragState || e.pointerId !== panDragState.id) return;
     panDragState = null;
-    try { document.body.style.cursor = currentMode === 'pan' ? 'grab' : ''; } catch (_) {}
+    // Keep the grab cursor while Space is still held, otherwise reset.
+    try {
+      document.body.style.cursor =
+        spaceHeld || currentMode === 'pan' ? 'grab' : '';
+    } catch (_) {}
     e.preventDefault();
   }
 
@@ -559,6 +609,23 @@ export const OVERLAY_SCRIPT = `(function() {
     if (!window.__cs_msg) {
       try { window.addEventListener('message', onParentMessage, false); window.__cs_msg = true; } catch (_) {}
     }
+    if (!window.__cs_panKeys) {
+      try {
+        window.addEventListener('keydown', onPanKeyDown, true);
+        window.addEventListener('keyup', onPanKeyUp, true);
+        // Space-released while the window loses focus would otherwise leave
+        // spaceHeld stuck at true forever. Reset on blur.
+        window.addEventListener('blur', function () {
+          if (spaceHeld) {
+            spaceHeld = false;
+            if (!panDragState) {
+              try { document.body.style.cursor = ''; } catch (_) {}
+            }
+          }
+        }, false);
+        window.__cs_panKeys = true;
+      } catch (err) { warnOnce('attach pan key listeners failed', err); }
+    }
     if (!window.__cs_scroll) {
       try {
         // capture=true so scrolls on inner overflow containers also bubble in here
@@ -729,18 +796,31 @@ export interface CanvasPanWheelMessage {
   type: 'CANVAS_PAN_WHEEL';
   deltaX: number;
   deltaY: number;
+  /** Ctrl held when the wheel fired — treated as zoom modifier on every OS. */
+  ctrlKey?: boolean;
+  /** Meta (Cmd) held — macOS zoom modifier. */
+  metaKey?: boolean;
 }
 
 export function isCanvasPanWheelMessage(data: unknown): data is CanvasPanWheelMessage {
   if (typeof data !== 'object' || data === null) return false;
-  const d = data as { __codesign?: boolean; type?: string; deltaX?: unknown; deltaY?: unknown };
+  const d = data as {
+    __codesign?: boolean;
+    type?: string;
+    deltaX?: unknown;
+    deltaY?: unknown;
+    ctrlKey?: unknown;
+    metaKey?: unknown;
+  };
   return (
     d.__codesign === true &&
     d.type === 'CANVAS_PAN_WHEEL' &&
     typeof d.deltaX === 'number' &&
     typeof d.deltaY === 'number' &&
     Number.isFinite(d.deltaX) &&
-    Number.isFinite(d.deltaY)
+    Number.isFinite(d.deltaY) &&
+    (d.ctrlKey === undefined || typeof d.ctrlKey === 'boolean') &&
+    (d.metaKey === undefined || typeof d.metaKey === 'boolean')
   );
 }
 

@@ -659,7 +659,16 @@ export function PreviewPane({ onPickStarter }: PreviewPaneProps) {
           // Iframes are separate browsing contexts so wheel events inside
           // never reach the outer scroll container. The overlay forwards
           // them here so we can translate to scrollLeft / scrollTop on the
-          // viewport the user is actually looking at.
+          // viewport the user is actually looking at. Ctrl/Cmd + wheel
+          // zooms — matching Figma and the existing outer-viewport
+          // behaviour for events that happen to miss the iframe.
+          if (msg.ctrlKey || msg.metaKey) {
+            const current = useCodesignStore.getState().previewZoom;
+            const step = msg.deltaY > 0 ? -5 : 5;
+            const next = Math.min(400, Math.max(25, Math.round(current + step)));
+            useCodesignStore.getState().setPreviewZoom(next);
+            return;
+          }
           const el = document.querySelector('[data-canvas-viewport]') as HTMLElement | null;
           if (!el) return;
           el.scrollLeft += msg.deltaX;
