@@ -74,6 +74,8 @@ describe('handlePreviewMessage trust boundary', () => {
       onCanvasSize: vi.fn(),
       onArtboardSelected: vi.fn(),
       onArtboardMoved: vi.fn(),
+      onCanvasPanWheel: vi.fn(),
+      onCanvasPanDrag: vi.fn(),
     };
   }
 

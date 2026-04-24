@@ -2,6 +2,8 @@ import { useT } from '@ligma/i18n';
 import {
   type ArtboardMovedMessage,
   type ArtboardSelectedMessage,
+  type CanvasPanDragMessage,
+  type CanvasPanWheelMessage,
   type CanvasSizeMessage,
   type ElementRectsMessage,
   type IframeErrorMessage,
@@ -9,6 +11,8 @@ import {
   buildSrcdoc,
   isArtboardMovedMessage,
   isArtboardSelectedMessage,
+  isCanvasPanDragMessage,
+  isCanvasPanWheelMessage,
   isCanvasSizeMessage,
   isElementRectsMessage,
   isIframeErrorMessage,
@@ -101,7 +105,9 @@ export type AllowedPreviewMessageType =
   | 'ELEMENT_RECTS'
   | 'CANVAS_SIZE'
   | 'ARTBOARD_SELECTED'
-  | 'ARTBOARD_MOVED';
+  | 'ARTBOARD_MOVED'
+  | 'CANVAS_PAN_WHEEL'
+  | 'CANVAS_PAN_DRAG';
 
 export interface PreviewMessageHandlers {
   onElementSelected: (msg: OverlayMessage) => void;
@@ -110,6 +116,8 @@ export interface PreviewMessageHandlers {
   onCanvasSize: (msg: CanvasSizeMessage) => void;
   onArtboardSelected: (msg: ArtboardSelectedMessage) => void;
   onArtboardMoved: (msg: ArtboardMovedMessage) => void;
+  onCanvasPanWheel: (msg: CanvasPanWheelMessage) => void;
+  onCanvasPanDrag: (msg: CanvasPanDragMessage) => void;
 }
 
 export type PreviewMessageOutcome =
@@ -163,6 +171,18 @@ export function handlePreviewMessage(
       if (isArtboardMovedMessage(data)) {
         handlers.onArtboardMoved(data);
         return { status: 'handled', type: 'ARTBOARD_MOVED' };
+      }
+      return { status: 'rejected', reason: 'shape', type: envelope.type };
+    case 'CANVAS_PAN_WHEEL':
+      if (isCanvasPanWheelMessage(data)) {
+        handlers.onCanvasPanWheel(data);
+        return { status: 'handled', type: 'CANVAS_PAN_WHEEL' };
+      }
+      return { status: 'rejected', reason: 'shape', type: envelope.type };
+    case 'CANVAS_PAN_DRAG':
+      if (isCanvasPanDragMessage(data)) {
+        handlers.onCanvasPanDrag(data);
+        return { status: 'handled', type: 'CANVAS_PAN_DRAG' };
       }
       return { status: 'rejected', reason: 'shape', type: envelope.type };
     default:
@@ -634,6 +654,25 @@ export function PreviewPane({ onPickStarter }: PreviewPaneProps) {
         onArtboardMoved: (msg) => {
           if (!currentDesignId) return;
           setArtboardOffset(currentDesignId, msg.label, { x: msg.x, y: msg.y });
+        },
+        onCanvasPanWheel: (msg) => {
+          // Iframes are separate browsing contexts so wheel events inside
+          // never reach the outer scroll container. The overlay forwards
+          // them here so we can translate to scrollLeft / scrollTop on the
+          // viewport the user is actually looking at.
+          const el = document.querySelector('[data-canvas-viewport]') as HTMLElement | null;
+          if (!el) return;
+          el.scrollLeft += msg.deltaX;
+          el.scrollTop += msg.deltaY;
+        },
+        onCanvasPanDrag: (msg) => {
+          const el = document.querySelector('[data-canvas-viewport]') as HTMLElement | null;
+          if (!el) return;
+          // Drag direction is opposite to scroll direction (dragging right
+          // moves the content right, which for the viewport means scrolling
+          // LEFT by the same delta). Match Figma / Miro's grab-hand feel.
+          el.scrollLeft -= msg.dx;
+          el.scrollTop -= msg.dy;
         },
       });
 

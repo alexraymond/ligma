@@ -60,10 +60,11 @@ describe('OVERLAY_SCRIPT reattach loop warning throttle', () => {
     // Initial reattach already ran inside script; simulate 25 more interval fires (~5s @ 200ms).
     for (let i = 0; i < 25; i++) tick();
 
-    // 7 install specs (mouseover/mouseout/click/pointerdown/pointermove/
-    // pointerup/submit) * 2 ops (remove+add) = 14 distinct keys at most. The
-    // invariant tested here is that the warn count doesn't scale with tick.
-    expect(warn.mock.calls.length).toBeLessThanOrEqual(14);
+    // 9 unique install event types (mouseover/mouseout/click/pointerdown/
+    // pointermove/pointerup/pointercancel/wheel/submit) * 2 ops (remove+add)
+    // = 18 distinct warn keys at most. The invariant tested here is that the
+    // warn count doesn't scale with tick.
+    expect(warn.mock.calls.length).toBeLessThanOrEqual(18);
   });
 
   it('emits at most one warn per unique error key over the whole loop', () => {
@@ -72,8 +73,9 @@ describe('OVERLAY_SCRIPT reattach loop warning throttle', () => {
     const keys = new Set(warn.mock.calls.map((c) => String(c[0])));
     // each warn call should be a unique key
     expect(warn.mock.calls.length).toBe(keys.size);
-    // should be ≤ 7 (one per install-spec event type), well under the 25-tick spam ceiling
-    expect(warn.mock.calls.length).toBeLessThanOrEqual(7);
+    // should be ≤ 9 (one per unique install event type), well under the
+    // 25-tick spam ceiling.
+    expect(warn.mock.calls.length).toBeLessThanOrEqual(9);
   });
 });
 

@@ -115,7 +115,7 @@ export interface ReportableErrorToastSpec {
 export type Theme = 'light' | 'dark';
 export type AppView = 'hub' | 'designSystems' | 'workspace' | 'settings';
 export type SettingsTab = 'models' | 'appearance' | 'storage' | 'diagnostics' | 'advanced';
-export type InteractionMode = 'default' | 'comment' | 'artboard-select' | 'artboard-move';
+export type InteractionMode = 'default' | 'comment' | 'artboard-select' | 'artboard-move' | 'pan';
 
 export interface CanvasSize {
   width: number;

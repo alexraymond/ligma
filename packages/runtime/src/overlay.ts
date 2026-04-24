@@ -231,6 +231,59 @@ export const OVERLAY_SCRIPT = `(function() {
     clearHover();
   }
 
+  // --- Canvas pan (iframe -> parent scroll) -------------------------------
+  // The outer CanvasViewport uses overflow:auto on a parent div, but a
+  // wheel / drag happening inside the iframe never reaches it (iframes are
+  // separate browsing contexts for event propagation). When the user is in
+  // pan mode, the overlay forwards wheel deltas and drag deltas up via
+  // postMessage so the parent can translate them into scrollLeft/scrollTop.
+  var panDragState = null;
+  function onWheelPan(e) {
+    if (currentMode !== 'pan') return;
+    // Preventing default is important: otherwise Chrome tries to scroll the
+    // iframe's document (even when nothing inside overflows, it still emits
+    // a scroll event and on some platforms shows a rubber-band bounce).
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      window.parent.postMessage({
+        __codesign: true,
+        type: 'CANVAS_PAN_WHEEL',
+        deltaX: e.deltaX,
+        deltaY: e.deltaY,
+      }, '*');
+    } catch (err) { warnOnce('postMessage CANVAS_PAN_WHEEL failed', err); }
+  }
+  function onPanDown(e) {
+    if (currentMode !== 'pan') return;
+    panDragState = { id: e.pointerId, x: e.clientX, y: e.clientY };
+    try { document.body.style.cursor = 'grabbing'; } catch (_) {}
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  function onPanMove(e) {
+    if (!panDragState || e.pointerId !== panDragState.id) return;
+    var dx = e.clientX - panDragState.x;
+    var dy = e.clientY - panDragState.y;
+    panDragState.x = e.clientX;
+    panDragState.y = e.clientY;
+    try {
+      window.parent.postMessage({
+        __codesign: true,
+        type: 'CANVAS_PAN_DRAG',
+        dx: dx,
+        dy: dy,
+      }, '*');
+    } catch (err) { warnOnce('postMessage CANVAS_PAN_DRAG failed', err); }
+    e.preventDefault();
+  }
+  function onPanUp(e) {
+    if (!panDragState || e.pointerId !== panDragState.id) return;
+    panDragState = null;
+    try { document.body.style.cursor = currentMode === 'pan' ? 'grab' : ''; } catch (_) {}
+    e.preventDefault();
+  }
+
   function onPointerDownMove(e) {
     if (currentMode !== 'artboard-move') return;
     var ab = findArtboard(e.target);
@@ -381,6 +434,7 @@ export const OVERLAY_SCRIPT = `(function() {
       if (data.mode === 'comment') next = 'comment';
       else if (data.mode === 'artboard-select') next = 'artboard-select';
       else if (data.mode === 'artboard-move') next = 'artboard-move';
+      else if (data.mode === 'pan') next = 'pan';
       else next = 'default';
       if (next === currentMode) return;
       currentMode = next;
@@ -391,6 +445,12 @@ export const OVERLAY_SCRIPT = `(function() {
       if (currentMode !== 'artboard-select' && currentMode !== 'artboard-move') {
         clearHoveredArtboard();
       }
+      // The iframe's own body cursor signals the mode to the user visually
+      // because the iframe captures pointer events — the parent's cursor
+      // style can't be seen once the pointer is inside.
+      try {
+        document.body.style.cursor = currentMode === 'pan' ? 'grab' : '';
+      } catch (_) {}
       return;
     }
     if (data.type === 'APPLY_ARTBOARD_OFFSETS') {
@@ -471,13 +531,24 @@ export const OVERLAY_SCRIPT = `(function() {
     { evt: 'pointerdown', fn: onPointerDownMove },
     { evt: 'pointermove', fn: onPointerMoveMove },
     { evt: 'pointerup', fn: onPointerUpMove },
+    // Canvas-pan handlers — no-op when currentMode !== 'pan'. Registered in
+    // capture phase (wheel also needs non-passive so preventDefault works).
+    { evt: 'wheel', fn: onWheelPan, opts: { capture: true, passive: false } },
+    { evt: 'pointerdown', fn: onPanDown },
+    { evt: 'pointermove', fn: onPanMove },
+    { evt: 'pointerup', fn: onPanUp },
+    { evt: 'pointercancel', fn: onPanUp },
     { evt: 'submit', fn: function(e) { e.preventDefault(); } }
   ];
   function reattach() {
     for (var i = 0; i < installs.length; i++) {
       var spec = installs[i];
-      try { document.removeEventListener(spec.evt, spec.fn, true); } catch (err) { warnOnce('removeEventListener failed for ' + spec.evt, err); }
-      try { document.addEventListener(spec.evt, spec.fn, true); } catch (err) { warnOnce('addEventListener failed for ' + spec.evt, err); }
+      // spec.opts overrides the default capture:true/passive:true when a
+      // listener needs non-passive behaviour (wheel preventDefault requires
+      // passive:false). Fall back to plain "true" for capture-phase install.
+      var opts = spec.opts || true;
+      try { document.removeEventListener(spec.evt, spec.fn, opts); } catch (err) { warnOnce('removeEventListener failed for ' + spec.evt, err); }
+      try { document.addEventListener(spec.evt, spec.fn, opts); } catch (err) { warnOnce('addEventListener failed for ' + spec.evt, err); }
     }
     if (!window.__cs_err) {
       try { window.addEventListener('error', onError, true); window.__cs_err = true; } catch (err) { warnOnce('attach window error listener failed', err); }
@@ -651,6 +722,46 @@ export interface ArtboardMovedMessage {
   label: string;
   x: number;
   y: number;
+}
+
+export interface CanvasPanWheelMessage {
+  __codesign: true;
+  type: 'CANVAS_PAN_WHEEL';
+  deltaX: number;
+  deltaY: number;
+}
+
+export function isCanvasPanWheelMessage(data: unknown): data is CanvasPanWheelMessage {
+  if (typeof data !== 'object' || data === null) return false;
+  const d = data as { __codesign?: boolean; type?: string; deltaX?: unknown; deltaY?: unknown };
+  return (
+    d.__codesign === true &&
+    d.type === 'CANVAS_PAN_WHEEL' &&
+    typeof d.deltaX === 'number' &&
+    typeof d.deltaY === 'number' &&
+    Number.isFinite(d.deltaX) &&
+    Number.isFinite(d.deltaY)
+  );
+}
+
+export interface CanvasPanDragMessage {
+  __codesign: true;
+  type: 'CANVAS_PAN_DRAG';
+  dx: number;
+  dy: number;
+}
+
+export function isCanvasPanDragMessage(data: unknown): data is CanvasPanDragMessage {
+  if (typeof data !== 'object' || data === null) return false;
+  const d = data as { __codesign?: boolean; type?: string; dx?: unknown; dy?: unknown };
+  return (
+    d.__codesign === true &&
+    d.type === 'CANVAS_PAN_DRAG' &&
+    typeof d.dx === 'number' &&
+    typeof d.dy === 'number' &&
+    Number.isFinite(d.dx) &&
+    Number.isFinite(d.dy)
+  );
 }
 
 export function isArtboardMovedMessage(data: unknown): data is ArtboardMovedMessage {

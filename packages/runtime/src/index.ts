@@ -33,6 +33,8 @@ export {
   isCanvasSizeMessage,
   isArtboardSelectedMessage,
   isArtboardMovedMessage,
+  isCanvasPanWheelMessage,
+  isCanvasPanDragMessage,
 } from './overlay';
 export type {
   OverlayMessage,
@@ -40,6 +42,8 @@ export type {
   CanvasSizeMessage,
   ArtboardSelectedMessage,
   ArtboardMovedMessage,
+  CanvasPanWheelMessage,
+  CanvasPanDragMessage,
 } from './overlay';
 export { isIframeErrorMessage } from './iframe-errors';
 export type { IframeErrorMessage } from './iframe-errors';
