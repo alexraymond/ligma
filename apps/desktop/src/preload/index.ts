@@ -362,6 +362,14 @@ const api = {
     update: (patch: Partial<Preferences>) =>
       ipcRenderer.invoke('preferences:v1:update', patch) as Promise<Preferences>,
   },
+  app: {
+    info: () =>
+      ipcRenderer.invoke('app-info:v1:get') as Promise<{
+        schemaVersion: 1;
+        version: string;
+        isPackaged: boolean;
+      }>,
+  },
   codexOAuth: {
     status: () => ipcRenderer.invoke('codex-oauth:v1:status') as Promise<CodexOAuthStatus>,
     login: () => ipcRenderer.invoke('codex-oauth:v1:login') as Promise<CodexOAuthStatus>,

@@ -8,7 +8,7 @@ import {
   FolderOpen,
   Settings as SettingsIcon,
 } from 'lucide-react';
-import { type CSSProperties, type ReactNode, useEffect } from 'react';
+import { type CSSProperties, type ReactNode, useEffect, useState } from 'react';
 import { useCodesignStore } from '../store';
 import { HomePromptBar } from './HomePromptBar';
 import { ModelSwitcher } from './ModelSwitcher';
@@ -24,12 +24,48 @@ export interface TopStripProps {
 }
 
 /**
+ * Pulls the running binary's version from the main process at runtime
+ * (`app.getVersion()` over IPC), falling back to the build-time constant
+ * for the first paint so the badge isn't blank for one frame. Doing the
+ * IPC lookup means the badge always reflects what the user is actually
+ * running — never a stale value cached when `pnpm dev` started, and never
+ * a build-time bake that diverges from the binary that auto-update
+ * actually installed.
+ */
+function useRuntimeVersionBadge(): string {
+  const fallback = typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : '0.0.0';
+  const [version, setVersion] = useState<string>(fallback);
+  const [isPackaged, setIsPackaged] = useState<boolean>(true);
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const info = await window.codesign?.app?.info();
+        if (cancelled || !info) return;
+        setVersion(info.version);
+        setIsPackaged(info.isPackaged);
+      } catch {
+        // Stay on the build-time fallback — it's accurate enough for a
+        // dev session that lost the IPC bridge.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  // Dev builds get a `-dev` suffix so the badge is unambiguous when you're
+  // looking at a local pnpm-dev session vs an installed release.
+  return isPackaged ? `v${version}` : `v${version}-dev`;
+}
+
+/**
  * Paper-sketchbook top strip — replaces the previous TopBar. Renders brand
  * on the left, a view-conditional middle (home prompt / breadcrumb / back),
  * and a right cluster (templates link, model pill, bell, theme, settings).
  */
 export function TopStrip({ onShowTemplates }: TopStripProps = {}) {
   const t = useT();
+  const versionBadge = useRuntimeVersionBadge();
   const view = useCodesignStore((s) => s.view);
   const previousView = useCodesignStore((s) => s.previousView);
   const setView = useCodesignStore((s) => s.setView);
@@ -118,7 +154,7 @@ export function TopStrip({ onShowTemplates }: TopStripProps = {}) {
         style={noDragStyle}
       >
         <div className="flex items-baseline gap-[var(--space-2_5)]">
-          <Wordmark badge={`v${__APP_VERSION__}`} size="sm" />
+          <Wordmark badge={versionBadge} size="sm" />
         </div>
 
         <div className="min-w-0 flex-1">{middle}</div>

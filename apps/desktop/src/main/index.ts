@@ -1198,6 +1198,25 @@ function registerIpcHandlers(db: Database | null): void {
   });
 }
 
+function setupAppInfoIpc(): void {
+  // Runtime version source — the renderer asks instead of reading a build-
+  // time constant, so a freshly-installed binary always shows its own
+  // package.json version even if Vite cached a stale `__APP_VERSION__` from
+  // an older dev session, and so an installed app reflects what the user is
+  // actually running (not what the bundle was tagged with months ago).
+  // `:v1:` namespace + schemaVersion in the payload match every other IPC
+  // channel — see CLAUDE.md "Schema-version everything that lives on disk …
+  // IPC payloads".
+  ipcMain.handle(
+    'app-info:v1:get',
+    (): { schemaVersion: 1; version: string; isPackaged: boolean } => ({
+      schemaVersion: 1,
+      version: app.getVersion(),
+      isPackaged: app.isPackaged,
+    }),
+  );
+}
+
 function setupAutoUpdater(): void {
   if (!app.isPackaged) return;
   autoUpdater.autoDownload = false;
@@ -1368,6 +1387,7 @@ void app.whenReady().then(async () => {
     registerWorkspaceIpc();
     registerExporterIpc(() => mainWindow);
     registerDiagnosticsIpc(diagnosticsDb);
+    setupAppInfoIpc();
     setupAutoUpdater();
     // region:window-chrome
     registerLigmaAboutPanel();
