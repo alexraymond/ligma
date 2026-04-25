@@ -1,5 +1,5 @@
 import { useT } from '@ligma/i18n';
-import { FolderOpen, Plus, X } from 'lucide-react';
+import { FolderOpen, LayoutGrid, Plus, X } from 'lucide-react';
 import { useState } from 'react';
 import { useCodesignStore } from '../store';
 
@@ -43,10 +43,20 @@ export function CanvasTabBar() {
       {tabs.map((tab, index) => {
         const isActive = index === active;
         const isFiles = tab.kind === 'files';
-        const path = isFiles ? null : (tab as { path: string }).path;
-        const label = isFiles ? t('canvas.filesTab') : fileTabLabel(path as string);
-        const title = isFiles ? t('canvas.filesTab') : (path as string);
-        const key: string = isFiles ? 'files' : `file:${path as string}`;
+        const isWall = tab.kind === 'wall';
+        const path = tab.kind === 'file' ? tab.path : null;
+        const label = isFiles
+          ? t('canvas.filesTab')
+          : isWall
+            ? 'Wall'
+            : fileTabLabel(path as string);
+        const title = isFiles
+          ? t('canvas.filesTab')
+          : isWall
+            ? 'All designs on one canvas'
+            : (path as string);
+        const key: string = isFiles ? 'files' : isWall ? 'wall' : `file:${path as string}`;
+        const closable = !isFiles && !isWall;
         return (
           <div
             key={key}
@@ -68,14 +78,15 @@ export function CanvasTabBar() {
               className="flex items-center gap-[var(--space-1_5)] focus:outline-none"
             >
               {isFiles ? <FolderOpen className="w-3.5 h-3.5 opacity-80" aria-hidden /> : null}
+              {isWall ? <LayoutGrid className="w-3.5 h-3.5 opacity-80" aria-hidden /> : null}
               <span
                 className="truncate max-w-[220px]"
-                style={isFiles ? undefined : { fontFamily: 'var(--font-mono)' }}
+                style={isFiles || isWall ? undefined : { fontFamily: 'var(--font-mono)' }}
               >
                 {label}
               </span>
             </button>
-            {isFiles ? null : (
+            {closable ? (
               <button
                 type="button"
                 onClick={() => close(index)}
@@ -84,7 +95,7 @@ export function CanvasTabBar() {
               >
                 <X className="w-3 h-3" aria-hidden />
               </button>
-            )}
+            ) : null}
             {isActive ? (
               <span
                 aria-hidden

@@ -85,6 +85,8 @@ export function Sidebar({ prompt, setPrompt, onSubmit }: SidebarProps) {
   );
   const cancelGeneration = useCodesignStore((s) => s.cancelGeneration);
   const inputFiles = useCodesignStore((s) => s.inputFiles);
+  const wallSelectedPaths = useCodesignStore((s) => s.wallSelectedPaths);
+  const toggleWallSelection = useCodesignStore((s) => s.toggleWallSelection);
   const referenceUrl = useCodesignStore((s) => s.referenceUrl);
   const setReferenceUrl = useCodesignStore((s) => s.setReferenceUrl);
   const pickInputFiles = useCodesignStore((s) => s.pickInputFiles);
@@ -117,6 +119,7 @@ export function Sidebar({ prompt, setPrompt, onSubmit }: SidebarProps) {
   const designSystem = config?.designSystem ?? null;
   const currentDesign = designs.find((d) => d.id === currentDesignId) ?? null;
   const contextItems = buildComposerContextItems({ inputFiles, referenceUrl, config });
+  const hasContext = contextItems.length > 0 || wallSelectedPaths.length > 0;
 
   useEffect(() => {
     if (currentDesignId && !chatLoaded) {
@@ -170,8 +173,27 @@ export function Sidebar({ prompt, setPrompt, onSubmit }: SidebarProps) {
             onCancel={cancelGeneration}
             isGenerating={isGenerating}
             contextSummary={
-              contextItems.length > 0 ? (
+              hasContext ? (
                 <div className="flex flex-wrap gap-[8px]">
+                  {wallSelectedPaths.map((path) => (
+                    <span
+                      key={`wall:${path}`}
+                      className="inline-flex max-w-full items-center gap-[6px] rounded-full border border-[var(--color-accent)] bg-[var(--color-background-secondary)] px-[10px] py-[5px] text-[11px] text-[var(--color-text-secondary)]"
+                      title={`Wall reference: ${path}`}
+                      style={{ fontFamily: 'var(--font-mono)' }}
+                    >
+                      <ContextIcon icon="file" />
+                      <span className="truncate max-w-[180px]">{path}</span>
+                      <button
+                        type="button"
+                        onClick={() => toggleWallSelection(path)}
+                        aria-label={`Remove wall reference ${path}`}
+                        className="inline-flex items-center justify-center rounded-full text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+                      >
+                        <X className="w-3 h-3" aria-hidden />
+                      </button>
+                    </span>
+                  ))}
                   {inputFiles.map((file) => (
                     <span
                       key={file.path}

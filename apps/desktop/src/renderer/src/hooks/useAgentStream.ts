@@ -45,6 +45,7 @@ export function useAgentStream(): void {
   const appendChatMessage = useCodesignStore((s) => s.appendChatMessage);
   const setStreamingAssistantText = useCodesignStore((s) => s.setStreamingAssistantText);
   const setPreviewHtmlFromAgent = useCodesignStore((s) => s.setPreviewHtmlFromAgent);
+  const recordAgentFileUpdate = useCodesignStore((s) => s.recordAgentFileUpdate);
   const updateChatToolStatus = useCodesignStore((s) => s.updateChatToolStatus);
   const persistAgentRunSnapshot = useCodesignStore((s) => s.persistAgentRunSnapshot);
   const inFlight = useRef<InFlightTurn | null>(null);
@@ -234,11 +235,25 @@ export function useAgentStream(): void {
     };
 
     const handleFsUpdated = (event: AgentStreamEvent) => {
-      // Live mirror of the agent's text_editor mutations into the iframe.
-      // We only react to index.html — other paths (frames/, skills/) are
-      // read-only context and never become the rendered artifact.
-      if (event.path === 'index.html' && typeof event.content === 'string') {
+      if (typeof event.content !== 'string' || typeof event.path !== 'string') return;
+      // Read-only seed paths the host injects (frames/, skills/) live in the
+      // agent's virtual fs but never come back as user-authored output. Skip
+      // them so they don't pollute the wall view.
+      if (event.path.startsWith('frames/') || event.path.startsWith('skills/')) return;
+      // Live iframe mirror only fires for index.html — that's what the active
+      // iframe shows during a generation. Multi-file walls don't live-render
+      // mid-turn; their cards refresh on agent_end via the per-file cache.
+      if (event.path === 'index.html') {
         scheduleFs({ designId: event.designId, content: event.content });
+      }
+      // Always update the per-file cache + persist for ANY HTML file the
+      // agent writes — that's what the wall view reads.
+      if (event.path.toLowerCase().endsWith('.html') && !event.path.startsWith('turn-')) {
+        recordAgentFileUpdate({
+          designId: event.designId,
+          path: event.path,
+          content: event.content,
+        });
       }
     };
 
@@ -373,6 +388,7 @@ export function useAgentStream(): void {
     appendChatMessage,
     setStreamingAssistantText,
     setPreviewHtmlFromAgent,
+    recordAgentFileUpdate,
     updateChatToolStatus,
     persistAgentRunSnapshot,
   ]);

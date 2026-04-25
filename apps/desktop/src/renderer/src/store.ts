@@ -142,9 +142,14 @@ export type PreviewViewport = 'desktop' | 'tablet' | 'mobile';
 // 'files' is the pinned tab that hosts the file list + inline preview; 'file'
 // tabs wrap a single file preview opened by double-clicking the list. Closing
 // a 'file' tab is purely UI state — it does NOT delete anything.
-export type CanvasTab = { kind: 'files' } | { kind: 'file'; path: string };
+// 'wall' is the multi-design Stitch-style overview — every HTML file the
+// project owns rendered as a card on a single panable canvas. Auto-created
+// the first time a project gains 2+ HTML files; defaults to active so the
+// new screens are visible the moment generation finishes.
+export type CanvasTab = { kind: 'files' } | { kind: 'file'; path: string } | { kind: 'wall' };
 
 export const FILES_TAB: CanvasTab = { kind: 'files' };
+export const WALL_TAB: CanvasTab = { kind: 'wall' };
 
 // Pure reducers, exported for unit tests so we don't need RTL for slice logic.
 export function openFileTab(tabs: CanvasTab[], path: string): { tabs: CanvasTab[]; index: number } {
@@ -161,8 +166,9 @@ export function closeTabAt(
 ): { tabs: CanvasTab[]; activeIndex: number } {
   const tab = tabs[target];
   if (!tab) return { tabs, activeIndex };
-  // The pinned 'files' tab cannot be closed — it always anchors index 0.
-  if (tab.kind === 'files') return { tabs, activeIndex };
+  // The pinned 'files' and 'wall' tabs cannot be closed — they anchor the
+  // canvas (files at index 0, wall at index 1 when present).
+  if (tab.kind === 'files' || tab.kind === 'wall') return { tabs, activeIndex };
   const next = tabs.filter((_, i) => i !== target);
   let nextActive = activeIndex;
   if (activeIndex === target) {
@@ -191,6 +197,19 @@ interface CodesignState {
    *  PreviewPane renders one (display:none) iframe per entry so switching back
    *  to a recently visited design is instant — no IPC, no srcDoc reparse. */
   previewHtmlByDesign: Record<string, string>;
+  /** Per-(design, file) HTML cache backing the wall view. Keyed by
+   *  `${designId}::${filePath}`. Populated by:
+   *  - useAgentStream's fs_updated handler (live agent writes)
+   *  - the wall view's on-mount hydrator (cold reads via files:v1:list/read)
+   *  Updates piggyback on existing files.upsert persistence. */
+  previewHtmlByFile: Record<string, string>;
+  /** Ordered list of file paths per design — drives wall card layout.
+   *  Same key shape as previewHtmlByFile keys. Sourced from files:v1:list. */
+  fileListByDesign: Record<string, string[]>;
+  /** Paths of cards selected on the wall — used to attach files as context
+   *  on the next user prompt. Single-design scope: cleared whenever the
+   *  active design changes. */
+  wallSelectedPaths: string[];
   /** Most-recent-first list of design ids in the preview pool. */
   recentDesignIds: string[];
   isGenerating: boolean;
@@ -466,6 +485,20 @@ interface CodesignState {
    *  Gated by designId match against the active or generating design so a
    *  background run cannot stomp the preview the user is currently viewing. */
   setPreviewHtmlFromAgent: (input: { designId: string; content: string }) => void;
+  /** Mirror an agent fs_updated event for a non-active file into the per-file
+   *  cache + persist via files.upsert. Distinct from setPreviewHtmlFromAgent
+   *  which targets the live iframe; this one feeds the wall view + persists
+   *  every file the agent touches in a multi-file run. */
+  recordAgentFileUpdate: (input: { designId: string; path: string; content: string }) => void;
+  /** Cold-load every file for a design from disk into previewHtmlByFile +
+   *  fileListByDesign. Used by the wall view on mount. */
+  hydrateFilesForDesign: (designId: string) => Promise<void>;
+  /** Toggle selection of a wall card. Selection state is reset whenever
+   *  the active design changes. */
+  toggleWallSelection: (path: string) => void;
+  /** Clear all wall selections — called after a prompt referencing them
+   *  is submitted, and on design switch. */
+  clearWallSelection: () => void;
   /** Persist the current in-memory `previewHtml` for a finished agentic run as
    *  a SQLite snapshot row. Without this, agentic runs never write to disk
    *  and reload boots back into the empty welcome state even when the agent
@@ -615,6 +648,34 @@ function recordPreviewInPool(
     if (merged[id] !== undefined) cache[id] = merged[id];
   }
   return { cache, recent };
+}
+
+/**
+ * Drop entries from the per-file preview cache whose designId is no longer
+ * in the recent-pool. Without this, walking through 50 designs once would
+ * pin every file's HTML for the rest of the session — `previewHtmlByFile`
+ * doesn't have its own LRU because it piggybacks on the design pool's
+ * eviction policy. Called whenever `recentDesignIds` shrinks (i.e. design
+ * switch).
+ */
+function pruneFileCache(
+  cache: Record<string, string>,
+  fileList: Record<string, string[]>,
+  recentDesignIds: string[],
+  currentDesignId: string | null,
+): { cache: Record<string, string>; fileList: Record<string, string[]> } {
+  const keep = new Set(recentDesignIds);
+  if (currentDesignId !== null) keep.add(currentDesignId);
+  const nextCache: Record<string, string> = {};
+  for (const [key, html] of Object.entries(cache)) {
+    const designId = key.split('::', 1)[0];
+    if (designId !== undefined && keep.has(designId)) nextCache[key] = html;
+  }
+  const nextFileList: Record<string, string[]> = {};
+  for (const [designId, paths] of Object.entries(fileList)) {
+    if (keep.has(designId)) nextFileList[designId] = paths;
+  }
+  return { cache: nextCache, fileList: nextFileList };
 }
 
 function isFiniteUsageNumber(v: unknown): v is number {
@@ -1294,6 +1355,47 @@ async function runGenerate(
   );
 }
 
+/**
+ * When the user selects designs on the wall and sends a prompt, those files
+ * are passed as inline reference context. Each file's HTML is included
+ * (truncated) so the agent can quote / pattern-match without needing a tool
+ * call to view them. Returns null if there are no selections so we don't
+ * leak an empty header into the user's prompt.
+ *
+ * Cap per file to keep total tokens bounded — the agent can still `view`
+ * the actual file via text_editor for the full source if it needs more.
+ */
+export function buildWallReferenceBlock(
+  selectedPaths: string[],
+  previewHtmlByFile: Record<string, string>,
+  designId: string | null,
+): string | null {
+  if (selectedPaths.length === 0 || designId === null) return null;
+  const PER_FILE_CAP = 4000;
+  const lines: string[] = [
+    '## REFERENCED DESIGNS — context the user pinned from the wall',
+    '',
+    'The user picked these existing designs as reference for what comes next.',
+    'Treat them as inspiration / constraints / things to extend or match.',
+    'Read the full source via `text_editor.view("<path>")` when you need more',
+    'than the truncated excerpt below.',
+    '',
+  ];
+  for (const path of selectedPaths) {
+    const key = `${designId}::${path}`;
+    const html = previewHtmlByFile[key];
+    if (!html) continue;
+    const trimmed =
+      html.length > PER_FILE_CAP ? `${html.slice(0, PER_FILE_CAP)}\n…[truncated]` : html;
+    lines.push(`### ${path}`);
+    lines.push('```html');
+    lines.push(trimmed);
+    lines.push('```');
+    lines.push('');
+  }
+  return lines.join('\n');
+}
+
 function buildPromptRequest(
   input: {
     prompt: string;
@@ -1369,6 +1471,9 @@ export function buildEnrichedPrompt(
 export const useCodesignStore = create<CodesignState>((set, get) => ({
   previewHtml: null,
   previewHtmlByDesign: {},
+  previewHtmlByFile: {},
+  fileListByDesign: {},
+  wallSelectedPaths: [],
   recentDesignIds: [],
   isGenerating: false,
   activeGenerationId: null,
@@ -1634,11 +1739,19 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     );
     if (!request) return;
 
-    const enrichedPrompt = buildEnrichedPrompt(request.prompt, pendingEdits);
-    const pendingEditIds = pendingEdits.map((c) => c.id);
-
     const generationId = newId();
     const designIdAtStart = get().currentDesignId;
+    const referencedWallPaths = [...get().wallSelectedPaths];
+    const wallReferenceBlock = buildWallReferenceBlock(
+      referencedWallPaths,
+      get().previewHtmlByFile,
+      designIdAtStart,
+    );
+    const promptWithEdits = buildEnrichedPrompt(request.prompt, pendingEdits);
+    const enrichedPrompt = wallReferenceBlock
+      ? `${wallReferenceBlock}\n\n${promptWithEdits}`
+      : promptWithEdits;
+    const pendingEditIds = pendingEdits.map((c) => c.id);
     set(() => ({
       isGenerating: true,
       activeGenerationId: generationId,
@@ -1691,6 +1804,9 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
       // so the next prompt starts empty instead of silently re-sending the
       // same files.
       if (snapshotAttachments.length > 0) set({ inputFiles: [] });
+      // Drain wall selection too — the prompt that just left already carries
+      // the referenced HTML inline (see buildWallReferenceBlock).
+      if (referencedWallPaths.length > 0) set({ wallSelectedPaths: [] });
     }
 
     if (!input.silent) {
@@ -2175,8 +2291,9 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
         commentsLoaded: false,
         commentBubble: null,
         currentSnapshotId: null,
-        canvasTabs: [FILES_TAB],
-        activeCanvasTab: 0,
+        canvasTabs: [FILES_TAB, WALL_TAB],
+        activeCanvasTab: 1,
+        wallSelectedPaths: [],
       });
       await get().loadDesigns();
       void get().loadChatForCurrentDesign();
@@ -2226,10 +2343,18 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
       );
       // Commit the visual switch instantly — iframe is already alive in the
       // pool so no reparse cost.
+      const pruned = pruneFileCache(
+        get().previewHtmlByFile,
+        get().fileListByDesign,
+        incomingPool.recent,
+        id,
+      );
       set({
         currentDesignId: id,
         previewHtml: cachedHtml,
         previewHtmlByDesign: incomingPool.cache,
+        previewHtmlByFile: pruned.cache,
+        fileListByDesign: pruned.fileList,
         recentDesignIds: incomingPool.recent,
         errorMessage: null,
         iframeErrors: [],
@@ -2243,11 +2368,13 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
         commentsLoaded: false,
         commentBubble: null,
         currentSnapshotId: null,
-        canvasTabs: [FILES_TAB, { kind: 'file', path: 'index.html' }],
+        canvasTabs: [FILES_TAB, WALL_TAB, { kind: 'file', path: 'index.html' }],
         activeCanvasTab: 1,
+        wallSelectedPaths: [],
       });
       void get().loadChatForCurrentDesign();
       void get().loadCommentsForCurrentDesign();
+      void get().hydrateFilesForDesign(id);
       void (async () => {
         try {
           const snapshots = await window.codesign?.snapshots.list(id);
@@ -2280,10 +2407,18 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
       const latest = snapshots[0] ?? null;
       const html = latest ? latest.artifactSource : null;
       const incomingPool = recordPreviewInPool(outgoingPool.cache, outgoingPool.recent, id, html);
+      const pruned = pruneFileCache(
+        get().previewHtmlByFile,
+        get().fileListByDesign,
+        incomingPool.recent,
+        id,
+      );
       set({
         currentDesignId: id,
         previewHtml: html,
         previewHtmlByDesign: incomingPool.cache,
+        previewHtmlByFile: pruned.cache,
+        fileListByDesign: pruned.fileList,
         recentDesignIds: incomingPool.recent,
         errorMessage: null,
         iframeErrors: [],
@@ -2297,11 +2432,18 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
         commentsLoaded: false,
         commentBubble: null,
         currentSnapshotId: null,
-        canvasTabs: latest ? [FILES_TAB, { kind: 'file', path: 'index.html' }] : [FILES_TAB],
-        activeCanvasTab: latest ? 1 : 0,
+        canvasTabs: latest
+          ? [FILES_TAB, WALL_TAB, { kind: 'file', path: 'index.html' }]
+          : [FILES_TAB, WALL_TAB],
+        // Always land on the wall (index 1) — even when an `index.html`
+        // file tab exists at index 2. The wall is the canonical overview
+        // and the user clicks a card to focus a specific file.
+        activeCanvasTab: 1,
+        wallSelectedPaths: [],
       });
       void get().loadChatForCurrentDesign();
       void get().loadCommentsForCurrentDesign();
+      void get().hydrateFilesForDesign(id);
     } catch (err) {
       const msg = err instanceof Error ? err.message : tr('errors.unknown');
       get().pushToast({
@@ -2606,6 +2748,70 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
     }));
   },
 
+  recordAgentFileUpdate({ designId, path, content }) {
+    const key = `${designId}::${path}`;
+    set((s) => {
+      const existingList = s.fileListByDesign[designId] ?? [];
+      const nextList = existingList.includes(path) ? existingList : [...existingList, path];
+      return {
+        previewHtmlByFile: { ...s.previewHtmlByFile, [key]: content },
+        fileListByDesign: { ...s.fileListByDesign, [designId]: nextList },
+      };
+    });
+    void window.codesign?.files?.upsert(designId, path, content).catch((err: unknown) => {
+      const msg = err instanceof Error ? err.message : String(err);
+      rendererLogger.warn('store', '[recordAgentFileUpdate] upsert failed', {
+        designId,
+        path,
+        message: msg,
+      });
+    });
+  },
+
+  toggleWallSelection(path: string) {
+    set((s) => {
+      const exists = s.wallSelectedPaths.includes(path);
+      return {
+        wallSelectedPaths: exists
+          ? s.wallSelectedPaths.filter((p) => p !== path)
+          : [...s.wallSelectedPaths, path],
+      };
+    });
+  },
+
+  clearWallSelection() {
+    if (get().wallSelectedPaths.length === 0) return;
+    set({ wallSelectedPaths: [] });
+  },
+
+  async hydrateFilesForDesign(designId: string) {
+    if (!window.codesign?.files) return;
+    try {
+      const rows = await window.codesign.files.list(designId);
+      const htmlRows = rows.filter(
+        (r) => r.path.toLowerCase().endsWith('.html') && !r.path.startsWith('turn-'),
+      );
+      const updates: Record<string, string> = {};
+      const paths: string[] = [];
+      for (const row of htmlRows) {
+        const file = await window.codesign.files.read(designId, row.path).catch(() => null);
+        if (file === null) continue;
+        const key = `${designId}::${row.path}`;
+        updates[key] = file.content;
+        paths.push(row.path);
+      }
+      set((s) => ({
+        previewHtmlByFile: { ...s.previewHtmlByFile, ...updates },
+        fileListByDesign: { ...s.fileListByDesign, [designId]: paths },
+      }));
+    } catch (err) {
+      rendererLogger.warn('store', '[hydrateFilesForDesign] failed', {
+        designId,
+        message: err instanceof Error ? err.message : String(err),
+      });
+    }
+  },
+
   setPreviewHtmlFromAgent({ designId, content }) {
     const state = get();
     // Only adopt the live html when the event's design matches what the user
@@ -2891,7 +3097,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
   },
 
   resetCanvasTabs() {
-    set({ canvasTabs: [FILES_TAB], activeCanvasTab: 0 });
+    set({ canvasTabs: [FILES_TAB, WALL_TAB], activeCanvasTab: 1 });
   },
 
   async createCanvasFile(path: string, content = '') {

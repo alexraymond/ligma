@@ -30,6 +30,7 @@ import { PreviewToolbar } from './PreviewToolbar';
 import { TweakPanel } from './TweakPanel';
 import { ArtboardCodeDrawer } from './canvas/ArtboardCodeDrawer';
 import { CanvasViewport } from './canvas/CanvasViewport';
+import { CanvasWall } from './canvas/CanvasWall';
 import { CommentBubble } from './comment/CommentBubble';
 import { PinOverlay } from './comment/PinOverlay';
 
@@ -799,6 +800,16 @@ export function PreviewPane({ onPickStarter }: PreviewPaneProps) {
     );
   } else if (activeTab?.kind === 'files' && previewHtml) {
     body = <FilesTabView />;
+  } else if (activeTab?.kind === 'wall') {
+    // Wall view — every HTML file in the project as a card on a panable
+    // canvas. Iframe pool stays mounted underneath but hidden via the
+    // active-only `display:none` toggle below; pool warmth survives wall
+    // ↔ focus-mode toggling.
+    body = (
+      <CanvasViewport>
+        <CanvasWall />
+      </CanvasViewport>
+    );
   } else {
     // Pool slots stay mounted even when the current design has no preview —
     // background iframes for recently-visited designs keep their documents
