@@ -34,6 +34,27 @@ function injectThumbnailStyle(srcDoc: string): string {
   return THUMBNAIL_STYLE + srcDoc;
 }
 
+/**
+ * Pull the model-supplied screen title from a generated artifact. Two
+ * conventions, in priority order:
+ *  - `data-screen-title="..."` on any element (the JSX path — agent puts
+ *    it on App's root div).
+ *  - `<meta name="ligma:screen-title" content="...">` (full-HTML files,
+ *    DESIGN_CANVAS multi-artboard outputs).
+ * Returns null when neither is present so callers can fall back to the
+ * filename. Parsing the source string (not a live DOM) keeps this fast
+ * and lets us run before the card iframe has even mounted.
+ */
+export function extractScreenTitle(source: string): string | null {
+  const dataAttr = source.match(/data-screen-title=["']([^"']{1,80})["']/i);
+  if (dataAttr?.[1]) return dataAttr[1].trim();
+  const meta = source.match(
+    /<meta[^>]*name=["']ligma:screen-title["'][^>]*content=["']([^"']{1,80})["']/i,
+  );
+  if (meta?.[1]) return meta[1].trim();
+  return null;
+}
+
 function downloadHtml(filename: string, content: string): void {
   const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
   const url = URL.createObjectURL(blob);
@@ -65,6 +86,7 @@ function WallCard({
   onToggleSelect,
 }: WallCardProps): ReactElement {
   const srcDoc = useMemo(() => injectThumbnailStyle(buildSrcdoc(html)), [html]);
+  const screenTitle = useMemo(() => extractScreenTitle(html), [html]);
   const scale = CARD_WIDTH / NATURAL_WIDTH;
 
   // Click-vs-drag disambiguation. A pointerdown opens a "candidate" gesture;
@@ -171,13 +193,34 @@ function WallCard({
         className="flex items-center justify-between px-[var(--space-3)] py-[var(--space-2)] border-b border-[var(--color-border-muted)]"
         style={{ background: 'var(--color-surface)' }}
       >
-        <span
-          className="truncate text-[12px] text-[var(--color-text-secondary)]"
-          style={{ fontFamily: 'var(--font-mono)' }}
-          title={path}
-        >
-          {path}
-        </span>
+        <div className="flex items-baseline gap-[8px] min-w-0">
+          {screenTitle ? (
+            <>
+              <span
+                className="truncate text-[13px] text-[var(--color-text-primary)]"
+                style={{ fontFamily: 'var(--font-display)', fontWeight: 500 }}
+                title={screenTitle}
+              >
+                {screenTitle}
+              </span>
+              <span
+                className="truncate text-[10px] text-[var(--color-text-muted)] shrink-0"
+                style={{ fontFamily: 'var(--font-mono)' }}
+                title={path}
+              >
+                {path}
+              </span>
+            </>
+          ) : (
+            <span
+              className="truncate text-[12px] text-[var(--color-text-secondary)]"
+              style={{ fontFamily: 'var(--font-mono)' }}
+              title={path}
+            >
+              {path}
+            </span>
+          )}
+        </div>
         <div className="flex items-center gap-[var(--space-1)] opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             type="button"
