@@ -216,6 +216,12 @@ interface CodesignState {
    *  designId so a background generation on design A doesn't stamp design
    *  B's cards while the user is looking at B. */
   agentWritingFile: { designId: string; path: string } | null;
+  /** Snapshot rows per design — used by the wall to look up snapshotId →
+   *  filePath, which lets us render comment-count badges per card. Hydrated
+   *  alongside files in hydrateFilesForDesign. Lighter shape than the full
+   *  snapshot row would be, but the row is small (no artifactSource) so we
+   *  cache the full thing for now. Pruned by pruneFileCache. */
+  snapshotsByDesign: Record<string, Array<{ id: string; filePath: string }>>;
   /** Most-recent-first list of design ids in the preview pool. */
   recentDesignIds: string[];
   isGenerating: boolean;
@@ -667,9 +673,14 @@ function recordPreviewInPool(
 function pruneFileCache(
   cache: Record<string, string>,
   fileList: Record<string, string[]>,
+  snapshots: Record<string, Array<{ id: string; filePath: string }>>,
   recentDesignIds: string[],
   currentDesignId: string | null,
-): { cache: Record<string, string>; fileList: Record<string, string[]> } {
+): {
+  cache: Record<string, string>;
+  fileList: Record<string, string[]>;
+  snapshots: Record<string, Array<{ id: string; filePath: string }>>;
+} {
   const keep = new Set(recentDesignIds);
   if (currentDesignId !== null) keep.add(currentDesignId);
   const nextCache: Record<string, string> = {};
@@ -681,7 +692,11 @@ function pruneFileCache(
   for (const [designId, paths] of Object.entries(fileList)) {
     if (keep.has(designId)) nextFileList[designId] = paths;
   }
-  return { cache: nextCache, fileList: nextFileList };
+  const nextSnapshots: Record<string, Array<{ id: string; filePath: string }>> = {};
+  for (const [designId, snaps] of Object.entries(snapshots)) {
+    if (keep.has(designId)) nextSnapshots[designId] = snaps;
+  }
+  return { cache: nextCache, fileList: nextFileList, snapshots: nextSnapshots };
 }
 
 function isFiniteUsageNumber(v: unknown): v is number {
@@ -1481,6 +1496,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
   fileListByDesign: {},
   wallSelectedPaths: [],
   agentWritingFile: null,
+  snapshotsByDesign: {},
   recentDesignIds: [],
   isGenerating: false,
   activeGenerationId: null,
@@ -2353,6 +2369,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
       const pruned = pruneFileCache(
         get().previewHtmlByFile,
         get().fileListByDesign,
+        get().snapshotsByDesign,
         incomingPool.recent,
         id,
       );
@@ -2362,6 +2379,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
         previewHtmlByDesign: incomingPool.cache,
         previewHtmlByFile: pruned.cache,
         fileListByDesign: pruned.fileList,
+        snapshotsByDesign: pruned.snapshots,
         recentDesignIds: incomingPool.recent,
         errorMessage: null,
         iframeErrors: [],
@@ -2417,6 +2435,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
       const pruned = pruneFileCache(
         get().previewHtmlByFile,
         get().fileListByDesign,
+        get().snapshotsByDesign,
         incomingPool.recent,
         id,
       );
@@ -2426,6 +2445,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
         previewHtmlByDesign: incomingPool.cache,
         previewHtmlByFile: pruned.cache,
         fileListByDesign: pruned.fileList,
+        snapshotsByDesign: pruned.snapshots,
         recentDesignIds: incomingPool.recent,
         errorMessage: null,
         iframeErrors: [],
@@ -2810,9 +2830,21 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
         updates[key] = file.content;
         paths.push(row.path);
       }
+      // Snapshots come along for the ride so the wall can map snapshotId →
+      // filePath when computing per-card comment counts. Lazy-loaded to keep
+      // the API surface small (a separate top-level action would also work
+      // but every wall mount needs both anyway).
+      let snapshotIndex: Array<{ id: string; filePath: string }> = [];
+      try {
+        const snaps = (await window.codesign.snapshots?.list(designId)) ?? [];
+        snapshotIndex = snaps.map((s) => ({ id: s.id, filePath: s.filePath }));
+      } catch {
+        // Snapshot lookup is non-fatal — comment badges just stay at 0.
+      }
       set((s) => ({
         previewHtmlByFile: { ...s.previewHtmlByFile, ...updates },
         fileListByDesign: { ...s.fileListByDesign, [designId]: paths },
+        snapshotsByDesign: { ...s.snapshotsByDesign, [designId]: snapshotIndex },
       }));
     } catch (err) {
       rendererLogger.warn('store', '[hydrateFilesForDesign] failed', {

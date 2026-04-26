@@ -1,5 +1,5 @@
 import { buildSrcdoc } from '@ligma/runtime';
-import { Download, ExternalLink } from 'lucide-react';
+import { Download, ExternalLink, MessageSquare } from 'lucide-react';
 import type { ReactElement, PointerEvent as ReactPointerEvent } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 import { useCodesignStore } from '../../store';
@@ -77,6 +77,11 @@ interface WallCardProps {
    *  Drives a subtle pulsing "writing…" badge so the user can watch
    *  generation progress card by card. */
   writing: boolean;
+  /** Number of comments anchored to any snapshot of this file. Rendered
+   *  as a small badge in the header strip when > 0 — closes the loop
+   *  between wall + comment-pin features without needing a focus-mode
+   *  detour to see "are there outstanding comments here?". */
+  commentCount: number;
   onOpen: (path: string) => void;
   onToggleSelect: (path: string, additive: boolean) => void;
 }
@@ -87,6 +92,7 @@ function WallCard({
   html,
   selected,
   writing,
+  commentCount,
   onOpen,
   onToggleSelect,
 }: WallCardProps): ReactElement {
@@ -226,6 +232,22 @@ function WallCard({
             </span>
           )}
         </div>
+        {commentCount > 0 ? (
+          <span
+            aria-label={`${commentCount} comment${commentCount === 1 ? '' : 's'}`}
+            className="inline-flex items-center gap-[3px] rounded-full px-[6px] py-[1px] text-[10px] shrink-0"
+            style={{
+              background: 'var(--color-surface-elevated)',
+              color: 'var(--color-text-secondary)',
+              border: '1px solid var(--color-border-muted)',
+              fontFamily: 'var(--font-mono)',
+            }}
+            title={`${commentCount} comment${commentCount === 1 ? '' : 's'} on this file`}
+          >
+            <MessageSquare className="w-2.5 h-2.5" aria-hidden />
+            {commentCount}
+          </span>
+        ) : null}
         <div className="flex items-center gap-[var(--space-1)] opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             type="button"
@@ -324,6 +346,8 @@ export function CanvasWall(): ReactElement {
   const wallSelectedPaths = useCodesignStore((s) => s.wallSelectedPaths);
   const toggleWallSelection = useCodesignStore((s) => s.toggleWallSelection);
   const agentWritingFile = useCodesignStore((s) => s.agentWritingFile);
+  const comments = useCodesignStore((s) => s.comments);
+  const snapshotsByDesign = useCodesignStore((s) => s.snapshotsByDesign);
 
   // Cold-load files when entering the wall. Idempotent; safe to call on
   // every mount because the action overwrites with fresh disk state.
@@ -336,6 +360,23 @@ export function CanvasWall(): ReactElement {
   }, [currentDesignId, hydrateFilesForDesign]);
 
   const paths = currentDesignId ? (fileListByDesign[currentDesignId] ?? []) : [];
+
+  // Bucket comments by file path for the badge counts. Comments target a
+  // snapshotId; snapshotsByDesign provides snapshotId → filePath. Build the
+  // map once per render — cheap (O(snapshots + comments)) and avoids passing
+  // the indexes deeper than necessary.
+  const commentsByFile = useMemo(() => {
+    if (!currentDesignId) return new Map<string, number>();
+    const snapshots = snapshotsByDesign[currentDesignId] ?? [];
+    const filePathBySnapshotId = new Map(snapshots.map((s) => [s.id, s.filePath]));
+    const counts = new Map<string, number>();
+    for (const c of comments) {
+      const filePath = c.snapshotId ? filePathBySnapshotId.get(c.snapshotId) : undefined;
+      if (filePath === undefined) continue;
+      counts.set(filePath, (counts.get(filePath) ?? 0) + 1);
+    }
+    return counts;
+  }, [comments, currentDesignId, snapshotsByDesign]);
 
   if (!currentDesignId) {
     return (
@@ -373,6 +414,7 @@ export function CanvasWall(): ReactElement {
         const selected = wallSelectedPaths.includes(path);
         const writing =
           agentWritingFile?.designId === currentDesignId && agentWritingFile.path === path;
+        const commentCount = commentsByFile.get(path) ?? 0;
         return (
           <WallCard
             key={path}
@@ -381,6 +423,7 @@ export function CanvasWall(): ReactElement {
             html={html}
             selected={selected}
             writing={writing}
+            commentCount={commentCount}
             onOpen={(p) => {
               openCanvasFileTab(p);
               setCurrentFilePath(currentDesignId, p);
