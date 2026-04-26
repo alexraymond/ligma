@@ -29,7 +29,7 @@ export function isExporterReady(_format: ExporterFormat): boolean {
 export type { ExportHtmlOptions } from './html';
 export type { ExportPdfOptions } from './pdf';
 export type { ExportPptxOptions } from './pptx';
-export type { ExportZipOptions, ZipAsset } from './zip';
+export type { ExportZipOptions, MultiFileBundleEntry, ZipAsset } from './zip';
 export type { ExportMarkdownOptions, MarkdownMeta } from './markdown';
 export { htmlToMarkdown } from './markdown';
 
@@ -40,6 +40,21 @@ export async function exportHtml(
 ): Promise<ExportResult> {
   const mod = await import('./html');
   return mod.exportHtml(htmlContent, destinationPath, opts);
+}
+
+/**
+ * Bundle every file in a multi-screen project into a single ZIP. Distinct
+ * from `exportArtifact` (which assumes one primary HTML + assets) — see
+ * `./zip.ts` for the layout difference. Lazy-loads the same `zip-lib`
+ * runtime as the single-file path, so the dep only enters the module
+ * graph the first time anyone hits "Download all" on the wall.
+ */
+export async function exportMultiFileBundle(
+  entries: import('./zip').MultiFileBundleEntry[],
+  destinationPath: string,
+): Promise<ExportResult> {
+  const mod = await import('./zip');
+  return mod.exportMultiFileZip(entries, destinationPath);
 }
 
 export async function exportArtifact(

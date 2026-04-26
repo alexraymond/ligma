@@ -101,3 +101,93 @@ export async function exportZip(
     await fs.rm(stagingDir, { recursive: true, force: true });
   }
 }
+
+export interface MultiFileBundleEntry {
+  /** POSIX-relative path inside the archive, e.g. `dashboard.html`. */
+  path: string;
+  /** UTF-8 source. Multi-file bundles are HTML/CSS/JS only — no binary
+   *  assets in this path. Add binary support if a future use-case needs it. */
+  content: string;
+}
+
+const MULTI_FILE_README = (entries: MultiFileBundleEntry[], generatedAt: string) => {
+  const fileList = entries.map((e) => `- \`${e.path}\``).join('\n');
+  return `# ligma multi-screen export
+
+This bundle was exported from [ligma](https://github.com/alexraymond/ligma).
+
+## Files
+
+${fileList}
+
+## Notes
+
+- Generated: ${generatedAt}
+- Each \`*.html\` file is a self-contained screen — open any of them
+  directly in a browser. There's no shared bundler or routing.
+- ${entries.length} screen${entries.length === 1 ? '' : 's'} total.
+- To re-edit, drop the bundle into ligma's project root.
+`;
+};
+
+/**
+ * Bundle every wall card (one HTML file per screen) into a portable ZIP.
+ * Distinct from `exportZip` — there is no privileged "index.html" here and
+ * no `assets/` subdirectory; every entry sits flat at the archive root,
+ * which matches the wall's mental model (peer screens, not a primary +
+ * supporting files). README enumerates the files explicitly so the user
+ * can find any specific screen without grepping the archive.
+ */
+export async function exportMultiFileZip(
+  entries: MultiFileBundleEntry[],
+  destinationPath: string,
+): Promise<ExportResult> {
+  if (entries.length === 0) {
+    throw new CodesignError(
+      'exportMultiFileZip requires at least one entry',
+      ERROR_CODES.IPC_BAD_INPUT,
+    );
+  }
+  const fs = await import('node:fs/promises');
+  const path = await import('node:path');
+  const os = await import('node:os');
+  const { Zip } = await import('zip-lib');
+
+  const stagingDir = await fs.mkdtemp(path.join(os.tmpdir(), 'codesign-zip-multi-'));
+  try {
+    const stagingResolved = path.resolve(stagingDir);
+    const zip = new Zip();
+    for (const entry of entries) {
+      const normalized = entry.path.replace(/\\/g, '/').replace(/^\/+/, '');
+      const localPath = path.resolve(stagingDir, normalized);
+      const rel = path.relative(stagingResolved, localPath);
+      if (!rel || rel.startsWith('..') || path.isAbsolute(rel)) {
+        throw new CodesignError(
+          `ZIP export rejected unsafe entry path: ${entry.path}`,
+          ERROR_CODES.EXPORTER_ZIP_UNSAFE_PATH,
+        );
+      }
+      await fs.mkdir(path.dirname(localPath), { recursive: true });
+      await fs.writeFile(localPath, entry.content, 'utf8');
+      zip.addFile(localPath, normalized);
+    }
+
+    const readme = MULTI_FILE_README(entries, new Date().toISOString());
+    const readmePath = path.join(stagingDir, 'README.md');
+    await fs.writeFile(readmePath, readme, 'utf8');
+    zip.addFile(readmePath, 'README.md');
+
+    await zip.archive(destinationPath);
+    const stat = await fs.stat(destinationPath);
+    return { bytes: stat.size, path: destinationPath };
+  } catch (err) {
+    if (err instanceof CodesignError) throw err;
+    throw new CodesignError(
+      `Multi-file ZIP export failed: ${err instanceof Error ? err.message : String(err)}`,
+      ERROR_CODES.EXPORTER_ZIP_FAILED,
+      { cause: err },
+    );
+  } finally {
+    await fs.rm(stagingDir, { recursive: true, force: true });
+  }
+}

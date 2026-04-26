@@ -1,5 +1,5 @@
 import { buildSrcdoc } from '@ligma/runtime';
-import { Download, ExternalLink, MessageSquare } from 'lucide-react';
+import { Download, ExternalLink, MessageSquare, Package } from 'lucide-react';
 import type { ReactElement, PointerEvent as ReactPointerEvent } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 import { useCodesignStore } from '../../store';
@@ -405,46 +405,92 @@ export function CanvasWall(): ReactElement {
     );
   }
 
+  const downloadableEntries = paths
+    .map((p) => ({ path: p, content: previewHtmlByFile[`${currentDesignId}::${p}`] ?? '' }))
+    .filter((e) => e.content.length > 0);
+
+  const onDownloadAll = async (): Promise<void> => {
+    if (downloadableEntries.length === 0) return;
+    const api = window.codesign?.exportMultiFileBundle;
+    if (!api) return;
+    try {
+      await api({ entries: downloadableEntries, defaultFilename: 'project.zip' });
+    } catch (err) {
+      console.error('[wall] download-all failed', err);
+    }
+  };
+
   return (
     <div
       className="min-h-full"
       style={{
-        padding: 32,
-        display: 'grid',
-        gridTemplateColumns: `repeat(auto-fit, ${CARD_WIDTH}px)`,
-        gap: 32,
-        justifyContent: 'start',
-        alignContent: 'start',
+        padding: '20px 32px 32px',
         background: 'var(--color-background)',
       }}
     >
-      {paths.map((path) => {
-        const key = `${currentDesignId}::${path}`;
-        const html = previewHtmlByFile[key];
-        if (!html) return null;
-        const selected = wallSelectedPaths.includes(path);
-        const writing =
-          agentWritingFile?.designId === currentDesignId && agentWritingFile.path === path;
-        const commentCount = commentsByFile.get(path) ?? 0;
-        const focused = currentFilePathByDesign[currentDesignId] === path;
-        return (
-          <WallCard
-            key={path}
-            designId={currentDesignId}
-            path={path}
-            html={html}
-            selected={selected}
-            focused={focused}
-            writing={writing}
-            commentCount={commentCount}
-            onOpen={(p) => {
-              openCanvasFileTab(p);
-              setCurrentFilePath(currentDesignId, p);
+      {downloadableEntries.length >= 2 ? (
+        <div
+          className="flex items-center justify-end mb-[12px]"
+          // Wrapper sits in the natural flow above the grid — it scrolls with
+          // content rather than sticking, which keeps the wall mental model
+          // simple (everything in one panable surface) and avoids fighting
+          // CanvasViewport's overflow-auto for sticky positioning.
+        >
+          <button
+            type="button"
+            onClick={onDownloadAll}
+            aria-label="Download all designs as a ZIP bundle"
+            title={`Download all ${downloadableEntries.length} designs as a ZIP`}
+            className="inline-flex items-center gap-[6px] rounded-full px-[12px] py-[5px] text-[12px] transition-shadow hover:shadow-[var(--shadow-soft)]"
+            style={{
+              background: 'var(--color-surface)',
+              color: 'var(--color-text-secondary)',
+              border: '1px solid var(--color-border-muted)',
+              fontFamily: 'var(--font-mono)',
             }}
-            onToggleSelect={(p, _additive) => toggleWallSelection(p)}
-          />
-        );
-      })}
+          >
+            <Package className="w-3.5 h-3.5" aria-hidden />
+            Download all ({downloadableEntries.length})
+          </button>
+        </div>
+      ) : null}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(auto-fit, ${CARD_WIDTH}px)`,
+          gap: 32,
+          justifyContent: 'start',
+          alignContent: 'start',
+        }}
+      >
+        {paths.map((path) => {
+          const key = `${currentDesignId}::${path}`;
+          const html = previewHtmlByFile[key];
+          if (!html) return null;
+          const selected = wallSelectedPaths.includes(path);
+          const writing =
+            agentWritingFile?.designId === currentDesignId && agentWritingFile.path === path;
+          const commentCount = commentsByFile.get(path) ?? 0;
+          const focused = currentFilePathByDesign[currentDesignId] === path;
+          return (
+            <WallCard
+              key={path}
+              designId={currentDesignId}
+              path={path}
+              html={html}
+              selected={selected}
+              focused={focused}
+              writing={writing}
+              commentCount={commentCount}
+              onOpen={(p) => {
+                openCanvasFileTab(p);
+                setCurrentFilePath(currentDesignId, p);
+              }}
+              onToggleSelect={(p, _additive) => toggleWallSelection(p)}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
