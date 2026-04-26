@@ -61,6 +61,23 @@ export function useAgentStream(): void {
   }>({ timer: null, pending: null, lastFlushAt: 0 });
   const FS_THROTTLE_MS = 250;
 
+  // Per-(designId, path) throttle for the wall view. Same shape and rate as
+  // the index.html throttle above — multi-file generation can write to 5+
+  // files in parallel and each card's iframe reloads on every srcDoc change,
+  // so an unthrottled stream would strobe N cards simultaneously. Per-path
+  // slots ensure each card flushes at most every FS_THROTTLE_MS while
+  // letting different files update independently.
+  const wallThrottles = useRef<
+    Map<
+      string,
+      {
+        timer: ReturnType<typeof setTimeout> | null;
+        pending: { designId: string; path: string; content: string } | null;
+        lastFlushAt: number;
+      }
+    >
+  >(new Map());
+
   useEffect(() => {
     if (typeof window === 'undefined' || !window.codesign) return;
     const flushFs = () => {
@@ -84,6 +101,35 @@ export function useAgentStream(): void {
       }
       if (slot.timer !== null) return;
       slot.timer = setTimeout(flushFs, Math.max(FS_THROTTLE_MS - since, 0));
+    };
+
+    // Per-path throttle: wall cards get the same coalescing as the live
+    // iframe so a 10-str_replace turn yields ~3 card refreshes, not 10.
+    const flushWallSlot = (key: string) => {
+      const slot = wallThrottles.current.get(key);
+      if (!slot) return;
+      slot.timer = null;
+      const pending = slot.pending;
+      slot.pending = null;
+      if (!pending) return;
+      slot.lastFlushAt = Date.now();
+      recordAgentFileUpdate(pending);
+    };
+    const scheduleWallUpdate = (next: { designId: string; path: string; content: string }) => {
+      const key = `${next.designId}::${next.path}`;
+      let slot = wallThrottles.current.get(key);
+      if (!slot) {
+        slot = { timer: null, pending: null, lastFlushAt: 0 };
+        wallThrottles.current.set(key, slot);
+      }
+      slot.pending = next;
+      const since = Date.now() - slot.lastFlushAt;
+      if (since >= FS_THROTTLE_MS && slot.timer === null) {
+        flushWallSlot(key);
+        return;
+      }
+      if (slot.timer !== null) return;
+      slot.timer = setTimeout(() => flushWallSlot(key), Math.max(FS_THROTTLE_MS - since, 0));
     };
 
     const handleTurnStart = (event: AgentStreamEvent) => {
@@ -247,9 +293,11 @@ export function useAgentStream(): void {
         scheduleFs({ designId: event.designId, content: event.content });
       }
       // Always update the per-file cache + persist for ANY HTML file the
-      // agent writes — that's what the wall view reads.
+      // agent writes — that's what the wall view reads. Throttled per-path
+      // so each card re-renders at most every FS_THROTTLE_MS even when the
+      // agent fires str_replace bursts across multiple files.
       if (event.path.toLowerCase().endsWith('.html') && !event.path.startsWith('turn-')) {
-        recordAgentFileUpdate({
+        scheduleWallUpdate({
           designId: event.designId,
           path: event.path,
           content: event.content,
@@ -308,6 +356,22 @@ export function useAgentStream(): void {
       if (pending) {
         slot.lastFlushAt = Date.now();
         setPreviewHtmlFromAgent(pending);
+      }
+      // Same drain for the per-path wall throttles so any in-flight final
+      // edit lands in previewHtmlByFile before persistence reads from it.
+      for (const [key, wallSlot] of wallThrottles.current) {
+        if (wallSlot.timer !== null) {
+          clearTimeout(wallSlot.timer);
+          wallSlot.timer = null;
+        }
+        const wallPending = wallSlot.pending;
+        wallSlot.pending = null;
+        if (wallPending) {
+          wallSlot.lastFlushAt = Date.now();
+          recordAgentFileUpdate(wallPending);
+        }
+        // Drop slot entirely — a new run starts a fresh map.
+        wallThrottles.current.delete(key);
       }
       const finalText = inFlight.current?.lastPersistedText ?? undefined;
       void persistAgentRunSnapshot({

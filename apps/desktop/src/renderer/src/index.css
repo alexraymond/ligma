@@ -13,6 +13,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Pan affordances — toggled on document.body by CanvasViewport (Space-held)
+ * and CanvasWall (active drag). The two states give kinetic feedback so the
+ * user can tell the difference between "ready to pan" and "panning right
+ * now," and the !important overrides win against per-element cursor styles
+ * (e.g. iframe overlays, anchor pointers) so the cursor stays consistent
+ * for the whole gesture. */
+body.ligma-pan-ready,
+body.ligma-pan-ready * {
+  cursor: grab !important;
+}
+body.ligma-panning,
+body.ligma-panning * {
+  cursor: grabbing !important;
+  user-select: none !important;
+}
+
 /* Paper surface — warm cream + blue graph-paper grid + corner warm glow + noise.
  * Applied to the root app shell so every view inherits the sketchbook grain.
  * The ::after noise layer uses SVG turbulence at mix-blend-mode: multiply.

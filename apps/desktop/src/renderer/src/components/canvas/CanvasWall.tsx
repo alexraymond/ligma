@@ -1,8 +1,13 @@
 import { buildSrcdoc } from '@ligma/runtime';
 import { Download, ExternalLink } from 'lucide-react';
-import type { ReactElement } from 'react';
+import type { ReactElement, PointerEvent as ReactPointerEvent } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 import { useCodesignStore } from '../../store';
+
+// How far the pointer must move before a click-drag is treated as a pan
+// (and the card click is suppressed). Matches Figma's threshold so the
+// gesture feels familiar — anything below this stays a click.
+const DRAG_THRESHOLD_PX = 5;
 
 const CARD_WIDTH = 360;
 const CARD_HEIGHT = 240;
@@ -62,21 +67,93 @@ function WallCard({
   const srcDoc = useMemo(() => injectThumbnailStyle(buildSrcdoc(html)), [html]);
   const scale = CARD_WIDTH / NATURAL_WIDTH;
 
+  // Click-vs-drag disambiguation. A pointerdown opens a "candidate" gesture;
+  // if the pointer moves > DRAG_THRESHOLD_PX before pointerup it becomes a
+  // pan (forwards deltas to [data-canvas-viewport]'s scroll position). If
+  // it doesn't, the pointerup fires onOpen / onToggleSelect like a normal
+  // click. This matches Figma — the canvas is always pannable, even from
+  // inside a card, without forcing the user to learn Space+drag first.
+  const dragRef = useRef<{
+    startX: number;
+    startY: number;
+    viewportEl: HTMLElement;
+    scrollLeft: number;
+    scrollTop: number;
+    additive: boolean;
+    isDrag: boolean;
+  } | null>(null);
+
+  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>): void => {
+    if (e.button !== 0) return;
+    // Don't intercept pointers that originated on the card's hover-revealed
+    // buttons (Download, Open) — they need their own click flow, and
+    // setPointerCapture below would otherwise route pointermove/up away
+    // from them and break their onClick handlers.
+    if ((e.target as Element).closest('button') !== null) return;
+    const viewportEl = (e.currentTarget as HTMLElement).closest(
+      '[data-canvas-viewport]',
+    ) as HTMLElement | null;
+    if (!viewportEl) return;
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      viewportEl,
+      scrollLeft: viewportEl.scrollLeft,
+      scrollTop: viewportEl.scrollTop,
+      additive: e.metaKey || e.ctrlKey || e.shiftKey,
+      isDrag: false,
+    };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>): void => {
+    const state = dragRef.current;
+    if (!state) return;
+    const dx = e.clientX - state.startX;
+    const dy = e.clientY - state.startY;
+    if (!state.isDrag && Math.hypot(dx, dy) > DRAG_THRESHOLD_PX) {
+      state.isDrag = true;
+      document.body.classList.add('ligma-panning');
+    }
+    if (state.isDrag) {
+      state.viewportEl.scrollLeft = state.scrollLeft - dx;
+      state.viewportEl.scrollTop = state.scrollTop - dy;
+    }
+  };
+
+  const onPointerUp = (e: ReactPointerEvent<HTMLDivElement>): void => {
+    const state = dragRef.current;
+    if (!state) return;
+    dragRef.current = null;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {
+      /* capture already released by browser */
+    }
+    document.body.classList.remove('ligma-panning');
+    if (state.isDrag) {
+      // Suppress the synthetic click — the gesture was a pan, not a click.
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    // Genuine click — route to focus or multi-select.
+    if (state.additive) onToggleSelect(path, true);
+    else onOpen(path);
+  };
+
   return (
     <div
       role="button"
       tabIndex={0}
-      onClick={(e) => {
-        if (e.metaKey || e.ctrlKey || e.shiftKey) {
-          onToggleSelect(path, true);
-        } else {
-          onOpen(path);
-        }
-      }}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
       onKeyDown={(e) => {
         if (e.key === 'Enter') onOpen(path);
       }}
-      className={`group relative flex flex-col overflow-hidden cursor-pointer transition-shadow ${
+      className={`group relative flex flex-col overflow-hidden transition-shadow ${
         selected ? 'ring-2 ring-[var(--color-accent)]' : 'hover:shadow-[var(--shadow-tape)]'
       }`}
       style={{
@@ -84,6 +161,10 @@ function WallCard({
         background: 'var(--color-paper-card)',
         border: '1px solid var(--color-border-muted)',
         borderRadius: 'var(--radius-lg)',
+        // `grab` cursor signals the canvas-pan affordance even before the
+        // user moves; `ligma-panning` (toggled above on real drag) flips it
+        // to `grabbing` via the global stylesheet for kinetic feedback.
+        cursor: 'grab',
       }}
     >
       <div
