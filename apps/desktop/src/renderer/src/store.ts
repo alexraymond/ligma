@@ -511,6 +511,12 @@ interface CodesignState {
   /** Clear all wall selections — called after a prompt referencing them
    *  is submitted, and on design switch. */
   clearWallSelection: () => void;
+  /** Reorder a card on the wall: move `fromPath` so it lands immediately
+   *  before `toPath`. In-memory only for now (the order resets to disk
+   *  order on next hydrateFilesForDesign). Persistence would need a new
+   *  files API channel — TODO when the schema-versioned file-order field
+   *  exists.  */
+  reorderWallCards: (designId: string, fromPath: string, toPath: string) => void;
   /** Persist the current in-memory `previewHtml` for a finished agentic run as
    *  a SQLite snapshot row. Without this, agentic runs never write to disk
    *  and reload boots back into the empty welcome state even when the agent
@@ -2812,6 +2818,25 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
   clearWallSelection() {
     if (get().wallSelectedPaths.length === 0) return;
     set({ wallSelectedPaths: [] });
+  },
+
+  reorderWallCards(designId: string, fromPath: string, toPath: string) {
+    if (fromPath === toPath) return;
+    set((s) => {
+      const list = s.fileListByDesign[designId];
+      if (!list) return {};
+      const fromIdx = list.indexOf(fromPath);
+      const toIdx = list.indexOf(toPath);
+      if (fromIdx === -1 || toIdx === -1) return {};
+      const next = [...list];
+      const [moved] = next.splice(fromIdx, 1);
+      // After splice, indexes after `fromIdx` shifted by -1. Recompute the
+      // insertion index relative to the post-splice array so dragging a
+      // later card BEFORE an earlier one doesn't overshoot.
+      const adjustedTo = toIdx > fromIdx ? toIdx - 1 : toIdx;
+      next.splice(adjustedTo, 0, moved as string);
+      return { fileListByDesign: { ...s.fileListByDesign, [designId]: next } };
+    });
   },
 
   async hydrateFilesForDesign(designId: string) {

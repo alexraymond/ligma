@@ -1,7 +1,7 @@
 import { buildSrcdoc } from '@ligma/runtime';
-import { Download, ExternalLink, MessageSquare, Package } from 'lucide-react';
+import { Download, ExternalLink, GripVertical, MessageSquare, Package } from 'lucide-react';
 import type { ReactElement, PointerEvent as ReactPointerEvent } from 'react';
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useCodesignStore } from '../../store';
 
 // How far the pointer must move before a click-drag is treated as a pan
@@ -87,8 +87,17 @@ interface WallCardProps {
    *  between wall + comment-pin features without needing a focus-mode
    *  detour to see "are there outstanding comments here?". */
   commentCount: number;
+  /** True while another card is being dragged toward this card's slot.
+   *  Renders an insertion line on the left edge so the drop target is
+   *  visually obvious before release. */
+  dropTarget: boolean;
+  /** True for the card currently being dragged — fades its visual
+   *  presence so the user can see the underlying grid shifting around. */
+  dragging: boolean;
   onOpen: (path: string) => void;
   onToggleSelect: (path: string, additive: boolean) => void;
+  /** Pointerdown on the drag handle starts the reorder gesture. */
+  onReorderStart: (path: string, e: ReactPointerEvent<HTMLElement>) => void;
 }
 
 function WallCard({
@@ -99,8 +108,11 @@ function WallCard({
   focused,
   writing,
   commentCount,
+  dropTarget,
+  dragging,
   onOpen,
   onToggleSelect,
+  onReorderStart,
 }: WallCardProps): ReactElement {
   const srcDoc = useMemo(() => injectThumbnailStyle(buildSrcdoc(html)), [html]);
   const screenTitle = useMemo(() => extractScreenTitle(html), [html]);
@@ -208,13 +220,46 @@ function WallCard({
         // user moves; `ligma-panning` (toggled above on real drag) flips it
         // to `grabbing` via the global stylesheet for kinetic feedback.
         cursor: 'grab',
+        opacity: dragging ? 0.4 : 1,
+        transition: 'opacity 120ms',
       }}
+      data-wall-card-path={path}
     >
+      {dropTarget ? (
+        <div
+          aria-hidden
+          className="absolute"
+          style={{
+            left: -16,
+            top: 0,
+            bottom: 0,
+            width: 3,
+            borderRadius: 2,
+            background: 'var(--color-accent)',
+            boxShadow: '0 0 8px color-mix(in srgb, var(--color-accent) 50%, transparent)',
+          }}
+        />
+      ) : null}
       <div
         className="flex items-center justify-between px-[var(--space-3)] py-[var(--space-2)] border-b border-[var(--color-border-muted)]"
         style={{ background: 'var(--color-surface)' }}
       >
-        <div className="flex items-baseline gap-[8px] min-w-0">
+        <button
+          type="button"
+          onPointerDown={(e) => {
+            // Stops the body's pan-vs-click handler from firing — reorder
+            // owns this gesture from pointerdown through pointerup.
+            e.stopPropagation();
+            onReorderStart(path, e);
+          }}
+          aria-label={`Drag to reorder ${path}`}
+          title="Drag to reorder"
+          className="shrink-0 p-[2px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] opacity-0 group-hover:opacity-100 transition-opacity"
+          style={{ cursor: 'grab', touchAction: 'none' }}
+        >
+          <GripVertical className="w-3.5 h-3.5" aria-hidden />
+        </button>
+        <div className="flex items-baseline gap-[8px] min-w-0 flex-1 ml-[2px]">
           {screenTitle ? (
             <>
               <span
@@ -355,10 +400,80 @@ export function CanvasWall(): ReactElement {
   const setCurrentFilePath = useCodesignStore((s) => s.setCurrentFilePath);
   const wallSelectedPaths = useCodesignStore((s) => s.wallSelectedPaths);
   const toggleWallSelection = useCodesignStore((s) => s.toggleWallSelection);
+  const reorderWallCards = useCodesignStore((s) => s.reorderWallCards);
   const agentWritingFile = useCodesignStore((s) => s.agentWritingFile);
   const comments = useCodesignStore((s) => s.comments);
   const snapshotsByDesign = useCodesignStore((s) => s.snapshotsByDesign);
   const currentFilePathByDesign = useCodesignStore((s) => s.currentFilePathByDesign);
+
+  // Drag-to-reorder state. Keep cursor + dragged path in React state so the
+  // floating ghost re-renders on pointermove; the drop-target path is just
+  // derived during the move handler so a single state update covers both.
+  const [reorder, setReorder] = useState<{
+    draggingPath: string;
+    dropTargetPath: string | null;
+    cursorX: number;
+    cursorY: number;
+  } | null>(null);
+  const reorderRef = useRef<{ pointerId: number; designId: string } | null>(null);
+
+  const onReorderStart = useCallback(
+    (path: string, e: ReactPointerEvent<HTMLElement>) => {
+      if (!currentDesignId) return;
+      reorderRef.current = { pointerId: e.pointerId, designId: currentDesignId };
+      e.currentTarget.setPointerCapture(e.pointerId);
+      setReorder({
+        draggingPath: path,
+        dropTargetPath: null,
+        cursorX: e.clientX,
+        cursorY: e.clientY,
+      });
+      document.body.classList.add('ligma-panning');
+    },
+    [currentDesignId],
+  );
+
+  // Bind global pointermove / pointerup so the gesture survives even when
+  // the cursor leaves the drag-handle button. The handle's setPointerCapture
+  // would route events back to the button — but the user's intent is to
+  // hover OTHER cards, so we listen on document instead and hit-test by
+  // querying [data-wall-card-path] under the cursor.
+  useEffect(() => {
+    if (!reorder) return;
+    const onMove = (e: PointerEvent): void => {
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const card = el?.closest('[data-wall-card-path]') as HTMLElement | null;
+      const target = card?.getAttribute('data-wall-card-path') ?? null;
+      setReorder((prev) =>
+        prev
+          ? {
+              ...prev,
+              cursorX: e.clientX,
+              cursorY: e.clientY,
+              dropTargetPath: target && target !== prev.draggingPath ? target : null,
+            }
+          : prev,
+      );
+    };
+    const onUp = (_e: PointerEvent): void => {
+      const ctx = reorderRef.current;
+      const current = reorder;
+      reorderRef.current = null;
+      document.body.classList.remove('ligma-panning');
+      setReorder(null);
+      if (ctx && current?.dropTargetPath) {
+        reorderWallCards(ctx.designId, current.draggingPath, current.dropTargetPath);
+      }
+    };
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+    document.addEventListener('pointercancel', onUp);
+    return () => {
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
+      document.removeEventListener('pointercancel', onUp);
+    };
+  }, [reorder, reorderWallCards]);
 
   // Cold-load files when entering the wall. Idempotent; safe to call on
   // every mount because the action overwrites with fresh disk state.
@@ -472,6 +587,8 @@ export function CanvasWall(): ReactElement {
             agentWritingFile?.designId === currentDesignId && agentWritingFile.path === path;
           const commentCount = commentsByFile.get(path) ?? 0;
           const focused = currentFilePathByDesign[currentDesignId] === path;
+          const dragging = reorder?.draggingPath === path;
+          const dropTarget = reorder?.dropTargetPath === path;
           return (
             <WallCard
               key={path}
@@ -482,15 +599,41 @@ export function CanvasWall(): ReactElement {
               focused={focused}
               writing={writing}
               commentCount={commentCount}
+              dragging={dragging}
+              dropTarget={dropTarget}
               onOpen={(p) => {
                 openCanvasFileTab(p);
                 setCurrentFilePath(currentDesignId, p);
               }}
               onToggleSelect={(p, _additive) => toggleWallSelection(p)}
+              onReorderStart={onReorderStart}
             />
           );
         })}
       </div>
+      {reorder ? (
+        <div
+          aria-hidden
+          className="fixed pointer-events-none z-50 rounded-[var(--radius-lg)]"
+          style={{
+            left: reorder.cursorX - 60,
+            top: reorder.cursorY - 16,
+            width: 120,
+            height: 32,
+            background: 'var(--color-accent)',
+            color: 'var(--color-on-accent)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'var(--font-mono)',
+            fontSize: 11,
+            boxShadow: 'var(--shadow-soft)',
+            opacity: 0.9,
+          }}
+        >
+          {reorder.draggingPath}
+        </div>
+      ) : null}
     </div>
   );
 }

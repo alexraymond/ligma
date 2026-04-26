@@ -122,6 +122,61 @@ describe('recordAgentFileUpdate', () => {
   });
 });
 
+describe('reorderWallCards', () => {
+  beforeEach(() => {
+    useCodesignStore.setState({
+      ...initialState,
+      previewHtmlByFile: {},
+      fileListByDesign: { d1: ['index.html', 'dashboard.html', 'settings.html', 'signup.html'] },
+      wallSelectedPaths: [],
+    });
+  });
+
+  it('moves a later card before an earlier one', () => {
+    useCodesignStore.getState().reorderWallCards('d1', 'signup.html', 'dashboard.html');
+    expect(useCodesignStore.getState().fileListByDesign['d1']).toEqual([
+      'index.html',
+      'signup.html',
+      'dashboard.html',
+      'settings.html',
+    ]);
+  });
+
+  it('moves an earlier card after a later one (adjusts insertion index post-splice)', () => {
+    useCodesignStore.getState().reorderWallCards('d1', 'index.html', 'signup.html');
+    // Drop "before signup.html" — after splice removes index, signup is at
+    // index 2; we insert at adjusted index 2, landing index right before it.
+    expect(useCodesignStore.getState().fileListByDesign['d1']).toEqual([
+      'dashboard.html',
+      'settings.html',
+      'index.html',
+      'signup.html',
+    ]);
+  });
+
+  it('is a no-op when from === to', () => {
+    const before = useCodesignStore.getState().fileListByDesign['d1'];
+    useCodesignStore.getState().reorderWallCards('d1', 'index.html', 'index.html');
+    expect(useCodesignStore.getState().fileListByDesign['d1']).toBe(before);
+  });
+
+  it('is a no-op when paths are missing from the list', () => {
+    const before = useCodesignStore.getState().fileListByDesign['d1'];
+    useCodesignStore.getState().reorderWallCards('d1', 'ghost.html', 'index.html');
+    expect(useCodesignStore.getState().fileListByDesign['d1']).toBe(before);
+  });
+
+  it('is a no-op when designId is unknown', () => {
+    useCodesignStore.getState().reorderWallCards('unknown', 'a', 'b');
+    expect(useCodesignStore.getState().fileListByDesign['d1']).toEqual([
+      'index.html',
+      'dashboard.html',
+      'settings.html',
+      'signup.html',
+    ]);
+  });
+});
+
 describe('hydrateFilesForDesign', () => {
   it('loads every HTML file via files.list + files.read into the cache', async () => {
     const list = vi.fn().mockResolvedValue([
