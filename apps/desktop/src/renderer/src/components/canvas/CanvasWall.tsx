@@ -73,6 +73,11 @@ interface WallCardProps {
   path: string;
   html: string;
   selected: boolean;
+  /** True when this file is the one currently active in focus mode. Adds
+   *  a subtle "focused" outline so the user can remember which screen they
+   *  were working on when they switch back from focus → wall. Distinct
+   *  from `selected` (which is the multi-select-for-context state). */
+  focused: boolean;
   /** True when the in-flight agent run most-recently wrote to this file.
    *  Drives a subtle pulsing "writing…" badge so the user can watch
    *  generation progress card by card. */
@@ -91,6 +96,7 @@ function WallCard({
   path,
   html,
   selected,
+  focused,
   writing,
   commentCount,
   onOpen,
@@ -187,7 +193,11 @@ function WallCard({
         if (e.key === 'Enter') onOpen(path);
       }}
       className={`group relative flex flex-col overflow-hidden transition-shadow ${
-        selected ? 'ring-2 ring-[var(--color-accent)]' : 'hover:shadow-[var(--shadow-tape)]'
+        selected
+          ? 'ring-2 ring-[var(--color-accent)]'
+          : focused
+            ? 'ring-1 ring-[var(--color-text-secondary)]'
+            : 'hover:shadow-[var(--shadow-tape)]'
       }`}
       style={{
         width: CARD_WIDTH,
@@ -348,6 +358,7 @@ export function CanvasWall(): ReactElement {
   const agentWritingFile = useCodesignStore((s) => s.agentWritingFile);
   const comments = useCodesignStore((s) => s.comments);
   const snapshotsByDesign = useCodesignStore((s) => s.snapshotsByDesign);
+  const currentFilePathByDesign = useCodesignStore((s) => s.currentFilePathByDesign);
 
   // Cold-load files when entering the wall. Idempotent; safe to call on
   // every mount because the action overwrites with fresh disk state.
@@ -415,6 +426,7 @@ export function CanvasWall(): ReactElement {
         const writing =
           agentWritingFile?.designId === currentDesignId && agentWritingFile.path === path;
         const commentCount = commentsByFile.get(path) ?? 0;
+        const focused = currentFilePathByDesign[currentDesignId] === path;
         return (
           <WallCard
             key={path}
@@ -422,6 +434,7 @@ export function CanvasWall(): ReactElement {
             path={path}
             html={html}
             selected={selected}
+            focused={focused}
             writing={writing}
             commentCount={commentCount}
             onOpen={(p) => {
