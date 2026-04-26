@@ -55,6 +55,89 @@ export function extractScreenTitle(source: string): string | null {
   return null;
 }
 
+/**
+ * Pure state machine for the click-vs-drag disambiguation on a wall card.
+ * Lives outside the React component so the gesture logic is testable
+ * without spinning up a DOM — the codebase has no jsdom / RTL today and
+ * adding one for one feature would be disproportionate. The component is
+ * the thin shell that maps real PointerEvents → these calls and applies
+ * the returned scroll deltas to the viewport element.
+ *
+ * State transitions:
+ *   null           --pointerDown(button=0)--> { armed, scrollLeft0, scrollTop0 }
+ *   armed          --pointerMove(<= 5px)----> armed (no scroll change)
+ *   armed          --pointerMove(> 5px)-----> dragging (apply scroll)
+ *   dragging       --pointerMove(any)-------> dragging (apply scroll)
+ *   armed/dragging --pointerUp--------------> null + side-effect
+ *
+ * `armed --pointerUp` produces a `'click'` side-effect (with `additive`
+ * flag from the original pointerdown). `dragging --pointerUp` produces
+ * `'pan'` so the caller knows to suppress the synthetic click.
+ */
+export interface GestureState {
+  startX: number;
+  startY: number;
+  scrollLeft0: number;
+  scrollTop0: number;
+  additive: boolean;
+  isDrag: boolean;
+}
+
+export interface PointerDownInput {
+  clientX: number;
+  clientY: number;
+  scrollLeft: number;
+  scrollTop: number;
+  additive: boolean;
+}
+
+export interface PointerMoveResult {
+  state: GestureState;
+  /** When the gesture has crossed the drag threshold, the new
+   *  scroll{Left,Top} the caller should set on the viewport. Null when
+   *  the gesture is still in `armed` (no movement applied yet). */
+  scroll: { scrollLeft: number; scrollTop: number } | null;
+  /** True the very first move that crosses the threshold — caller uses
+   *  this to flip the cursor to `grabbing`. */
+  justBecameDrag: boolean;
+}
+
+export type PointerUpEffect = { kind: 'click'; additive: boolean } | { kind: 'pan' };
+
+export function startGesture(input: PointerDownInput): GestureState {
+  return {
+    startX: input.clientX,
+    startY: input.clientY,
+    scrollLeft0: input.scrollLeft,
+    scrollTop0: input.scrollTop,
+    additive: input.additive,
+    isDrag: false,
+  };
+}
+
+export function processGestureMove(
+  state: GestureState,
+  clientX: number,
+  clientY: number,
+): PointerMoveResult {
+  const dx = clientX - state.startX;
+  const dy = clientY - state.startY;
+  const wasDrag = state.isDrag;
+  const isDrag = wasDrag || Math.hypot(dx, dy) > DRAG_THRESHOLD_PX;
+  const next: GestureState = wasDrag === isDrag ? state : { ...state, isDrag };
+  if (!isDrag) return { state: next, scroll: null, justBecameDrag: false };
+  return {
+    state: next,
+    scroll: { scrollLeft: state.scrollLeft0 - dx, scrollTop: state.scrollTop0 - dy },
+    justBecameDrag: !wasDrag,
+  };
+}
+
+export function processGestureUp(state: GestureState): PointerUpEffect {
+  if (state.isDrag) return { kind: 'pan' };
+  return { kind: 'click', additive: state.additive };
+}
+
 function downloadHtml(filename: string, content: string): void {
   const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
   const url = URL.createObjectURL(blob);
@@ -118,21 +201,12 @@ function WallCard({
   const screenTitle = useMemo(() => extractScreenTitle(html), [html]);
   const scale = CARD_WIDTH / NATURAL_WIDTH;
 
-  // Click-vs-drag disambiguation. A pointerdown opens a "candidate" gesture;
-  // if the pointer moves > DRAG_THRESHOLD_PX before pointerup it becomes a
-  // pan (forwards deltas to [data-canvas-viewport]'s scroll position). If
-  // it doesn't, the pointerup fires onOpen / onToggleSelect like a normal
-  // click. This matches Figma — the canvas is always pannable, even from
-  // inside a card, without forcing the user to learn Space+drag first.
-  const dragRef = useRef<{
-    startX: number;
-    startY: number;
-    viewportEl: HTMLElement;
-    scrollLeft: number;
-    scrollTop: number;
-    additive: boolean;
-    isDrag: boolean;
-  } | null>(null);
+  // Click-vs-drag disambiguation lives in pure helpers (startGesture,
+  // processGestureMove, processGestureUp) so the state machine can be
+  // tested without DOM. The component is the thin shell that wires real
+  // PointerEvents in and applies the returned scroll deltas to the
+  // viewport element resolved here.
+  const dragRef = useRef<{ state: GestureState; viewportEl: HTMLElement } | null>(null);
 
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>): void => {
     if (e.button !== 0) return;
@@ -146,35 +220,33 @@ function WallCard({
     ) as HTMLElement | null;
     if (!viewportEl) return;
     dragRef.current = {
-      startX: e.clientX,
-      startY: e.clientY,
+      state: startGesture({
+        clientX: e.clientX,
+        clientY: e.clientY,
+        scrollLeft: viewportEl.scrollLeft,
+        scrollTop: viewportEl.scrollTop,
+        additive: e.metaKey || e.ctrlKey || e.shiftKey,
+      }),
       viewportEl,
-      scrollLeft: viewportEl.scrollLeft,
-      scrollTop: viewportEl.scrollTop,
-      additive: e.metaKey || e.ctrlKey || e.shiftKey,
-      isDrag: false,
     };
     e.currentTarget.setPointerCapture(e.pointerId);
   };
 
   const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>): void => {
-    const state = dragRef.current;
-    if (!state) return;
-    const dx = e.clientX - state.startX;
-    const dy = e.clientY - state.startY;
-    if (!state.isDrag && Math.hypot(dx, dy) > DRAG_THRESHOLD_PX) {
-      state.isDrag = true;
-      document.body.classList.add('ligma-panning');
-    }
-    if (state.isDrag) {
-      state.viewportEl.scrollLeft = state.scrollLeft - dx;
-      state.viewportEl.scrollTop = state.scrollTop - dy;
+    const slot = dragRef.current;
+    if (!slot) return;
+    const result = processGestureMove(slot.state, e.clientX, e.clientY);
+    slot.state = result.state;
+    if (result.justBecameDrag) document.body.classList.add('ligma-panning');
+    if (result.scroll) {
+      slot.viewportEl.scrollLeft = result.scroll.scrollLeft;
+      slot.viewportEl.scrollTop = result.scroll.scrollTop;
     }
   };
 
   const onPointerUp = (e: ReactPointerEvent<HTMLDivElement>): void => {
-    const state = dragRef.current;
-    if (!state) return;
+    const slot = dragRef.current;
+    if (!slot) return;
     dragRef.current = null;
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
@@ -182,14 +254,14 @@ function WallCard({
       /* capture already released by browser */
     }
     document.body.classList.remove('ligma-panning');
-    if (state.isDrag) {
+    const effect = processGestureUp(slot.state);
+    if (effect.kind === 'pan') {
       // Suppress the synthetic click — the gesture was a pan, not a click.
       e.preventDefault();
       e.stopPropagation();
       return;
     }
-    // Genuine click — route to focus or multi-select.
-    if (state.additive) onToggleSelect(path, true);
+    if (effect.additive) onToggleSelect(path, true);
     else onOpen(path);
   };
 
