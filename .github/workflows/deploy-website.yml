@@ -40,7 +40,7 @@ jobs:
 
       - uses: actions/configure-pages@v4
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: website/.vitepress/dist
 
@@ -56,7 +56,7 @@ jobs:
       id-token: write
       actions: write
     steps:
-      # Work around actions/upload-pages-artifact@v3 bug where transient
+      # Work around actions/upload-pages-artifact@v5 bug where transient
       # network hiccups during upload can produce >1 artifact named
       # "github-pages" in a single run, which then makes deploy-pages@v4
       # fail with "Multiple artifacts named 'github-pages'". Delete all
