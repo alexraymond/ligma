@@ -314,7 +314,7 @@ export function useAgentStream(): void {
         message: event.message,
         code: event.code,
       });
-      useCodesignStore.setState({ pendingToolCalls: [] });
+      useCodesignStore.setState({ pendingToolCalls: [], agentWritingFile: null });
       setStreamingAssistantText(null);
       inFlight.current = null;
       void appendChatMessage({
@@ -343,7 +343,8 @@ export function useAgentStream(): void {
       // Any tools still showing "running" at run end would stick forever
       // (their result event never arrived). Drain the live tray — the
       // persisted DB rows are the source of truth once the run is done.
-      useCodesignStore.setState({ pendingToolCalls: [] });
+      // Also clear the wall's "writing…" pulse — the run is done.
+      useCodesignStore.setState({ pendingToolCalls: [], agentWritingFile: null });
       // Flush any throttled fs_updated payload synchronously so the preview
       // store reflects the final html before we read it back for persistence.
       const slot = fsThrottle.current;

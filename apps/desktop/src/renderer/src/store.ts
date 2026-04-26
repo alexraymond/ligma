@@ -210,6 +210,12 @@ interface CodesignState {
    *  on the next user prompt. Single-design scope: cleared whenever the
    *  active design changes. */
   wallSelectedPaths: string[];
+  /** Path of the most-recently-written file during the in-flight generation.
+   *  The wall renders a "writing…" pulse on the matching card so the user
+   *  can see progress mid-run. Cleared on agent_end / agent_error. Keyed by
+   *  designId so a background generation on design A doesn't stamp design
+   *  B's cards while the user is looking at B. */
+  agentWritingFile: { designId: string; path: string } | null;
   /** Most-recent-first list of design ids in the preview pool. */
   recentDesignIds: string[];
   isGenerating: boolean;
@@ -1474,6 +1480,7 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
   previewHtmlByFile: {},
   fileListByDesign: {},
   wallSelectedPaths: [],
+  agentWritingFile: null,
   recentDesignIds: [],
   isGenerating: false,
   activeGenerationId: null,
@@ -2756,6 +2763,9 @@ export const useCodesignStore = create<CodesignState>((set, get) => ({
       return {
         previewHtmlByFile: { ...s.previewHtmlByFile, [key]: content },
         fileListByDesign: { ...s.fileListByDesign, [designId]: nextList },
+        // Stamp the most-recently-written file so the wall can pulse the
+        // matching card. Cleared on agent_end / error in useAgentStream.
+        agentWritingFile: { designId, path },
       };
     });
     void window.codesign?.files?.upsert(designId, path, content).catch((err: unknown) => {

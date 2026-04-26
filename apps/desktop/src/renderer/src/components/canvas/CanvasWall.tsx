@@ -73,6 +73,10 @@ interface WallCardProps {
   path: string;
   html: string;
   selected: boolean;
+  /** True when the in-flight agent run most-recently wrote to this file.
+   *  Drives a subtle pulsing "writing…" badge so the user can watch
+   *  generation progress card by card. */
+  writing: boolean;
   onOpen: (path: string) => void;
   onToggleSelect: (path: string, additive: boolean) => void;
 }
@@ -82,6 +86,7 @@ function WallCard({
   path,
   html,
   selected,
+  writing,
   onOpen,
   onToggleSelect,
 }: WallCardProps): ReactElement {
@@ -276,6 +281,25 @@ function WallCard({
             style={{ background: 'color-mix(in srgb, var(--color-accent) 8%, transparent)' }}
           />
         ) : null}
+        {writing ? (
+          <div
+            aria-label={`writing ${path}`}
+            className="absolute top-[8px] right-[8px] inline-flex items-center gap-[6px] rounded-full px-[10px] py-[3px] text-[10px] pointer-events-none"
+            style={{
+              background: 'var(--color-accent)',
+              color: 'var(--color-on-accent)',
+              fontFamily: 'var(--font-mono)',
+              boxShadow: 'var(--shadow-soft)',
+            }}
+          >
+            <span
+              aria-hidden
+              className="inline-block w-[6px] h-[6px] rounded-full animate-pulse"
+              style={{ background: 'var(--color-on-accent)' }}
+            />
+            writing…
+          </div>
+        ) : null}
       </div>
     </div>
   );
@@ -299,6 +323,7 @@ export function CanvasWall(): ReactElement {
   const setCurrentFilePath = useCodesignStore((s) => s.setCurrentFilePath);
   const wallSelectedPaths = useCodesignStore((s) => s.wallSelectedPaths);
   const toggleWallSelection = useCodesignStore((s) => s.toggleWallSelection);
+  const agentWritingFile = useCodesignStore((s) => s.agentWritingFile);
 
   // Cold-load files when entering the wall. Idempotent; safe to call on
   // every mount because the action overwrites with fresh disk state.
@@ -346,6 +371,8 @@ export function CanvasWall(): ReactElement {
         const html = previewHtmlByFile[key];
         if (!html) return null;
         const selected = wallSelectedPaths.includes(path);
+        const writing =
+          agentWritingFile?.designId === currentDesignId && agentWritingFile.path === path;
         return (
           <WallCard
             key={path}
@@ -353,6 +380,7 @@ export function CanvasWall(): ReactElement {
             path={path}
             html={html}
             selected={selected}
+            writing={writing}
             onOpen={(p) => {
               openCanvasFileTab(p);
               setCurrentFilePath(currentDesignId, p);
