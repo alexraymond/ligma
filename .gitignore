@@ -1,0 +1,81 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Caches
+.turbo/
+.vite/
+.cache/
+.eslintcache
+.next/
+
+# Test outputs
+coverage/
+playwright-report/
+test-results/
+*.lcov
+
+# Environment
+.env
+.env.*
+!.env.example
+scripts/.smoke-keys.env
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+pnpm-debug.log*
+
+# Local data
+.claude/workspace/
+.claude/worktrees/
+*.local
+
+# VitePress
+website/.vitepress/dist/
+website/.vitepress/cache/
+
+# Playwright MCP screenshots
+.playwright-mcp/
+
+# Internal marketing drafts — not for public repo
+promo-copy/
+
+# Demo speedup source files — not used in README
+website/public/demos/_speedup/
+
+# Agent worktrees / transcripts
+.claude/projects/
+.codex-temp/
+
+# Swarm execution state (prd.json, findings, progress, swarm-state) — scratch, not product code
+/tasks/
+
+# ─── Local data store ────────────────────────────────────────────────────────
+# data/ is a LOCAL store only (a dogfood instance's LIGMA_DATA_DIR target).
+# Nothing under it is ever committed — it is personal project state.
+data/
+
+# .envs/ is vestigial: worktrees now go to ~/.ligma/envs. It stays only so an
+# old checkout's leftovers cannot be committed.
+.envs/

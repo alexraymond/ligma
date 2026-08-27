@@ -1,0 +1,56 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786509888773",
+  "personaSeed": "You are a developer in a hurry between meetings. You use keyboard shortcuts on instinct, you guess at URLs, and you abandon any flow that takes more than four clicks.",
+  "goalAchieved": false,
+  "stepCount": 16,
+  "wrongTurns": 4,
+  "elapsedMs": 355811,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "The Deck promises 'Each answer can be taken back for 10 seconds — the countdown beside it is the window the server actually granted', but answering the spot-check card produced no undo countdown and the answer never appeared in the Answered list; all 12 prior answers show 'Undo window closed'. A user who changes their mind has no way to take an answer back.",
+      "evidence": [
+        "personas/naive-user-3/shots/03-click.png",
+        "personas/naive-user-3/shots/04-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Two crew members and three tasks are marked 'Blocked' — including 'Review and approve landing page design' assigned to 'me' — yet the Deck says 'Nothing is waiting on you' and Decisions shows 'No pending decisions'. Blocked work never surfaces an ask in the one place the product says asks will appear.",
+      "evidence": [
+        "personas/naive-user-3/shots/09-goto.png",
+        "personas/naive-user-3/shots/15-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Clicking the 'Review and approve landing page design' task (whose description says 'Approve or request changes') opens a raw edit form with title/description/importance fields — there is no Approve or Request-changes action anywhere.",
+      "evidence": [
+        "personas/naive-user-3/shots/10-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The Cancel button on the task edit modal could not be clicked by its visible text — the click resolved to a hidden drag-and-drop helper element and timed out, leaving the modal open.",
+      "evidence": [
+        "personas/naive-user-3/shots/11-click-failed.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "During the session the console logged a 404 and a 409 Conflict with no user-visible error message, and several /api/dashboard and /api/tasks requests aborted; the UI never surfaced any of these to the user.",
+      "evidence": [
+        "personas/naive-user-3/shots/15-goto.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-3/transcript.jsonl",
+  "invalid": false
+}

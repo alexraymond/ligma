@@ -1,0 +1,117 @@
+{
+  "projectId": "proj_AUz2Cm9T9bbf",
+  "journeyId": "jrn_capture-a-thought-and-turn-it-into-a-task",
+  "runId": "vrun_1786525213503",
+  "recordedAt": "2026-08-12T09:31:16.914Z",
+  "steps": [
+    {
+      "index": 0,
+      "step": "Type the idea into the ever-present 'Brain dump — capture anything' box in the header and press Enter",
+      "outcome": "not-attempted",
+      "note": "not reported by the panel",
+      "screenshot": null
+    },
+    {
+      "index": 1,
+      "step": "Later, open the Brain Dump page to see the 'To Process' queue of raw captures",
+      "outcome": "not-attempted",
+      "note": "not reported by the panel",
+      "screenshot": null
+    },
+    {
+      "index": 2,
+      "step": "On an entry, choose Task (opens a Create Task dialog pre-filled with the note), Auto-process, Edit, Archive, or Delete",
+      "outcome": "not-attempted",
+      "note": "not reported by the panel",
+      "screenshot": null
+    },
+    {
+      "index": 3,
+      "step": "Submit the pre-filled dialog; the entry leaves the To Process count and is marked processed",
+      "outcome": "not-attempted",
+      "note": "not reported by the panel",
+      "screenshot": null
+    }
+  ],
+  "screenshots": [
+    "personas/naive-user-1/shots/01-goto.png",
+    "personas/naive-user-1/shots/02-click-failed.png",
+    "personas/naive-user-1/shots/03-click.png",
+    "personas/naive-user-1/shots/04-click.png",
+    "personas/naive-user-1/shots/05-requested.png",
+    "personas/naive-user-1/shots/06-click-failed.png",
+    "personas/naive-user-1/shots/07-click.png",
+    "personas/naive-user-1/shots/08-click.png",
+    "personas/naive-user-1/shots/09-click.png",
+    "personas/naive-user-1/shots/10-click.png",
+    "personas/naive-user-1/shots/11-click.png",
+    "personas/naive-user-1/shots/12-click.png",
+    "personas/naive-user-1/shots/13-goto.png",
+    "personas/naive-user-1/shots/14-goto.png",
+    "personas/naive-user-1/shots/15-goto.png",
+    "personas/naive-user-1/shots/16-click.png",
+    "personas/naive-user-2/shots/01-goto.png",
+    "personas/naive-user-2/shots/02-click-failed.png",
+    "personas/naive-user-2/shots/03-click.png",
+    "personas/naive-user-2/shots/04-click.png",
+    "personas/naive-user-2/shots/05-click.png",
+    "personas/naive-user-2/shots/06-click-failed.png",
+    "personas/naive-user-2/shots/07-click.png",
+    "personas/naive-user-2/shots/08-click.png",
+    "personas/naive-user-2/shots/09-click.png",
+    "personas/naive-user-2/shots/10-click.png",
+    "personas/naive-user-2/shots/11-click.png",
+    "personas/naive-user-3/shots/01-goto.png",
+    "personas/naive-user-3/shots/02-goto.png",
+    "personas/naive-user-3/shots/03-click.png",
+    "personas/naive-user-3/shots/04-click.png",
+    "personas/naive-user-3/shots/05-click-failed.png",
+    "personas/naive-user-3/shots/06-requested.png",
+    "personas/naive-user-3/shots/07-click.png",
+    "personas/naive-user-3/shots/08-click.png",
+    "personas/naive-user-3/shots/09-click.png",
+    "personas/naive-user-3/shots/10-click.png",
+    "personas/naive-user-3/shots/11-click.png",
+    "personas/returning-user/shots/01-goto.png",
+    "personas/returning-user/shots/02-goto.png",
+    "personas/returning-user/shots/03-requested.png",
+    "personas/returning-user/shots/04-goto.png",
+    "personas/returning-user/shots/05-requested.png",
+    "personas/spec-auditor/shots/01-goto.png",
+    "personas/spec-auditor/shots/02-click.png",
+    "personas/spec-auditor/shots/03-requested.png",
+    "personas/spec-auditor/shots/04-goto.png",
+    "personas/spec-auditor/shots/05-click-failed.png",
+    "personas/spec-auditor/shots/06-click.png",
+    "personas/spec-auditor/shots/07-click.png",
+    "personas/spec-auditor/shots/08-click.png",
+    "personas/spec-auditor/shots/09-click.png",
+    "personas/spec-auditor/shots/10-click-failed.png",
+    "personas/spec-auditor/shots/11-click-failed.png",
+    "personas/spec-auditor/shots/12-click.png",
+    "personas/spec-auditor/shots/13-click-failed.png",
+    "personas/spec-auditor/shots/14-click-failed.png",
+    "personas/spec-auditor/shots/15-click.png",
+    "personas/spec-auditor/shots/16-goto.png"
+  ],
+  "metrics": {
+    "timeOnTaskMs": 336515,
+    "misclicks": 0,
+    "stepCount": 20,
+    "goalAchieved": null
+  },
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "The header input labeled \"Brain dump — capture anything\" silently discards what you type: I entered my idea there and pressed Enter, and no item was created, no error, no feedback — the text was simply lost. A user trusting that label loses their thought."
+    },
+    {
+      "severity": "note",
+      "summary": "The on-page Brain Dump capture field works perfectly: the string 'Idea: add a \"session recap\" email after each StoryForge game — players forget plot hooks (captured 2026-08-12)' (110 chars, straight quotes and em dash) came back character-for-character identical after capture, after /reload, and in a brand-new tab/session, with triage buttons (Task/Edit/Auto-process) attached so it can become real work without retyping."
+    },
+    {
+      "severity": "minor",
+      "summary": "Background polling requests fail repeatedly with net::ERR_ABORTED (/api/dashboard, /api/sidebar, /api/tasks every ~15-30s), and the console logs three React hydration-mismatch errors per page load. Neither corrupted my data, but they erode confidence in a session left open."
+    }
+  ]
+}

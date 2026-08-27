@@ -1,0 +1,68 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786515180343",
+  "personaSeed": "You are a developer in a hurry between meetings. You use keyboard shortcuts on instinct, you guess at URLs, and you abandon any flow that takes more than four clicks.",
+  "goalAchieved": true,
+  "stepCount": 30,
+  "wrongTurns": 6,
+  "elapsedMs": 892044,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "The Deck's empty state promises it will surface 'a design to approve' and 'a brief that went stale', but neither ever appeared as a card. The design approval existed as a task assigned to me ('Review and approve landing page design', Blocked on the Board) and a stale launch-post brief was implied by a blocked marketer task, yet the Deck said 'Nothing is waiting on you' — I had to hunt across Board and Inbox to even discover them, and found no way to act on them anywhere.",
+      "evidence": [
+        "personas/naive-user-3/shots/09-goto.png",
+        "personas/naive-user-3/shots/23-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Answering a decision card with 'Investigate the harness' silently re-queued the identical question: the same two 'used all 3 verification attempts' cards came back a few minutes later, after more /verify runs failed with 'Harness malfunction — not a verdict' (6 failures listed on /runs). The user's answer appears to have no effect except burning quota and re-asking.",
+      "evidence": [
+        "personas/naive-user-3/shots/21-click.png",
+        "personas/naive-user-3/shots/10-goto.png",
+        "personas/naive-user-3/shots/16-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The 10-second undo window is very tight in practice: my first take-back attempt failed because the Undo button disappeared before the click landed, and it only succeeded when clicked immediately after answering.",
+      "evidence": [
+        "personas/naive-user-3/shots/15-click-failed.png",
+        "personas/naive-user-3/shots/17-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The spot-check verdict answer ('Looks right') gets no undo countdown and never appears in the Answered history — the list stayed at 12 entries — even though the page states 'Each answer can be taken back for 10 seconds'.",
+      "evidence": [
+        "personas/naive-user-3/shots/04-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The Inbox report 'Ready for verification: Design hero section for landing page' has an empty body ('the builder produced no summary'), and clicking its 'Linked task' link does nothing — no navigation, no panel.",
+      "evidence": [
+        "personas/naive-user-3/shots/06-click.png",
+        "personas/naive-user-3/shots/07-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Home showed 'Decisions: No pending decisions' while four tasks (including one assigned to me) sat Blocked and two agents were reported Blocked — the dashboard's decision summary and the actual blocked state disagree until a sweep later mints deck cards.",
+      "evidence": [
+        "personas/naive-user-3/shots/01-goto.png",
+        "personas/naive-user-3/shots/09-goto.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-3/transcript.jsonl",
+  "invalid": false
+}

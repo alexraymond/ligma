@@ -1,0 +1,125 @@
+{
+  "charter": "spec-auditor",
+  "runId": "vrun_1786501491178",
+  "personaSeed": null,
+  "goalAchieved": null,
+  "stepCount": 172,
+  "wrongTurns": 3,
+  "elapsedMs": 2407959,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "Adopting a repo that is already an adopted project gives no warning and silently merges a second batch of journeys into the existing project, leaving the Verify surface with 8 journeys including near-duplicate pairs (e.g. 'Download and install the desktop app' vs 'Download and successfully install the app', 'Get from install to first generated design in 90 seconds' vs 'Go from install to my first generated design'). A user re-adopting by accident pollutes their verification queue and would pay to prove the same journey twice.",
+      "evidence": [
+        "personas/spec-auditor/shots/163-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Adopting /Users/alexraymond/open-design failed with 'Harness malfunction — Command failed: pnpm install', so repos that don't install via pnpm apparently cannot be adopted. The failure page is honest (explicitly 'not a verdict', 'nothing was written into the repo', safe to retry) but the user is left with no path forward for that repo.",
+      "evidence": [
+        "personas/spec-auditor/shots/159-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The home dashboard's background poll of /api/dashboard fails with HTTP 405 (Method Not Allowed) roughly every 30 seconds, logging repeated console errors while the user sits on the home page.",
+      "evidence": [
+        "personas/spec-auditor/shots/01-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Adoption does write into the adopted repo by design: the boot recipe lives at /Users/alexraymond/ligma-classic/.ligma/boot.json (shown on Knowledge) and a post-adopt notice said '5 journeys written into .ligma/'. Only the behaviour record (characterization baselines) is stated to be kept centrally ('recorded centrally and never in the repo'). Whether .ligma/ config counts as 'belonging to' the repo is a product-intent call the panel should weigh against the goal's no-foreign-writes clause.",
+      "evidence": [
+        "personas/spec-auditor/shots/161-goto.png",
+        "personas/spec-auditor/shots/30-click.png",
+        "personas/spec-auditor/shots/162-click.png"
+      ],
+      "criterionId": "crit_7"
+    },
+    {
+      "severity": "note",
+      "summary": "Journey proposals arrive pre-accepted ('5 of 5 accepted'), so review is opt-out rather than opt-in, and the single commit button 'Adopt this repo' sits at the very bottom below five long proposal cards; a hasty user could adopt everything without reading it.",
+      "evidence": [
+        "personas/spec-auditor/shots/17-requested.png"
+      ],
+      "criterionId": "crit_4"
+    }
+  ],
+  "criterionResults": [
+    {
+      "criterionId": "crit_goal",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/11-click.png",
+        "personas/spec-auditor/shots/17-requested.png",
+        "personas/spec-auditor/shots/29-click.png",
+        "personas/spec-auditor/shots/163-goto.png",
+        "personas/spec-auditor/shots/161-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/02-click.png",
+        "personas/spec-auditor/shots/11-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/17-requested.png",
+        "personas/spec-auditor/shots/29-click.png",
+        "personas/spec-auditor/shots/161-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/11-click.png",
+        "personas/spec-auditor/shots/17-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/15-goto.png",
+        "personas/spec-auditor/shots/17-requested.png",
+        "personas/spec-auditor/shots/29-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/30-click.png",
+        "personas/spec-auditor/shots/163-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/161-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/162-click.png",
+        "personas/spec-auditor/shots/159-goto.png"
+      ]
+    }
+  ],
+  "transcriptPath": "personas/spec-auditor/transcript.jsonl",
+  "invalid": false
+}

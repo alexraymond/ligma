@@ -1,0 +1,68 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786518282057",
+  "personaSeed": "You are a developer in a hurry between meetings. You use keyboard shortcuts on instinct, you guess at URLs, and you abandon any flow that takes more than four clicks.",
+  "goalAchieved": true,
+  "stepCount": 145,
+  "wrongTurns": 3,
+  "elapsedMs": 3993025,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "On the 'Start something new' form, a click aimed at the enabled 'Adopt' submit button can land on the adjacent 'Adopt a repo' mode toggle (the labels overlap as substrings), which silently resets the form and discards the typed repo path with no feedback — the user believes adoption started when nothing happened.",
+      "evidence": [
+        "personas/naive-user-3/shots/03-click.png",
+        "personas/naive-user-3/shots/04-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Boot-recipe inference failed twice on the same root cause (a pnpm workspace file the repo carries): first at install, then — after I fixed install — again at the dev command, each retry costing minutes including a 120s health poll. The error is raw pnpm output ('packages field missing or empty'), and recovering required knowing pnpm's --ignore-workspace flag; a user without that CLI knowledge is stuck at 'Environment needs a fix'.",
+      "evidence": [
+        "personas/naive-user-3/shots/10-click.png",
+        "personas/naive-user-3/shots/13-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Clicking 'Prove it' on a journey gives no immediate visible acknowledgement, and the resulting verification run never appears on the global Runs page or the project's Runs tab (both kept saying '0 running' while it executed for ~30 minutes and consumed ~12 governor sessions). The lack of feedback led me to click it a second time.",
+      "evidence": [
+        "personas/naive-user-3/shots/36-click.png",
+        "personas/naive-user-3/shots/26-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The verification run page showed only a bare 'Running' status for ~30 minutes with completely empty Verdict, Timeline, Screenshots, and Transcripts tabs — no progress, stage, or activity indication at all until the final verdict landed.",
+      "evidence": [
+        "personas/naive-user-3/shots/47-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "After the proof finished, the journey card shows both a 'done' and a 'failed' badge and says 'Last run 2026-08-12 09:00', while the verification run page for that same run says it started at 10:00:13 AM — the two surfaces disagree by an hour, so the user can't tell when the run actually happened.",
+      "evidence": [
+        "personas/naive-user-3/shots/69-requested.png",
+        "personas/naive-user-3/shots/47-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "The whole adoption loop did work end to end: my corrected recipe was folded into the review sheet, confirming wrote .ligma/boot.json into the repo ('ready'), six crawl-proposed journeys landed on Verify, and the failed proof recorded a detailed regression-corpus entry plus a characterization baseline that the Knowledge page marks as never written into the repo.",
+      "evidence": [
+        "personas/naive-user-3/shots/16-requested.png",
+        "personas/naive-user-3/shots/70-goto.png",
+        "personas/naive-user-3/shots/67-goto.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-3/transcript.jsonl",
+  "invalid": false
+}

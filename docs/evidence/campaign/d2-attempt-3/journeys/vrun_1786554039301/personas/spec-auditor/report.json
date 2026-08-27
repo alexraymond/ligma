@@ -1,0 +1,13 @@
+{
+  "charter": "spec-auditor",
+  "runId": "vrun_1786554039301",
+  "personaSeed": null,
+  "goalAchieved": null,
+  "stepCount": 0,
+  "wrongTurns": 0,
+  "elapsedMs": 4793,
+  "findings": [],
+  "criterionResults": null,
+  "transcriptPath": "personas/spec-auditor/transcript.jsonl",
+  "invalid": true
+}

@@ -1,0 +1,110 @@
+
+=== Mission Control Agent Daemon ===
+
+[36m[2026-08-13 00:02:26] [INFO] [config] No config file found, creating with defaults[0m
+[36m[2026-08-13 00:02:26] [INFO] [daemon] Backend health check (claude, codex, gemini)[0m
+[36m[2026-08-13 00:02:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:02:26] [INFO] [runner] Found claude at: /opt/homebrew/bin/claude[0m
+[36m[2026-08-13 00:02:26] [INFO] [daemon] Backend claude: available (/opt/homebrew/bin/claude)[0m
+[36m[2026-08-13 00:02:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 00:02:26] [WARN] [runner] Could not auto-detect codex binary. Set 'codexBinaryPath' in daemon-config.json or install Codex CLI globally.[0m
+[33m[2026-08-13 00:02:26] [WARN] [daemon] Backend codex: unavailable (codex) — Codex CLI binary not found. Install Codex CLI or set "codexBinaryPath" in daemon-config.json.[0m
+[36m[2026-08-13 00:02:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:02:26] [INFO] [runner] Found gemini at: /opt/homebrew/bin/gemini[0m
+[36m[2026-08-13 00:02:26] [INFO] [daemon] Backend gemini: available (/opt/homebrew/bin/gemini)[0m
+[36m[2026-08-13 00:02:26] [INFO] [daemon] API listening on http://127.0.0.1:49245[0m
+[36m[2026-08-13 00:02:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:02:26] [INFO] [daemon] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:02:26] [INFO] [daemon] Daemon started (PID: 22370)[0m
+[36m[2026-08-13 00:02:26] [INFO] [scheduler] Starting scheduler...[0m
+[36m[2026-08-13 00:02:26] [INFO] [scheduler] Task polling: every 5 minutes (*/5 * * * *)[0m
+[36m[2026-08-13 00:02:26] [INFO] [scheduler] Schedule "dailyPlan": 0 7 * * * → /daily-plan[0m
+[36m[2026-08-13 00:02:26] [INFO] [scheduler] Schedule "standup": 0 9 * * 1-5 → /standup[0m
+[36m[2026-08-13 00:02:26] [INFO] [scheduler] Schedule "weeklyReview": 0 17 * * 5 → /weekly-review[0m
+[36m[2026-08-13 00:02:26] [INFO] [scheduler] Smoke digest: 0 8 * * *[0m
+[36m[2026-08-13 00:02:26] [INFO] [scheduler] Scheduler started with 5 active schedule(s)[0m
+[36m[2026-08-13 00:02:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:02:26] [INFO] [daemon] Running initial task poll...[0m
+[36m[2026-08-13 00:02:26] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 00:02:26] [INFO] [daemon] Config: polling=true (every 5min), concurrency=3, maxTurns=25, timeout=30min, allowedTools=[Read,Edit,Write][0m
+[36m[2026-08-13 00:02:26] [INFO] [daemon] Daemon is running. Press Ctrl+C to stop.[0m
+[36m[2026-08-13 00:03:21] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/projects/**)[0m
+[36m[2026-08-13 00:03:21] [INFO] [runner] Backend: claude[0m
+[36m[2026-08-13 00:03:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:04:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:05:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 00:05:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:06:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:06:44] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/projects/**)[0m
+[36m[2026-08-13 00:06:44] [INFO] [runner] Backend: claude[0m
+[36m[2026-08-13 00:07:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:07:31] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/projects/**)[0m
+[36m[2026-08-13 00:07:31] [INFO] [runner] Backend: claude[0m
+[36m[2026-08-13 00:08:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:09:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:09:50] [INFO] [studio] Design turn dt_w6yZstCsUYO2 (prompt) claimed a claude builder slot[0m
+[36m[2026-08-13 00:09:50] [INFO] [studio] Generation turn via claude subscription (4 scoped tools)[0m
+[36m[2026-08-13 00:10:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 00:10:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:11:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:11:50] [INFO] [studio] Critique for dsn_thQ9eswCxsgj claimed a claude judge slot[0m
+[36m[2026-08-13 00:11:50] [INFO] [studio] Generation turn via claude subscription (3 scoped tools)[0m
+[36m[2026-08-13 00:12:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:13:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:14:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:15:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 00:15:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:16:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:17:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:18:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:18:53] [INFO] [studio] Design turn dt_zJRDkNRb-_ea (prompt) claimed a claude builder slot[0m
+[36m[2026-08-13 00:18:53] [INFO] [studio] Generation turn via claude subscription (4 scoped tools)[0m
+[36m[2026-08-13 00:19:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:19:46] [INFO] [studio] Critique for dsn_thQ9eswCxsgj claimed a claude judge slot[0m
+[36m[2026-08-13 00:19:46] [INFO] [studio] Generation turn via claude subscription (3 scoped tools)[0m
+[36m[2026-08-13 00:20:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 00:20:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:21:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:22:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:23:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:24:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:25:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 00:25:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:26:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:26:55] [INFO] [studio] Promote planner claimed a claude slot[0m
+[36m[2026-08-13 00:26:55] [INFO] [studio] Generation turn via claude subscription (3 scoped tools)[0m
+[36m[2026-08-13 00:27:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:28:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:29:26] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:30:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 00:30:00] [INFO] [dispatcher] Found 10 pending task(s)[0m
+[36m[2026-08-13 00:30:00] [INFO] [dispatcher] Dispatching task task_AHR96SUG-ZtN to agent "builder"[0m
+[36m[2026-08-13 00:30:00] [INFO] [health] Session started: session_1786581000030_3ex3 (agent=builder, task=task_AHR96SUG-ZtN, pid=0)[0m
+[36m[2026-08-13 00:30:00] [INFO] [dispatcher] Marked task task_AHR96SUG-ZtN as in-progress[0m
+[36m[2026-08-13 00:30:00] [INFO] [dispatcher] Task task_AHR96SUG-ZtN builds in /var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/products/a-small-tip-calculator-web-app-just-two-screens-[0m
+[36m[2026-08-13 00:30:00] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 00:30:00] [WARN] [dispatcher] Skipping backend gemini for task task_AHR96SUG-ZtN: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[33m[2026-08-13 00:30:00] [WARN] [dispatcher] Skipping backend codex for task task_AHR96SUG-ZtN: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[36m[2026-08-13 00:30:00] [INFO] [runner] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:30:00] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/projects/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/tasks.json) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/tasks.json)[0m
+[36m[2026-08-13 00:30:00] [INFO] [runner] Backend: claude[0m
+[36m[2026-08-13 00:30:00] [INFO] [dispatcher] Dispatching task task_E2JaHmxCQzvX to agent "builder"[0m
+[36m[2026-08-13 00:30:00] [INFO] [health] Session started: session_1786581000044_0wa2 (agent=builder, task=task_E2JaHmxCQzvX, pid=0)[0m
+[36m[2026-08-13 00:30:00] [INFO] [dispatcher] Marked task task_E2JaHmxCQzvX as in-progress[0m
+[36m[2026-08-13 00:30:00] [INFO] [dispatcher] Task task_E2JaHmxCQzvX builds in /var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/products/a-small-tip-calculator-web-app-just-two-screens-[0m
+[36m[2026-08-13 00:30:00] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 00:30:00] [WARN] [dispatcher] Skipping backend gemini for task task_E2JaHmxCQzvX: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[33m[2026-08-13 00:30:00] [WARN] [dispatcher] Skipping backend codex for task task_E2JaHmxCQzvX: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[36m[2026-08-13 00:30:00] [INFO] [runner] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:30:00] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/projects/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/tasks.json) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/tasks.json)[0m
+[36m[2026-08-13 00:30:00] [INFO] [runner] Backend: claude[0m
+[36m[2026-08-13 00:30:00] [INFO] [dispatcher] Dispatching task task_wuvad-zGwuL0 to agent "builder"[0m
+[36m[2026-08-13 00:30:00] [INFO] [health] Session started: session_1786581000048_5cso (agent=builder, task=task_wuvad-zGwuL0, pid=0)[0m
+[36m[2026-08-13 00:30:00] [INFO] [dispatcher] Marked task task_wuvad-zGwuL0 as in-progress[0m
+[36m[2026-08-13 00:30:00] [INFO] [dispatcher] Task task_wuvad-zGwuL0 builds in /var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/products/a-small-tip-calculator-web-app-just-two-screens-[0m
+[36m[2026-08-13 00:30:00] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 00:30:00] [WARN] [dispatcher] Skipping backend gemini for task task_wuvad-zGwuL0: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[33m[2026-08-13 00:30:00] [WARN] [dispatcher] Skipping backend codex for task task_wuvad-zGwuL0: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[36m[2026-08-13 00:30:00] [INFO] [runner] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 00:30:00] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/projects/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/tasks.json) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-7mQWUg/tasks.json)[0m
+[36m[2026-08-13 00:30:00] [INFO] [runner] Backend: claude[0m

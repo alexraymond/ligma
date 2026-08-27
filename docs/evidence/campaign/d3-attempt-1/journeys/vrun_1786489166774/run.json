@@ -1,0 +1,23 @@
+{
+  "id": "vrun_1786489166774",
+  "taskId": null,
+  "journeyId": "d3-adopt",
+  "projectId": "proj_ligma",
+  "contractId": "ctr_1786489166775",
+  "contractVersion": 1,
+  "envId": null,
+  "baseCommit": "",
+  "status": "complete",
+  "pid": 39837,
+  "personaReports": [
+    "personas/naive-user-1/report.json",
+    "personas/naive-user-1/report.json",
+    "personas/naive-user-1/report.json",
+    "personas/returning-user/report.json",
+    "personas/spec-auditor/report.json"
+  ],
+  "verdictPath": "verdict.json",
+  "startedAt": "2026-08-11T22:59:26.776Z",
+  "finishedAt": "2026-08-12T00:19:28.142Z",
+  "error": null
+}

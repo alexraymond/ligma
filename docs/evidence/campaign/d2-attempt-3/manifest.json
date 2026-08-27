@@ -1,0 +1,100 @@
+{
+  "chainId": "d2",
+  "title": "UI greenfield",
+  "brief": "A multi-screen web app: prototypes stream onto the Wall; the critique lane is visible without touching settings; the user pins a comment, sees the apply-preview, applies it; promotes from the approved design; a browser persona walks the built app; the judge scores against the design baseline; a failure returns to the builder with the judge's reasoning and passes on a capped retry.",
+  "mode": "live",
+  "result": "red",
+  "bootedInstance": {
+    "envId": "env_1786553998175_9ha68n",
+    "url": "http://localhost:56274",
+    "daemonUrl": "http://127.0.0.1:56202",
+    "dataDir": "/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-ZMRVkv",
+    "publicKey": null
+  },
+  "links": [
+    {
+      "kind": "journey-run",
+      "id": "d2a-design-loop",
+      "description": "Prototypes stream onto the Wall; critique lane visible without touching settings; pin a comment; SEE the apply-preview; apply; approve; promote from design.",
+      "journeyId": "d2a-design-loop",
+      "status": "failed",
+      "detail": "vrun_1786554039301: verdict failed",
+      "evidence": [
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-1/report.json",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-1/steps.jsonl",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-1/transcript.jsonl",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-2/report.json",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-2/shots/01-goto.png",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-2/shots/02-click.png",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-2/shots/03-click.png",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-2/shots/04-click.png",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-2/steps.jsonl",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-2/transcript.jsonl",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-3/report.json",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-3/steps.jsonl",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/naive-user-3/transcript.jsonl",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/returning-user/report.json",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/returning-user/steps.jsonl",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/returning-user/transcript.jsonl",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/spec-auditor/report.json",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/spec-auditor/steps.jsonl",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/personas/spec-auditor/transcript.jsonl",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/run.json",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d2/journeys/vrun_1786554039301/verdict.json"
+      ],
+      "signaturesVerified": 1,
+      "startedAt": "2026-08-12T17:00:39.295Z",
+      "finishedAt": "2026-08-12T17:08:56.553Z"
+    },
+    {
+      "kind": "interlude-monitor",
+      "id": "d2-build",
+      "description": "The booted instance builds the approved design: a task reaches awaiting-verification (or done).",
+      "path": "/api/tasks",
+      "collection": "tasks",
+      "anyOf": [
+        {
+          "kanban": "awaiting-verification"
+        },
+        {
+          "kanban": "done"
+        }
+      ],
+      "timeoutMs": 5400000,
+      "pollMs": 15000,
+      "status": "skipped",
+      "detail": "an earlier link in this chain did not pass",
+      "evidence": [],
+      "signaturesVerified": 0,
+      "startedAt": "2026-08-12T17:08:56.553Z",
+      "finishedAt": "2026-08-12T17:08:56.553Z"
+    },
+    {
+      "kind": "journey-run",
+      "id": "d2b-verify-retry",
+      "description": "Browser persona walks the built app; the judge scores against the design baseline; on failure the builder gets the judge's reasoning and passes within the attempt cap.",
+      "journeyId": "d2b-verify-retry",
+      "status": "skipped",
+      "detail": "an earlier link in this chain did not pass",
+      "evidence": [],
+      "signaturesVerified": 0,
+      "startedAt": "2026-08-12T17:08:56.553Z",
+      "finishedAt": "2026-08-12T17:08:56.553Z"
+    },
+    {
+      "kind": "evidence-export",
+      "id": "d2-retry-chain",
+      "description": "The engine-recorded retry chain: every run record and signed verdict the booted instance produced.",
+      "source": "booted-runs",
+      "minArtifacts": 1,
+      "status": "skipped",
+      "detail": "an earlier link in this chain did not pass",
+      "evidence": [],
+      "signaturesVerified": 0,
+      "startedAt": "2026-08-12T17:08:56.553Z",
+      "finishedAt": "2026-08-12T17:08:56.553Z"
+    }
+  ],
+  "startedAt": "2026-08-12T16:59:58.168Z",
+  "finishedAt": "2026-08-12T17:09:03.340Z"
+}

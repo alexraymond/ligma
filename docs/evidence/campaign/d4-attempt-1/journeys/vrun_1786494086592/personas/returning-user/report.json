@@ -1,0 +1,24 @@
+{
+  "charter": "returning-user",
+  "runId": "vrun_1786494086592",
+  "personaSeed": null,
+  "goalAchieved": false,
+  "stepCount": 37,
+  "wrongTurns": 0,
+  "elapsedMs": 705253,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "The product at http://localhost:55784 refused every connection (net::ERR_CONNECTION_REFUSED) across ~13 minutes of repeated attempts. A returning user cannot load the app at all, so no data can be viewed, entered, or verified as persisted.",
+      "evidence": [
+        "personas/returning-user/shots/01-goto-failed.png",
+        "personas/returning-user/shots/06-goto-failed.png",
+        "personas/returning-user/shots/28-requested.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/returning-user/transcript.jsonl",
+  "invalid": false
+}

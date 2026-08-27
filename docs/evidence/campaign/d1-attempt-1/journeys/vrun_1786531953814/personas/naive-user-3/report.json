@@ -1,0 +1,58 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786531953814",
+  "personaSeed": "You are a developer in a hurry between meetings. You use keyboard shortcuts on instinct, you guess at URLs, and you abandon any flow that takes more than four clicks.",
+  "goalAchieved": true,
+  "stepCount": 79,
+  "wrongTurns": 6,
+  "elapsedMs": 1100692,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "The 'Promote to build' step — the pipeline's own path from a locked brief to builder tasks — fails every time: the proposal preview request returns HTTP 500, the modal shows a raw '500 Internal Server Error' with no retry guidance, and 'Confirm and compile' stays disabled. Three attempts over several minutes all failed the same way.",
+      "evidence": [
+        "personas/naive-user-3/shots/45-click.png",
+        "personas/naive-user-3/shots/47-click-failed.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Submitting discovery answers frequently returns HTTP 400 while the form still shows 'Ready to send.' with no visible error; a page reload then wipes all selected answers, forcing the user to re-answer the same questions multiple times (I re-did round 1 three times and round 2 twice).",
+      "evidence": [
+        "personas/naive-user-3/shots/12-click.png",
+        "personas/naive-user-3/shots/19-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Discovery's follow-up question rounds never appear live: after submitting a round, the page keeps saying 'Discovery is still running' and the error banner names questions ('When a short link is visited, which matters more?' etc.) that are nowhere on the page — only a manual browser reload reveals the new round.",
+      "evidence": [
+        "personas/naive-user-3/shots/19-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "On the home page, the Start button still reads as disabled after typing a prompt and picking 'API service'; clicking it appears to do nothing, yet a project is silently created and the page navigates a moment later, which reads as a broken button to a first-time user.",
+      "evidence": [
+        "personas/naive-user-3/shots/03-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Workaround that achieved the goal: creating a Board task assigned to the Developer triggered an automatic system delegation ('You have been assigned as lead to: Build the URL shortener REST API with rate limiting (per locked brief)') visible in the Inbox, so the locked brief was handed to a builder despite the broken promote path; the task itself remains in 'Not Started'.",
+      "evidence": [
+        "personas/naive-user-3/shots/64-requested.png",
+        "personas/naive-user-3/shots/66-requested.png",
+        "personas/naive-user-3/shots/68-requested.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-3/transcript.jsonl",
+  "invalid": false
+}

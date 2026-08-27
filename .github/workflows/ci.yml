@@ -1,0 +1,44 @@
+name: CI
+
+# Minimal gate: install, lint, typecheck, unit tests. No e2e, no release —
+# those need a real daemon/browser and a publishing story this repo doesn't
+# have yet (see docs/audits/fix-campaign-2026-08-27.md, decision 8).
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-typecheck:
+    name: Lint & Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # harness-bridge unit tests drive a real headless Chromium (persona browser bridge)
+      - run: pnpm --filter @ligma/daemon exec playwright install --with-deps chromium
+      - run: pnpm test

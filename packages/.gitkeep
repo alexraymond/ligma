@@ -1,0 +1,7 @@
+# Reserved for future packages:
+#   packages/core/        — Generation orchestration
+#   packages/providers/   — pi-ai adapter + missing-capability wrappers
+#   packages/runtime/     — Sandbox renderer (iframe srcdoc + esbuild-wasm)
+#   packages/artifacts/   — Artifact schema
+#   packages/exporters/   — PDF / PPTX / ZIP (lazy-loaded)
+#   packages/shared/      — Types, utils, zod schemas

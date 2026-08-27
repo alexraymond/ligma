@@ -1,0 +1,23 @@
+{
+  "id": "vrun_1786554039301",
+  "taskId": null,
+  "journeyId": "d2a-design-loop",
+  "projectId": "proj_ligma",
+  "contractId": "ctr_1786554039301",
+  "contractVersion": 1,
+  "envId": null,
+  "baseCommit": "",
+  "status": "complete",
+  "pid": 60969,
+  "personaReports": [
+    "personas/naive-user-1/report.json",
+    "personas/naive-user-1/report.json",
+    "personas/naive-user-1/report.json",
+    "personas/returning-user/report.json",
+    "personas/spec-auditor/report.json"
+  ],
+  "verdictPath": "verdict.json",
+  "startedAt": "2026-08-12T17:00:39.303Z",
+  "finishedAt": "2026-08-12T17:08:56.543Z",
+  "error": null
+}

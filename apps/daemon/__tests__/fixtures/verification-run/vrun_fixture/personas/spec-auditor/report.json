@@ -1,0 +1,42 @@
+{
+  "charter": "spec-auditor",
+  "runId": "vrun_fixture",
+  "personaSeed": null,
+  "goalAchieved": null,
+  "stepCount": 11,
+  "wrongTurns": 0,
+  "elapsedMs": 52700,
+  "findings": [
+    {
+      "severity": "note",
+      "summary": "crit_3's save control is functionally present but works but tedious to reach — three menus deep, unlabeled, and adjacent to a destructive action.",
+      "evidence": ["personas/naive-user-2/shots/02-lost-in-menu.png"],
+      "criterionId": "crit_3"
+    }
+  ],
+  "criterionResults": [
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "evidence": ["personas/spec-auditor/shots/01-criterion-crit_1.png"]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "met",
+      "evidence": ["personas/naive-user-1/shots/03-save-confirmed.png"]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "not-met",
+      "evidence": ["personas/naive-user-2/shots/03-dead-end.png"]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "met",
+      "evidence": ["personas/spec-auditor/shots/02-criterion-crit_4.png"]
+    },
+    { "criterionId": "crit_5", "status": "not-tested", "evidence": [] }
+  ],
+  "transcriptPath": "personas/spec-auditor/transcript.jsonl",
+  "invalid": false
+}

@@ -1,0 +1,128 @@
+{
+  "runId": "vrun_1786581439197",
+  "taskId": null,
+  "contractId": "ctr_1786581439198",
+  "contractVersion": 4,
+  "outcome": "failed",
+  "criterionVerdicts": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-met",
+      "reasoning": "naive-user-1 got end to end (goalAchieved true, 8 tasks on the Board in personas/naive-user-1/shots/60-requested.png), but the thing handed to the builders is not the small app they specified. I verified from their transcript that they locked 'No — tip total only', 'No rounding — exact amounts only', 'USD only — hardcode the $ sign'. The compiled promote dialog (personas/naive-user-1/shots/58-click.png) nevertheless ships 'per-person splits', 'Handle currency formatting and rounding rules', and a 'split counter with +/- buttons'; naive-user-3's dialog (personas/naive-user-3/shots/19-click.png) adds 'currency selector with options (USD, EUR, GBP, CAD)', a 'Round up totals' toggle, an 'Include tax in tip' toggle, and a task 'Implement three visual theme variations'. The padding is in the prototypes too — the approved calculator in personas/spec-auditor/shots/23-click.png carries a 'Split between 2 −/+' control. This is precisely the outcome the criterion names as failure ('you would be annoyed if anyone padded it out'). Economy also failed: naive-user-1 needed 67 steps, 6 wrong turns, four manual reloads, and had to re-enter all seven brief answers after the first Answer submission silently lost them.",
+      "evidence": [
+        "personas/naive-user-1/shots/58-click.png",
+        "personas/naive-user-3/shots/19-click.png",
+        "personas/spec-auditor/shots/23-click.png",
+        "personas/naive-user-1/shots/60-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "reasoning": "naive-user-1 typed the two-screen request into the Studio prompt and the prototypes populated the canvas in the same live page session: personas/naive-user-1/shots/41-requested.png shows approach-1-calculator.html rendering on the Wall with the session still in 'Drafting' and the version rail reading v1 '6 file(s) from prompt' — i.e. files arriving while generation was still running, before any reload (their first reload comes later in steps.jsonl). Corroborated by naive-user-2 (shots/09-click.png) and naive-user-3, and by the spec-auditor's own note that the approved design holds exactly calculator.html + settings.html plus three approach pairs. I did not follow the spec-auditor to not-met: its blocker (personas/spec-auditor/shots/34-requested.png, a fresh request stuck 40+ min) happened at 32/40 · 0 free after four earlier personas had drained the shared session budget — the turn was deferred by the quota governor, not dropped. The real defect there is the missing queue/deferral feedback on the canvas, which I raise below rather than scoring here.",
+      "evidence": [
+        "personas/naive-user-1/shots/41-requested.png",
+        "personas/naive-user-2/shots/09-click.png",
+        "personas/spec-auditor/shots/34-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "met",
+      "reasoning": "The Critique lane is on the Studio page by default, no settings visit anywhere in any transcript. personas/naive-user-1/shots/41-requested.png shows 'Critique scored 58 / 75' with per-rule scores and prose (accessibility-baseline, form-validation, rtl-and-bidi, typography…) directly under the canvas on first arrival, and the side hint states it 'scores every generation against the design system automatically — it's always on, never a settings toggle'. Same lane at 53/75 in personas/spec-auditor/shots/23-click.png, which is the only criterion the auditor itself marked met.",
+      "evidence": [
+        "personas/naive-user-1/shots/41-requested.png",
+        "personas/spec-auditor/shots/23-click.png",
+        "personas/spec-auditor/shots/19-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "unknown",
+      "reasoning": "Not not-met, and not met. The spec-auditor's report claims clicking prototype elements 'opened no comment composer', but its own evidence file contradicts that: personas/spec-auditor/shots/28-click.png shows a composer open at bottom-right, anchored to the clicked element ('div · /div[2]/div[2]/div[1]'), with a text area and Cancel / 'Pin it' buttons — the point-at-it affordance does fire. What is missing is anyone completing it: I grepped all five transcripts and no persona ever typed into that composer or clicked 'Pin it' (0 hits), and the designs API pendingPinCount stayed 0 throughout. Every persona instead said what they wanted via the free-text prompt bar ('the tip % buttons feel cramped…'), which is saying but not pointing. So there is no affirmative evidence that a pointed comment is captured.",
+      "evidence": [
+        "personas/spec-auditor/shots/28-click.png",
+        "personas/spec-auditor/shots/23-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "unknown",
+      "reasoning": "No evidence at all. Nobody reached a pre-send preview of what their comment would tell the designer — the spec-auditor marked it not-tested, and the composer in personas/spec-auditor/shots/28-click.png was abandoned before any text was entered, so what it would have shown is unobserved. The adjacent observation points the wrong way rather than filling the gap: the returning-user sent a 113-character reaction and reports (personas/returning-user/shots/19-click.png) that their exact words are never surfaced anywhere afterwards — the conversation lane keeps showing only the original brief prompt and version rows show a bare 'prompt' chip with no text. That is about after sending, so it cannot settle this criterion either way.",
+      "evidence": [
+        "personas/spec-auditor/shots/28-click.png",
+        "personas/returning-user/shots/19-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "met",
+      "reasoning": "naive-user-1's single reaction (bigger tip buttons on approach 1) produced a visible new design: personas/naive-user-1/shots/55-click.png shows the rail at Versions 2 with v2 '2 file(s) from prompt · 8 files · 50 KB' (v1 had 6 files), the critique rescored 58 → 62, and the v1 complaint about undersized tip buttons is gone from the v2 critique text. The resulting approved calculator in personas/spec-auditor/shots/23-click.png shows large tip pills, consistent with the change landing. Independently reproduced three more times: naive-user-2 got v3 '1 file(s) from prompt' (personas/naive-user-2/shots/12-requested.png), naive-user-3 v4, returning-user v5 '3 file(s) from prompt'. Noted: the change was applied through the prompt bar, not the pin flow, since nobody exercised the pin path.",
+      "evidence": [
+        "personas/naive-user-1/shots/55-click.png",
+        "personas/naive-user-2/shots/12-requested.png",
+        "personas/spec-auditor/shots/23-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "met",
+      "reasoning": "naive-user-1 clicked Approve on the design they had arrived at (v2) and the state changed: their transcript's post-click accessibility snapshot returns 'button \"Approved\" [disabled]' with 'Promote to build' now available, and the following screenshot lane reads 'Approved' where it read 'Drafting' (personas/naive-user-1/shots/55-click.png → 56-click.png). naive-user-2 and naive-user-3 both report the opposite — a revised version arriving pre-marked 'approved' with Approve never enabled (personas/naive-user-3/shots/16-requested.png) — but all five personas ran against the same project proj_i9xvEEgwd08s, so they were looking at the design session naive-user-1 had already approved. That is a harness artifact, not a second observation of the product refusing to let a user approve; I flag it below rather than scoring it.",
+      "evidence": [
+        "personas/naive-user-1/shots/55-click.png",
+        "personas/naive-user-1/shots/56-click.png",
+        "personas/naive-user-3/shots/16-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "unknown",
+      "reasoning": "Promotion itself works and two of the four listed things are confirmed. personas/naive-user-1/shots/58-click.png shows the pre-confirm dialog with 'Tasks (8)', each task carrying a description, file list, acceptance criteria and 'invariant'-tagged rules; personas/naive-user-3/shots/19-click.png shows the same for a 6-task compile; and confirming landed 8 builder tasks on the Board (personas/naive-user-1/shots/60-requested.png). An estimate section exists — 'Governor estimate · 0 spawns · window 32/40 over 5h' — but only observed in the returning-user's failed dialog (personas/returning-user/shots/14-click.png), never in a successful pre-confirm read. Journeys I could not find anywhere: I grepped all five transcripts for Journey/journey, and every hit is the 'Journey to prove' combobox on the project Overview page, not the promote dialog; no screenshot of the dialog shows a journeys section. Two of four elements unobserved, so this defaults to unknown. Separately, the returning-user's 'Confirm and compile' failed outright with 'Refusing to promote a preview that reported an error: the governor is holding sessions back' while Tasks showed (0) and the button stayed enabled — worth noting even though the cause was the shared, exhausted session budget.",
+      "evidence": [
+        "personas/naive-user-1/shots/58-click.png",
+        "personas/naive-user-3/shots/19-click.png",
+        "personas/naive-user-1/shots/60-requested.png",
+        "personas/returning-user/shots/14-click.png"
+      ]
+    }
+  ],
+  "humanDecisions": [
+    {
+      "question": "Re-run this journey with one isolated project per persona before treating the crit_1 and crit_7 failures as product defects?",
+      "context": "All five personas drove the same project (proj_i9xvEEgwd08s) and the same 40-session governor budget. Later personas therefore saw work already built before they had reacted to any mockup (naive-user-2, naive-user-3), found the design already approved by someone else (personas/naive-user-3/shots/16-requested.png), and hit 32/40 · 0 free, which is what deferred the spec-auditor's design turn and the returning-user's compile. Several 'major' findings are downstream of that sharing, not of the product."
+    },
+    {
+      "question": "Is a silently deferred design turn acceptable, given the canvas says nothing about the queue?",
+      "context": "The spec-auditor sat on 'Drafting' with 'No screens yet — describe what you want below and watch it appear' for 40+ minutes (personas/spec-auditor/shots/34-requested.png). The deferral was real and honestly reported — but only in the Promote dialog ('Deferred, resumes ~06:38') and on the global Runs page, never on the canvas where the user is waiting."
+    },
+    {
+      "question": "The pin flow opens but nobody used it — is the prompt bar the intended way to react, or is pin-and-comment the contracted path that needs a targeted re-test?",
+      "context": "crit_3 and crit_4 both hang on this. The composer does open anchored to a clicked element (personas/spec-auditor/shots/28-click.png), yet all four UI personas instinctively reached for the free-text prompt bar instead, and no persona ever submitted a pin (pendingPinCount stayed 0). If pinning is the contracted path, it is discoverable enough to click and not discoverable enough to finish."
+    },
+    {
+      "question": "Accept the live-status staleness, or does it block sign-off?",
+      "context": "Three personas independently saw the Studio stuck on 'drafting' with a Stop button for 6–10+ minutes after the version had already been saved, recoverable only by manual reload (naive-user-1 shots/44-click-failed.png, naive-user-3 shots/15-click.png, returning-user shots/11-click.png). In naive-user-1's case the recovering reload silently discarded the reaction text they had typed."
+    },
+    {
+      "question": "Ship with design cards unclickable at the default viewport?",
+      "context": "All four UI personas hit the same wall: the sticky header, pipeline nav and Critique panel intercept pointer events over the Wall's design cards, and the hover-only 'Open in focus mode' button times out. Each had to enlarge the window to 1920×1400 to select a prototype (personas/naive-user-2/shots/05-click-failed.png through 07-click-failed.png, personas/returning-user/shots/18-click-failed.png). Not a criterion failure, but a laptop-sized user is stuck."
+    },
+    {
+      "question": "Is the promote confirmation readable by the person it asks to commit?",
+      "context": "The dialog explains a consequential, hard-to-reverse action as 'One confirm compiles and signs the contract, freezes the oracle and lands the tasks on the Board', and the lower panel adds 'The holdout note' and 'Governor estimate · 0 spawns · reserve floor 32'. naive-user-2 and naive-user-3 both flagged this as jargon a first-time user cannot interpret (personas/naive-user-3/shots/19-click.png, personas/returning-user/shots/14-click.png)."
+    },
+    {
+      "question": "Should discovery hold the user through three ~90-second question rounds with no notification, and should Answer confirm before it has actually saved?",
+      "context": "naive-user-1 reloaded four times to discover new questions existed ('Discovery is still running'), and their first Answer submission showed 'Ready to send.' but lost all seven selections — they re-selected and resubmitted (personas/naive-user-1/shots/19-click.png, 27-click.png). Also two repeating HTTP 409s from the project journeys endpoint with nothing visibly broken."
+    }
+  ],
+  "judgeModel": "opus",
+  "createdAt": "2026-08-13T02:38:26.332Z",
+  "signature": {
+    "payloadHash": "779957485c8f3c00be4796135cef548d03c0cd9c821c5f0b926ebfd15a0f17dd",
+    "signature": "a4ee0c8b9370735e603af444738ef116991507d50920321f908d126579f66dbf2fcb1758b6e46c70973c9687099089b954db7745771cdcf5e6acf789b71fe205",
+    "publicKey": "MCowBQYDK2VwAyEAuCdQvfPWbtyeVg8T45YLTXFjdO4MXYx4qQTU/Wi4z0A="
+  },
+  "journeyId": "d2a-design-loop",
+  "projectId": "proj_ligma"
+}

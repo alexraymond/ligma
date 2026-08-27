@@ -1,0 +1,69 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786489166774",
+  "personaSeed": "You are a developer in a hurry between meetings. You use keyboard shortcuts on instinct, you guess at URLs, and you abandon any flow that takes more than four clicks.",
+  "goalAchieved": false,
+  "stepCount": 36,
+  "wrongTurns": 4,
+  "elapsedMs": 753530,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "Adopting a repo never succeeds: six attempts across three different local repos all ended in a 'Harness malfunction' screen (pnpm install failures or env health-check timeout) before the review sheet ever appeared, so a new repo can never be brought into the system and its boot recipe can never be confirmed.",
+      "evidence": [
+        "personas/naive-user-3/shots/08-requested.png",
+        "personas/naive-user-3/shots/12-requested.png",
+        "personas/naive-user-3/shots/17-requested.png",
+        "personas/naive-user-3/shots/21-requested.png",
+        "personas/naive-user-3/shots/33-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The failure screen says 'Adopting again is safe' but offers no retry button, no log link, and no diagnostics; retrying via the Home widget fails identically every time while consuming Claude session quota (Governor went 14/40 to 20/40 over the attempts).",
+      "evidence": [
+        "personas/naive-user-3/shots/12-requested.png",
+        "personas/naive-user-3/shots/29-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The adoption page says the run 'is watchable like any other run on Runs', but the Runs page showed no adoption runs at all (0 dispatched, no run list) and the Daemon Logs contained nothing about the adoption attempts, leaving no way to see why they failed.",
+      "evidence": [
+        "personas/naive-user-3/shots/21-requested.png",
+        "personas/naive-user-3/shots/23-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Failure detail is inconsistent: for one repo the message was just 'Command failed: pnpm install' with no output, while for another the raw pnpm error text was shown, so a user can't tell whether the problem is their repo or the product.",
+      "evidence": [
+        "personas/naive-user-3/shots/08-requested.png",
+        "personas/naive-user-3/shots/33-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Repo adoption is only reachable from the Home page's 'What are we making?' widget; the Projects section's 'New Mission' flow (the natural first place to look for bringing in a project) has no repo option, costing a detour.",
+      "evidence": [
+        "personas/naive-user-3/shots/03-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Background polling of /api/dashboard returned repeated HTTP 405 errors and the console logged a React hydration mismatch on load; neither visibly broke the UI during the session.",
+      "evidence": [
+        "personas/naive-user-3/shots/33-requested.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-3/transcript.jsonl",
+  "invalid": false
+}

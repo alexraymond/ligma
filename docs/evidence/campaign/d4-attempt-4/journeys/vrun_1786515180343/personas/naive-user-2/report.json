@@ -1,0 +1,73 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786515180343",
+  "personaSeed": "You are a careful academic researcher. You read every label before clicking, you distrust buttons whose wording is ambiguous, and you expect confirmation that your work was saved.",
+  "goalAchieved": false,
+  "stepCount": 48,
+  "wrongTurns": 3,
+  "elapsedMs": 997681,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "Every verification run fails with 'Harness malfunction — not a verdict — verification exited 1' (underlying error shown in the task panel: 'spawn pnpm ENOENT'). Autopilot retried four times with the same failure, so tasks sit in 'Awaiting Verification' forever and the review/approval cards the Deck promises never arrive.",
+      "evidence": [
+        "personas/naive-user-2/shots/18-click.png",
+        "personas/naive-user-2/shots/26-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The Deck stayed at 'Nothing is waiting on you' for 20+ minutes while agents completed work, so a user told that decisions, a design approval, and a stale brief await them can never clear them — only a single spot-check card ever appeared.",
+      "evidence": [
+        "personas/naive-user-2/shots/24-requested.png",
+        "personas/naive-user-2/shots/02-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The Deck states 'Each answer can be taken back for 10 seconds — the countdown beside it is the window the server actually granted', but answering the spot-check card produced an instant 'Verdict confirmed' with no countdown and no entry in the Answered list, so the answer could not be taken back.",
+      "evidence": [
+        "personas/naive-user-2/shots/04-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The Recent Activity and Deck 'Answered (12)' lists show twelve decisions answered by 'me' minutes before this session started, all with undo windows already closed — confusing for a user who never answered anything.",
+      "evidence": [
+        "personas/naive-user-2/shots/03-click.png",
+        "personas/naive-user-2/shots/01-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The 'Ready for verification: Design hero section for landing page' inbox report has an empty body reading '(the builder produced no summary)', giving the reviewer nothing to evaluate.",
+      "evidence": [
+        "personas/naive-user-2/shots/09-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The 'Linked task: Design hero section for landing page' link in the inbox report detail does nothing when clicked — no navigation and no panel opens.",
+      "evidence": [
+        "personas/naive-user-2/shots/10-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The 'in review — open the verdict' chip on a board card cannot be clicked: the task-details drawer opens over it and intercepts pointer events, so the click times out.",
+      "evidence": [
+        "personas/naive-user-2/shots/17-click-failed.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-2/transcript.jsonl",
+  "invalid": false
+}

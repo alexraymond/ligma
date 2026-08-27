@@ -1,0 +1,65 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786518282057",
+  "personaSeed": "You are a careful academic researcher. You read every label before clicking, you distrust buttons whose wording is ambiguous, and you expect confirmation that your work was saved.",
+  "goalAchieved": true,
+  "stepCount": 125,
+  "wrongTurns": 6,
+  "elapsedMs": 2964298,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "Submitting a repo path the adopter rejects (a directory nested inside another git repo) returns HTTP 400 from /api/projects/adopt with no visible error anywhere in the UI — the form silently sits there and the user cannot tell the adoption never started.",
+      "evidence": [
+        "personas/naive-user-2/shots/07-click.png",
+        "personas/naive-user-2/shots/08-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "While a journey 'Prove it' run was live for ~30 minutes (Verify badge 'running', Governor climbing 4→10 sessions), the Runs page showed '0 running' and never listed the run, despite its copy promising 'Every agent session, live'. The user cannot watch or stop a journey proof.",
+      "evidence": [
+        "personas/naive-user-2/shots/30-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "On the adopt form, clicking the 'Adopt a repo' toggle after typing a path resets the form and silently discards the typed repo path; the two nearby buttons 'Adopt a repo' and 'Adopt' are easy to confuse.",
+      "evidence": [
+        "personas/naive-user-2/shots/03-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The 'evidence' link on a journey row in Verify does nothing visible when clicked — no navigation, expansion, or error.",
+      "evidence": [
+        "personas/naive-user-2/shots/35-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "After a user corrects the boot recipe (port 5174) and the retry succeeds, the review sheet and project Overview still show the re-inferred rationale claiming 'the renderer's default Vite port 5173 is the only addressable strategy', contradicting the recipe actually saved.",
+      "evidence": [
+        "personas/naive-user-2/shots/17-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "The happy path worked end to end: env-failure recovery offered a clear 'Correct the boot recipe' editor with the failing probe explained; on confirm, .ligma/boot.json was written to the repo, 5 journeys were saved, and the first characterization baseline appeared in Knowledge, labeled as recorded centrally and never in the repo.",
+      "evidence": [
+        "personas/naive-user-2/shots/18-click.png",
+        "personas/naive-user-2/shots/37-requested.png",
+        "personas/naive-user-2/shots/39-requested.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-2/transcript.jsonl",
+  "invalid": false
+}

@@ -1,0 +1,327 @@
+[2026-08-12 12:37:46] [INFO] [config] No config file found, creating with defaults
+[2026-08-12 12:37:46] [INFO] [daemon] Backend health check (claude, codex, gemini)
+[2026-08-12 12:37:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:37:46] [INFO] [runner] Found claude at: /opt/homebrew/bin/claude
+[2026-08-12 12:37:46] [INFO] [daemon] Backend claude: available (/opt/homebrew/bin/claude)
+[2026-08-12 12:37:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:37:46] [WARN] [runner] Could not auto-detect codex binary. Set 'codexBinaryPath' in daemon-config.json or install Codex CLI globally.
+[2026-08-12 12:37:46] [WARN] [daemon] Backend codex: unavailable (codex) — Codex CLI binary not found. Install Codex CLI or set "codexBinaryPath" in daemon-config.json.
+[2026-08-12 12:37:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:37:46] [INFO] [runner] Found gemini at: /opt/homebrew/bin/gemini
+[2026-08-12 12:37:46] [INFO] [daemon] Backend gemini: available (/opt/homebrew/bin/gemini)
+[2026-08-12 12:37:46] [INFO] [daemon] API listening on http://127.0.0.1:64594
+[2026-08-12 12:37:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:37:46] [INFO] [daemon] Allowed tools: Read, Edit, Write
+[2026-08-12 12:37:46] [INFO] [daemon] Daemon started (PID: 64326)
+[2026-08-12 12:37:46] [INFO] [scheduler] Starting scheduler...
+[2026-08-12 12:37:46] [INFO] [scheduler] Task polling: every 5 minutes (*/5 * * * *)
+[2026-08-12 12:37:46] [INFO] [scheduler] Schedule "dailyPlan": 0 7 * * * → /daily-plan
+[2026-08-12 12:37:46] [INFO] [scheduler] Schedule "standup": 0 9 * * 1-5 → /standup
+[2026-08-12 12:37:46] [INFO] [scheduler] Schedule "weeklyReview": 0 17 * * 5 → /weekly-review
+[2026-08-12 12:37:46] [INFO] [scheduler] Smoke digest: 0 8 * * *
+[2026-08-12 12:37:46] [INFO] [scheduler] Scheduler started with 5 active schedule(s)
+[2026-08-12 12:37:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:37:46] [INFO] [daemon] Running initial task poll...
+[2026-08-12 12:37:46] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 12:37:46] [INFO] [daemon] Config: polling=true (every 5min), concurrency=3, maxTurns=25, timeout=30min, allowedTools=[Read,Edit,Write]
+[2026-08-12 12:37:46] [INFO] [daemon] Daemon is running. Press Ctrl+C to stop.
+[2026-08-12 12:38:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:38:52] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/projects/**)
+[2026-08-12 12:38:52] [INFO] [runner] Backend: claude
+[2026-08-12 12:39:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:40:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 12:40:32] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/projects/**)
+[2026-08-12 12:40:32] [INFO] [runner] Backend: claude
+[2026-08-12 12:40:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:41:30] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/projects/**)
+[2026-08-12 12:41:30] [INFO] [runner] Backend: claude
+[2026-08-12 12:41:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:42:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:43:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:44:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:45:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 12:45:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:46:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:47:23] [INFO] [studio] Design turn dt_ZVCCEB7-iYdO (prompt) claimed a claude builder slot
+[2026-08-12 12:47:23] [INFO] [studio] Generation turn via claude subscription (4 scoped tools)
+[2026-08-12 12:47:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:48:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:49:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:50:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 12:50:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:51:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:52:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:53:17] [INFO] [studio] Critique for dsn_p-L4Y5Ue42XB claimed a claude judge slot
+[2026-08-12 12:53:17] [INFO] [studio] Generation turn via claude subscription (3 scoped tools)
+[2026-08-12 12:53:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:54:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:55:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 12:55:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:56:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:57:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:58:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 12:59:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:00:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 13:00:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:01:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:02:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:03:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:04:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:05:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 13:05:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:06:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:07:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:08:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:09:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:10:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 13:10:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:11:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:12:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:13:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:14:16] [INFO] [studio] Design turn dt_7l5tb30sRHH_ (comment-apply) claimed a claude builder slot
+[2026-08-12 13:14:16] [INFO] [studio] Generation turn via claude subscription (4 scoped tools)
+[2026-08-12 13:14:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:15:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 13:15:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:16:04] [INFO] [studio] Critique for dsn_p-L4Y5Ue42XB claimed a claude judge slot
+[2026-08-12 13:16:04] [INFO] [studio] Generation turn via claude subscription (3 scoped tools)
+[2026-08-12 13:16:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:17:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:18:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:19:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:20:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 13:20:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:21:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:22:13] [INFO] [studio] Promote planner claimed a claude slot
+[2026-08-12 13:22:13] [INFO] [studio] Generation turn via claude subscription (3 scoped tools)
+[2026-08-12 13:22:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:23:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:24:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:25:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 13:25:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:26:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:27:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:28:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:29:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:30:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 13:30:00] [INFO] [dispatcher] Found 8 pending task(s)
+[2026-08-12 13:30:00] [INFO] [dispatcher] Dispatching task task_-w-plOC8hL_D to agent "builder"
+[2026-08-12 13:30:00] [ERROR] [dispatcher] Failed to dispatch task task_-w-plOC8hL_D: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:30:00] [INFO] [dispatcher] Dispatching task task_a5tFX0Tnh0Ls to agent "builder"
+[2026-08-12 13:30:00] [ERROR] [dispatcher] Failed to dispatch task task_a5tFX0Tnh0Ls: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:30:00] [INFO] [dispatcher] Dispatching task task_InCuuqqLLM4_ to agent "builder"
+[2026-08-12 13:30:00] [ERROR] [dispatcher] Failed to dispatch task task_InCuuqqLLM4_: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:30:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:31:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:32:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:33:36] [INFO] [studio] Design turn dt_IN-uSK-z2DtO (prompt) claimed a claude builder slot
+[2026-08-12 13:33:36] [INFO] [studio] Generation turn via claude subscription (4 scoped tools)
+[2026-08-12 13:33:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:34:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:35:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 13:35:00] [INFO] [dispatcher] Found 8 pending task(s)
+[2026-08-12 13:35:00] [INFO] [dispatcher] Dispatching task task_-w-plOC8hL_D to agent "builder"
+[2026-08-12 13:35:00] [ERROR] [dispatcher] Failed to dispatch task task_-w-plOC8hL_D: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:35:00] [INFO] [dispatcher] Dispatching task task_a5tFX0Tnh0Ls to agent "builder"
+[2026-08-12 13:35:00] [ERROR] [dispatcher] Failed to dispatch task task_a5tFX0Tnh0Ls: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:35:00] [INFO] [dispatcher] Dispatching task task_InCuuqqLLM4_ to agent "builder"
+[2026-08-12 13:35:00] [ERROR] [dispatcher] Failed to dispatch task task_InCuuqqLLM4_: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:35:07] [INFO] [studio] Critique for dsn_p-L4Y5Ue42XB claimed a claude judge slot
+[2026-08-12 13:35:07] [INFO] [studio] Generation turn via claude subscription (3 scoped tools)
+[2026-08-12 13:35:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:36:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:37:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:38:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:39:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:40:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 13:40:00] [INFO] [dispatcher] Found 8 pending task(s)
+[2026-08-12 13:40:00] [INFO] [dispatcher] Dispatching task task_-w-plOC8hL_D to agent "builder"
+[2026-08-12 13:40:00] [ERROR] [dispatcher] Failed to dispatch task task_-w-plOC8hL_D: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:40:00] [INFO] [dispatcher] Dispatching task task_a5tFX0Tnh0Ls to agent "builder"
+[2026-08-12 13:40:00] [ERROR] [dispatcher] Failed to dispatch task task_a5tFX0Tnh0Ls: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:40:00] [INFO] [dispatcher] Dispatching task task_InCuuqqLLM4_ to agent "builder"
+[2026-08-12 13:40:00] [ERROR] [dispatcher] Failed to dispatch task task_InCuuqqLLM4_: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:40:33] [INFO] [studio] Design turn dt_86Itqm7yL9CA (prompt) claimed a claude builder slot
+[2026-08-12 13:40:33] [INFO] [studio] Generation turn via claude subscription (4 scoped tools)
+[2026-08-12 13:40:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:41:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:42:05] [INFO] [studio] Critique for dsn_p-L4Y5Ue42XB claimed a claude judge slot
+[2026-08-12 13:42:05] [INFO] [studio] Generation turn via claude subscription (3 scoped tools)
+[2026-08-12 13:42:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:43:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:44:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:45:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 13:45:00] [INFO] [dispatcher] Found 8 pending task(s)
+[2026-08-12 13:45:00] [INFO] [dispatcher] Dispatching task task_-w-plOC8hL_D to agent "builder"
+[2026-08-12 13:45:00] [ERROR] [dispatcher] Failed to dispatch task task_-w-plOC8hL_D: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:45:00] [INFO] [dispatcher] Dispatching task task_a5tFX0Tnh0Ls to agent "builder"
+[2026-08-12 13:45:00] [ERROR] [dispatcher] Failed to dispatch task task_a5tFX0Tnh0Ls: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:45:00] [INFO] [dispatcher] Dispatching task task_InCuuqqLLM4_ to agent "builder"
+[2026-08-12 13:45:00] [ERROR] [dispatcher] Failed to dispatch task task_InCuuqqLLM4_: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:45:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:46:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:47:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:48:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:49:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:50:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 13:50:00] [INFO] [dispatcher] Found 8 pending task(s)
+[2026-08-12 13:50:00] [INFO] [dispatcher] Dispatching task task_-w-plOC8hL_D to agent "builder"
+[2026-08-12 13:50:00] [ERROR] [dispatcher] Failed to dispatch task task_-w-plOC8hL_D: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:50:00] [INFO] [dispatcher] Dispatching task task_a5tFX0Tnh0Ls to agent "builder"
+[2026-08-12 13:50:00] [ERROR] [dispatcher] Failed to dispatch task task_a5tFX0Tnh0Ls: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:50:00] [INFO] [dispatcher] Dispatching task task_InCuuqqLLM4_ to agent "builder"
+[2026-08-12 13:50:00] [ERROR] [dispatcher] Failed to dispatch task task_InCuuqqLLM4_: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:50:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:51:41] [INFO] [studio] Promote planner claimed a claude slot
+[2026-08-12 13:51:41] [INFO] [studio] Generation turn via claude subscription (3 scoped tools)
+[2026-08-12 13:51:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:52:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:53:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:54:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:55:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 13:55:00] [INFO] [dispatcher] Found 8 pending task(s)
+[2026-08-12 13:55:00] [INFO] [dispatcher] Dispatching task task_-w-plOC8hL_D to agent "builder"
+[2026-08-12 13:55:00] [ERROR] [dispatcher] Failed to dispatch task task_-w-plOC8hL_D: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:55:00] [INFO] [dispatcher] Dispatching task task_a5tFX0Tnh0Ls to agent "builder"
+[2026-08-12 13:55:00] [ERROR] [dispatcher] Failed to dispatch task task_a5tFX0Tnh0Ls: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:55:00] [INFO] [dispatcher] Dispatching task task_InCuuqqLLM4_ to agent "builder"
+[2026-08-12 13:55:00] [ERROR] [dispatcher] Failed to dispatch task task_InCuuqqLLM4_: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 13:55:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:56:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:57:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:58:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 13:59:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:00:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 14:00:00] [INFO] [dispatcher] Found 18 pending task(s)
+[2026-08-12 14:00:00] [INFO] [dispatcher] Dispatching task task_-w-plOC8hL_D to agent "builder"
+[2026-08-12 14:00:00] [ERROR] [dispatcher] Failed to dispatch task task_-w-plOC8hL_D: ENOENT: no such file or directory, open '/var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-DM3ie1/skills-library.json'
+[2026-08-12 14:00:00] [WARN] [dispatcher] Quota governor deferred 2 pending task(s): reserve — retry in 13133s (work stays queued)
+[2026-08-12 14:00:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:01:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:02:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:02:55] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12957s
+[2026-08-12 14:03:25] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12927s
+[2026-08-12 14:03:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:03:55] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12897s
+[2026-08-12 14:04:25] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12867s
+[2026-08-12 14:04:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:04:55] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12837s
+[2026-08-12 14:05:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 14:05:00] [INFO] [dispatcher] Found 18 pending task(s)
+[2026-08-12 14:05:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 12833s (work stays queued)
+[2026-08-12 14:05:25] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12807s
+[2026-08-12 14:05:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:05:55] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12777s
+[2026-08-12 14:06:25] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12747s
+[2026-08-12 14:06:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:06:55] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12717s
+[2026-08-12 14:07:25] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12687s
+[2026-08-12 14:07:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:07:55] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12657s
+[2026-08-12 14:08:26] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12627s
+[2026-08-12 14:08:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:08:56] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12597s
+[2026-08-12 14:09:26] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12567s
+[2026-08-12 14:09:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:09:56] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12537s
+[2026-08-12 14:10:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 14:10:00] [INFO] [dispatcher] Found 18 pending task(s)
+[2026-08-12 14:10:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 12533s (work stays queued)
+[2026-08-12 14:10:26] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12507s
+[2026-08-12 14:10:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:10:56] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12477s
+[2026-08-12 14:11:26] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12447s
+[2026-08-12 14:11:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:11:56] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12417s
+[2026-08-12 14:12:26] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12387s
+[2026-08-12 14:12:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:12:56] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12357s
+[2026-08-12 14:13:26] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12327s
+[2026-08-12 14:13:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:13:56] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12297s
+[2026-08-12 14:14:26] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12267s
+[2026-08-12 14:14:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:14:56] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12237s
+[2026-08-12 14:15:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 14:15:00] [INFO] [dispatcher] Found 18 pending task(s)
+[2026-08-12 14:15:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 12233s (work stays queued)
+[2026-08-12 14:15:26] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12207s
+[2026-08-12 14:15:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:15:56] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12177s
+[2026-08-12 14:16:26] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12147s
+[2026-08-12 14:16:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:16:56] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12117s
+[2026-08-12 14:17:26] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12087s
+[2026-08-12 14:17:46] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:17:56] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12057s
+[2026-08-12 14:18:26] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 12027s
+[2026-08-12 14:20:00] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:20:00] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 11932s
+[2026-08-12 14:20:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 14:20:00] [INFO] [dispatcher] Found 18 pending task(s)
+[2026-08-12 14:20:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 11932s (work stays queued)
+[2026-08-12 14:20:30] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 11902s
+[2026-08-12 14:22:07] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:22:07] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 11805s
+[2026-08-12 14:22:37] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 11775s
+[2026-08-12 14:30:04] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:30:04] [ERROR] [studio] Design turn dt_xtcr8i4Is3Uk deferred by the governor: governor denied studio prompt turn for dsn_p-L4Y5Ue42XB for 20min (last reason: reserve)
+[2026-08-12 14:31:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:32:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:33:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:34:03] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 11089s
+[2026-08-12 14:34:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:34:33] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 11059s
+[2026-08-12 14:35:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 14:35:00] [INFO] [dispatcher] Found 18 pending task(s)
+[2026-08-12 14:35:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 11033s (work stays queued)
+[2026-08-12 14:35:03] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 11029s
+[2026-08-12 14:35:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:35:33] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10999s
+[2026-08-12 14:36:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:36:03] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10969s
+[2026-08-12 14:36:33] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10939s
+[2026-08-12 14:37:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:37:03] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10909s
+[2026-08-12 14:37:33] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10879s
+[2026-08-12 14:38:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:38:03] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10849s
+[2026-08-12 14:38:33] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10819s
+[2026-08-12 14:39:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:39:03] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10789s
+[2026-08-12 14:39:33] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10759s
+[2026-08-12 14:40:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 14:40:00] [INFO] [dispatcher] Found 18 pending task(s)
+[2026-08-12 14:40:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 10733s (work stays queued)
+[2026-08-12 14:40:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:40:03] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10729s
+[2026-08-12 14:40:33] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10699s
+[2026-08-12 14:41:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:41:03] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10669s
+[2026-08-12 14:41:33] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10639s
+[2026-08-12 14:42:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:42:03] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10609s
+[2026-08-12 14:42:33] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10579s
+[2026-08-12 14:43:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:43:04] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10549s
+[2026-08-12 14:43:34] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10519s
+[2026-08-12 14:44:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:44:04] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10489s
+[2026-08-12 14:44:34] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10459s
+[2026-08-12 14:45:00] [INFO] [dispatcher] Polling for pending tasks...
+[2026-08-12 14:45:00] [INFO] [dispatcher] Found 18 pending task(s)
+[2026-08-12 14:45:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 10433s (work stays queued)
+[2026-08-12 14:45:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:45:04] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10429s
+[2026-08-12 14:45:34] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10399s
+[2026-08-12 14:46:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:46:04] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10369s
+[2026-08-12 14:46:34] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10339s
+[2026-08-12 14:47:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:47:04] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10309s
+[2026-08-12 14:47:34] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10279s
+[2026-08-12 14:48:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:48:04] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10249s
+[2026-08-12 14:48:34] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10219s
+[2026-08-12 14:49:03] [INFO] [config] Allowed tools: Read, Edit, Write
+[2026-08-12 14:49:04] [WARN] [governor] studio prompt turn for dsn_p-L4Y5Ue42XB waiting on quota: reserve, retry in 10189s

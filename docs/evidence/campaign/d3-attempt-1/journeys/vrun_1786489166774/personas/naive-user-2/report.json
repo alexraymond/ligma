@@ -1,0 +1,13 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786489166774",
+  "personaSeed": "You are a careful academic researcher. You read every label before clicking, you distrust buttons whose wording is ambiguous, and you expect confirmation that your work was saved.",
+  "goalAchieved": null,
+  "stepCount": 45,
+  "wrongTurns": 0,
+  "elapsedMs": 1619867,
+  "findings": [],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-2/transcript.jsonl",
+  "invalid": true
+}

@@ -1,0 +1,123 @@
+{
+  "charter": "spec-auditor",
+  "runId": "vrun_1786515180343",
+  "personaSeed": null,
+  "goalAchieved": null,
+  "stepCount": 20,
+  "wrongTurns": 3,
+  "elapsedMs": 439880,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "The Deck arrived pre-drained: 18 decisions were already answered before this session began (timestamps 4m–40m before first load), every undo window already closed. The queue never held more than 3 items, so the batch-review offer that appears at ten-or-more waiting could never be triggered or tested, and 'several decisions' were reduced to two regenerated verification-resolution cards.",
+      "evidence": [
+        "personas/spec-auditor/shots/03-click.png"
+      ],
+      "criterionId": "crit_2"
+    },
+    {
+      "severity": "major",
+      "summary": "No design-approval card and no stale-brief card ever appeared in the Deck — not in the waiting queue and not anywhere in the fully-read answered history — even though the Deck's own empty state promises 'a design to approve, a brief that went stale' will appear there. The landing-page design review exists only as a 'Review and approve landing page design' task on the board, reachable only by navigating away from the Deck.",
+      "evidence": [
+        "personas/spec-auditor/shots/19-requested.png",
+        "personas/spec-auditor/shots/01-goto.png"
+      ],
+      "criterionId": "crit_5"
+    },
+    {
+      "severity": "minor",
+      "summary": "The two 'verification attempts exhausted' decisions loop: the same two tasks (hero section, competitor pricing) had each been resolved three times before my session and respawned again minutes later, with answer history reading 'Re-run once with a human reviewer — (\"final\" attempt #4)'. A user who clears the Deck watches it refill with the same two questions.",
+      "evidence": [
+        "personas/spec-auditor/shots/05-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Waiting-count displays disagree: at one point the Deck header read '2 waiting' while the list below it showed 3 actionable items (2 decisions + 1 spot-check), and moments earlier header and nav badge both said 3 for identical contents. Separately, immediately after a reload the page fully rendered 'Nothing is waiting on you' while one card was actually waiting, correcting itself on the next poll.",
+      "evidence": [],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Cards can change under the pointer: while I was clicking 'Looks right' on the front card, two new decisions arrived and took over the front of the deck, so the click timed out against a target that had been displaced. On a live queue this makes misclicks on the wrong card plausible.",
+      "evidence": [
+        "personas/spec-auditor/shots/04-click-failed.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Batch machinery does exist below the advertised threshold: List view offers 'Select all pending' and a '2 selected — Answer / Dismiss / Defer 7d' action bar, but with only 2 pending decisions the contract's 'select at least five' could not be exercised and no ten-or-more offer was ever shown.",
+      "evidence": [
+        "personas/spec-auditor/shots/10-click.png"
+      ],
+      "criterionId": "crit_2"
+    }
+  ],
+  "criterionResults": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/17-click.png",
+        "personas/spec-auditor/shots/14-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/03-click.png",
+        "personas/spec-auditor/shots/05-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/10-click.png",
+        "personas/spec-auditor/shots/03-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/13-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/13-click.png",
+        "personas/spec-auditor/shots/14-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/19-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/19-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/02-goto.png",
+        "personas/spec-auditor/shots/17-click.png"
+      ]
+    }
+  ],
+  "transcriptPath": "personas/spec-auditor/transcript.jsonl",
+  "invalid": false
+}

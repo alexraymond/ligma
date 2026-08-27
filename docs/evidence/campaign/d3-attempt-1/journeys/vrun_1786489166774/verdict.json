@@ -1,0 +1,114 @@
+{
+  "runId": "vrun_1786489166774",
+  "taskId": null,
+  "contractId": "ctr_1786489166775",
+  "contractVersion": 1,
+  "outcome": "failed",
+  "criterionVerdicts": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-met",
+      "reasoning": "Four valid persona runs (naive-user-1, naive-user-3, returning-user, spec-auditor) made ~20 adoption attempts across three local repos and every one dead-ended on 'Harness malfunction — not a verdict'. I opened the screenshots myself: spec-auditor/shots/10-requested.png and 14-requested.png both show 'Env env_… never became healthy at http://localhost:5173' for /Users/alexraymond/ligma-classic, and returning-user/shots/33-requested.png shows the identical failure for a third env id. No project is ever created, so nothing downstream of adoption is reachable. spec-auditor's own criterionResults mark crit_goal not-met.",
+      "evidence": [
+        "personas/spec-auditor/shots/10-requested.png",
+        "personas/spec-auditor/shots/14-requested.png",
+        "personas/returning-user/shots/33-requested.png",
+        "personas/naive-user-3/shots/12-requested.png",
+        "personas/naive-user-1/shots/30-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "not-met",
+      "reasoning": "The home-page affordance exists and works up to submission — spec-auditor/shots/13-click.png shows Home → 'What are we making?' with an 'Adopt a repo' toggle, the path /Users/alexraymond/ligma-classic typed in, and an Adopt button — but the repository is never actually brought in. Every submission ends at the failure page (spec-auditor/shots/14-requested.png), and Projects stays empty (spec-auditor/shots/15-goto.png). The criterion is 'bring in a repository', not 'find the form'; the bringing-in never completes. Corroborated by naive-user-1 (7 attempts, 3 repos), naive-user-3 (6 attempts) and returning-user (5 attempts), all deterministic on retry.",
+      "evidence": [
+        "personas/spec-auditor/shots/13-click.png",
+        "personas/spec-auditor/shots/14-requested.png",
+        "personas/spec-auditor/shots/15-goto.png",
+        "personas/naive-user-3/shots/33-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "unknown",
+      "reasoning": "No persona ever reached a boot-recipe confirmation step, so there is no observation of it either working or misbehaving. The only related evidence is promissory copy on the home form ('A run will infer the boot recipe and propose journeys — you confirm them on one sheet', spec-auditor/shots/13-click.png) and the failure pages that appear instead. returning-user separately reports there is no way to view or correct the inferred recipe after failure, but that is about the error page, not the confirmation step. spec-auditor marked this not-tested. This criterion is among the weakest-covered: the invalid naive-user-2 run was the careful-label-reading persona and was the run most likely to have interrogated the confirmation step's wording and its 'once, rather than a form' quality — that coverage is simply missing.",
+      "evidence": [
+        "personas/spec-auditor/shots/13-click.png",
+        "personas/spec-auditor/shots/14-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "not-met",
+      "reasoning": "The exploration half is observed and then observed to fail: spec-auditor reports the run sits in 'crawling' for 2–4 minutes and then dead-ends (shots/10-requested.png, 14-requested.png), twice identically. So the product does start exploring the repo but never produces proposed journeys — that is the product concretely doing something else, not an untested path. naive-user-1 and naive-user-3 report the same shape across a further 13 attempts on three different repos.",
+      "evidence": [
+        "personas/spec-auditor/shots/10-requested.png",
+        "personas/spec-auditor/shots/14-requested.png",
+        "personas/naive-user-1/shots/32-requested.png",
+        "personas/naive-user-3/shots/21-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "unknown",
+      "reasoning": "The review sheet never rendered for any persona, so nobody could evaluate whether proposals are reviewable before being written down. naive-user-1 states plainly that all seven attempts 'died before the review sheet ever appeared'. There is no screenshot of a review surface anywhere in the evidence set — only failure pages. Weakened further by the invalid naive-user-2 run, whose persona ('expects confirmation that your work was saved') was the one charter aimed squarely at review-then-commit semantics.",
+      "evidence": [
+        "personas/spec-auditor/shots/14-requested.png",
+        "personas/naive-user-1/shots/32-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "unknown",
+      "reasoning": "No project was ever created, so no Verify surface could be inspected for populated journeys. The nearest evidence is spec-auditor/shots/15-goto.png, which shows the Projects list rendering empty skeleton cards with no adopted project — that is absence of the precondition, not an observation of an unpopulated Verify surface for an adopted repo. spec-auditor marked it not-tested.",
+      "evidence": [
+        "personas/spec-auditor/shots/15-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "unknown",
+      "reasoning": "Same as crit_5: the Knowledge surface for an adopted project was never reachable because adoption never produced a project. spec-auditor navigated to shots/15-goto.png and 17-goto.png and found nothing adopted to inspect; it marked the criterion not-tested. No persona shows a Knowledge surface populated from a repo.",
+      "evidence": [
+        "personas/spec-auditor/shots/15-goto.png",
+        "personas/spec-auditor/shots/17-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "unknown",
+      "reasoning": "Only the negative half has evidence, and it is vacuous. naive-user-1 checked both target repos after seven attempts and found no new uncommitted files (note-severity finding, no screenshot attached), and the failure page itself asserts 'nothing was written into the repo' (spec-auditor/shots/14-requested.png) — but nothing about current behaviour was ever recorded in the first place, so 'not committed into the adopted repo' is trivially satisfied while 'kept centrally' has zero supporting evidence. returning-user did verify that what the product does keep centrally (the failed run record, path string-exact) survives reload and a fresh session, which is suggestive of central storage but is about a failure record, not recorded behaviour. Also weakened by the invalid naive-user-2 run — the persona that would most plausibly have chased where things were saved.",
+      "evidence": [
+        "personas/spec-auditor/shots/14-requested.png",
+        "personas/returning-user/shots/36-requested.png"
+      ]
+    }
+  ],
+  "humanDecisions": [
+    {
+      "question": "Is the underlying failure a product defect or a dirty test machine, and should this run be re-executed after fixing the environment?",
+      "context": "Both returning-user and spec-auditor noticed the product's own Runs → Environment Preflight already flags '1 of 10 checks need attention: git worktree support — HEAD is detached, envs will branch off a bare commit', shown while every env boot was failing at http://localhost:5173. That is plausibly the root cause of the blocker, and it is a machine-state issue rather than a code issue. A person should decide whether to fix the detached HEAD and re-run before treating the whole contract as failed on the merits."
+    },
+    {
+      "question": "Failed adoptions consume Claude session quota — is that acceptable for runs the product itself labels a malfunction?",
+      "context": "Three independent personas tracked the Governor gauge climbing across failed attempts (14/40 → 20/40 for naive-user-3, 20/40 → 25/40 for returning-user, 25/40 → 27/40 for spec-auditor). Following the product's own advice that 'adopting again is safe' burned roughly a third of the budget on runs that produced nothing. Not a contract criterion, but a real cost."
+    },
+    {
+      "question": "Accept the current honesty-over-recovery framing of the failure page?",
+      "context": "The copy is genuinely honest — 'harness malfunction, not a verdict', 'nothing was written into the repo' — and returning-user confirmed the claim held. But the page has no retry button, no log link, no way to correct the inferred boot recipe, and naive-user-1 found the run record returns 'Adoption run not found' minutes later. Honest and unrecoverable is a design tradeoff a person should rule on."
+    },
+    {
+      "question": "Fix the overlapping accessible names on the Home adopt form?",
+      "context": "returning-user found that the 'Adopt a repo' mode toggle and the 'Adopt' submit button have overlapping accessible names, so a click targeting 'Adopt' can hit the toggle, flip the form back to prompt mode, and silently discard the typed repo path. Minor, but it sits directly on the crit_1 path."
+    }
+  ],
+  "judgeModel": "opus",
+  "createdAt": "2026-08-12T00:19:28.139Z",
+  "signature": {
+    "payloadHash": "99a42414c297f941c603eb1ee6540a77fc47d82aa8834723b544b8b0c7a7ec76",
+    "signature": "1cd40f0769715196f9abcd5cfab1645aa22dd0ec16a8fc3cf79856ef83e591509c6572e7aa4ba25ae217aa0369258e48f1ab03dfe8b2ccc9e4232edccd3ffc02",
+    "publicKey": "MCowBQYDK2VwAyEAuCdQvfPWbtyeVg8T45YLTXFjdO4MXYx4qQTU/Wi4z0A="
+  },
+  "journeyId": "d3-adopt",
+  "projectId": "proj_ligma"
+}

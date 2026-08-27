@@ -1,0 +1,17 @@
+{
+  "id": "jrn_answer_a_decision",
+  "title": "Answer a decision from the deck",
+  "goal": "Something is waiting on you. Find what needs your answer, answer it from the card itself without hunting through the app, and confirm the answer stuck.",
+  "steps": [
+    "Find where the things that need you are queued",
+    "Read one pending decision with enough context to answer it on the spot",
+    "Choose an answer",
+    "See the queue shrink and the decision recorded as answered",
+    "Find the undo affordance before it expires"
+  ],
+  "tags": ["core", "deck", "attention"],
+  "origin": "human",
+  "schedule": null,
+  "createdAt": "2026-08-11T00:00:00.000Z",
+  "updatedAt": "2026-08-11T00:00:00.000Z"
+}

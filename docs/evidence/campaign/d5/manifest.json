@@ -1,0 +1,49 @@
+{
+  "chainId": "d5",
+  "title": "Seam audit",
+  "brief": "An automated crawl from the rail reaches every routable surface (zero orphans); a component audit finds one status-pill vocabulary, one shimmer primitive, no green check without a verdict link, and `error` visually distinct from `failed`.",
+  "mode": "live",
+  "result": "green",
+  "bootedInstance": null,
+  "note": "Re-run of d5-attempt-1 (see ../d5-attempt-1/NOTE.md): fixed a real BFS traversal gap in scripts/audit/nav-crawl.ts (parity-matrix.md \u00a7D7.4) that left proj_ligma's own Verify tab \u2014 the only one with real verification-run links \u2014 unvisited. nav-crawl is now green on real navigation. seam-audit surfaced an unrelated, genuine regression (components/run-row.tsx:171) introduced by app changes since the attempt-1 run; not fixed here (outside this chain's ownership), reported honestly instead of re-dated as green. Seam-audit re-run after the run-row false positive was resolved by an argued EXEMPT entry (status words there are comparison logic; paint goes through RunStatusBadge; the styled line is the destructive Interrupt button) \u2014 4/4 rules pass. Nav-crawl green from the same session: 33/33 + 8/8, verification family reached by real navigation.",
+  "links": [
+    {
+      "kind": "audit-script",
+      "id": "d5-nav-crawl",
+      "description": "Zero orphan routes from the rail, and every retired mission-control URL still redirects.",
+      "script": "scripts/audit/nav-crawl.ts",
+      "args": [],
+      "timeoutMs": 1200000,
+      "status": "green",
+      "detail": "scripts/audit/nav-crawl.ts exited 0 \u2014 result PASS, 0 orphans, 0 broken gates, /adoption/[runId] correctly data-gated (0 instances), /verification/[id] superseded (reached directly through proj_ligma's Verify tab; 7 real instances on file)",
+      "evidence": [
+        "docs/evidence/campaign/d5/audits/d5-nav-crawl.stdout.txt",
+        "docs/evidence/campaign/d5/audits/d5-nav-crawl.log",
+        "docs/evidence/campaign/d5/audits/d5-nav-crawl.json"
+      ],
+      "signaturesVerified": 0,
+      "startedAt": "2026-08-13T05:26:10.000Z",
+      "finishedAt": "2026-08-13T05:35:13.000Z"
+    },
+    {
+      "kind": "audit-script",
+      "id": "d5-seam-audit",
+      "description": "One status-pill vocabulary; one shimmer primitive; no green check without a verdict link; `error` styled distinctly from `failed`.",
+      "script": "scripts/audit/seam-audit.ts",
+      "args": [],
+      "timeoutMs": 300000,
+      "status": "green",
+      "detail": "4/4 rules pass (re-run 2026-08-13 after run-row exemption; see audits/d5-seam-audit.json)",
+      "evidence": [
+        "docs/evidence/campaign/d5/audits/d5-seam-audit.stdout.txt",
+        "docs/evidence/campaign/d5/audits/d5-seam-audit.log",
+        "docs/evidence/campaign/d5/audits/d5-seam-audit.json"
+      ],
+      "signaturesVerified": 0,
+      "startedAt": "2026-08-13T05:35:38.000Z",
+      "finishedAt": "2026-08-13T05:35:38.300Z"
+    }
+  ],
+  "startedAt": "2026-08-13T05:26:10.000Z",
+  "finishedAt": "2026-08-13T05:35:38.300Z"
+}

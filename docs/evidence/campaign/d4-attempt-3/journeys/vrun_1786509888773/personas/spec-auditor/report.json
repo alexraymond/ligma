@@ -1,0 +1,113 @@
+{
+  "charter": "spec-auditor",
+  "runId": "vrun_1786509888773",
+  "personaSeed": null,
+  "goalAchieved": null,
+  "stepCount": 26,
+  "wrongTurns": 3,
+  "elapsedMs": 339804,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "The scenario's seeded workload was mostly consumed before this session: 12 decisions were already answered with undo windows closed, and no design-approval or stale-brief card ever appeared anywhere in the product (Deck, Inbox, Projects, Library). The Deck's empty state advertises 'a design to approve, a brief that went stale' as card kinds, but a user in this state can never exercise those flows, and the batch flow (10+ waiting) is unreachable — demo data reload only re-seeds a single decision.",
+      "evidence": [
+        "personas/spec-auditor/shots/03-click.png",
+        "personas/spec-auditor/shots/04-goto.png",
+        "personas/spec-auditor/shots/08-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The 10-second undo window is tight in practice: on my first genuine attempt the toast expired before the Undo click landed, and the answer was irrevocably committed. A user who hesitates even briefly loses the take-back with no recourse.",
+      "evidence": [
+        "personas/spec-auditor/shots/17-click-failed.png"
+      ],
+      "criterionId": "crit_7"
+    },
+    {
+      "severity": "minor",
+      "summary": "Answering the spot-check verdict commits immediately with no undo toast and no entry in the Deck's 'Answered' history — unlike decisions, there is no visible take-back window for a verdict spot-check, even though the page copy says 'Each answer can be taken back for 10 seconds'.",
+      "evidence": [
+        "personas/spec-auditor/shots/26-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "'Load demo data' in Settings gives no visible confirmation and applies with a noticeable delay — the Deck updated only after tens of seconds, mid-interaction, which changed the front card while I was clicking it and made two clicks land on nothing.",
+      "evidence": [
+        "personas/spec-auditor/shots/06-click.png",
+        "personas/spec-auditor/shots/21-click-failed.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/03-click.png",
+        "personas/spec-auditor/shots/26-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/07-goto.png",
+        "personas/spec-auditor/shots/08-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/07-goto.png",
+        "personas/spec-auditor/shots/23-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/08-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/08-click.png",
+        "personas/spec-auditor/shots/26-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/08-click.png",
+        "personas/spec-auditor/shots/26-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/02-goto.png",
+        "personas/spec-auditor/shots/26-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/23-click.png",
+        "personas/spec-auditor/shots/24-click.png"
+      ]
+    }
+  ],
+  "transcriptPath": "personas/spec-auditor/transcript.jsonl",
+  "invalid": false
+}

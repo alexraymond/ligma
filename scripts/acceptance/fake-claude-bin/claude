@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+/**
+ * A thin wrapper whose basename is exactly "claude" — `validateBinary`
+ * (apps/daemon/src/engine/security.ts) allowlists spawned binaries by
+ * basename only, and does not know "fake-claude.mjs". The real canned-reply
+ * logic lives in ../fake-claude.mjs (a plain CJS require away, kept as its
+ * own file because the acceptance suite's unit tests exec it by path).
+ *
+ * A child process, not a `require`/`import` of the sibling file: fake-claude.mjs
+ * is ESM (needs `import`), and this file must stay extensionless (so its
+ * basename is "claude"), which Node loads as CommonJS by default here — a
+ * `require("../fake-claude.mjs")` would fail on the ESM syntax.
+ */
+const { spawnSync } = require("child_process");
+const path = require("path");
+
+const result = spawnSync(
+  process.execPath,
+  [path.join(__dirname, "..", "fake-claude.mjs"), ...process.argv.slice(2)],
+  { stdio: "inherit", env: process.env },
+);
+process.exit(result.status ?? 1);

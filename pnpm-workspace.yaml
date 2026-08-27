@@ -1,0 +1,5 @@
+packages:
+  - "apps/cli"
+  - "apps/daemon"
+  - "apps/web"
+  - "packages/*"

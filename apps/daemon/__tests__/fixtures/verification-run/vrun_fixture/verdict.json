@@ -1,0 +1,61 @@
+{
+  "runId": "vrun_fixture",
+  "taskId": "task_sf001",
+  "contractId": "ctr_1755000000000",
+  "contractVersion": 1,
+  "outcome": "failed",
+  "criterionVerdicts": [
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "reasoning": "The spec-auditor confirmed a new character sheet can be created and its fields (name, class, ability scores) persist after a page reload. Naive User 1 independently reached the same state via the UI.",
+      "evidence": [
+        "personas/spec-auditor/shots/01-criterion-crit_1.png",
+        "personas/naive-user-1/shots/02-character-sheet.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "met",
+      "reasoning": "Saving a character sheet shows a confirmation toast and the save persists across a fresh session, as seen in Naive User 1's run.",
+      "evidence": ["personas/naive-user-1/shots/03-save-confirmed.png"]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "not-met",
+      "reasoning": "Naive User 2 could not locate the save action from the character sheet's overflow menu within 12 steps and abandoned the task at a dead end. The spec-auditor's transcript notes the save control is unlabeled and visually indistinguishable from the delete control.",
+      "evidence": [
+        "personas/naive-user-2/shots/02-lost-in-menu.png",
+        "personas/naive-user-2/shots/03-dead-end.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "met",
+      "reasoning": "The spec-auditor verified that submitting a negative hit-point value is rejected with an inline validation message and does not corrupt game state.",
+      "evidence": ["personas/spec-auditor/shots/02-criterion-crit_4.png"]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "unknown",
+      "reasoning": "The saboteur submitted a negative hit-point value through a raw API call (bypassing client validation) and the response was ambiguous — the server returned 200 but the resulting game state could not be re-fetched to confirm whether it was corrupted, because the bridge session ended before a follow-up read. No persona was able to produce conclusive evidence either way.",
+      "evidence": [
+        "personas/saboteur/shots/01-negative-hp-input.png",
+        "personas/saboteur/shots/02-state-corrupted.png"
+      ]
+    }
+  ],
+  "humanDecisions": [
+    {
+      "question": "Is the current save flow acceptable to ship as-is, or does the unlabeled save control block release?",
+      "context": "Naive User 2 failed criterion crit_3 outright, but the spec-auditor's own note on the same flow was milder: works but tedious — the save action exists and functions once found, it's just buried three menus deep next to the delete action. No automated check can weigh \"findable\" against \"technically present,\" so this needs a human call on whether it's a release blocker or a follow-up polish task."
+    }
+  ],
+  "judgeModel": "opus",
+  "createdAt": "2026-08-09T14:11:47.000Z",
+  "signature": {
+    "payloadHash": "3f1a9c2e4b5d6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8",
+    "signature": "9a7b3c1d5e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2b4c6d8e0f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2b4c6d8e0f2a4b6c8d0e",
+    "publicKey": "MCowBQYDK2VwAyEAoZjLm3qN8h5f1e0a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3"
+  }
+}

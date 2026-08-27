@@ -1,0 +1,23 @@
+{
+  "id": "vrun_1786498542107",
+  "taskId": null,
+  "journeyId": "d4-deck",
+  "projectId": "proj_ligma",
+  "contractId": "ctr_1786498542108",
+  "contractVersion": 2,
+  "envId": null,
+  "baseCommit": "",
+  "status": "complete",
+  "pid": 32747,
+  "personaReports": [
+    "personas/naive-user-1/report.json",
+    "personas/naive-user-1/report.json",
+    "personas/naive-user-1/report.json",
+    "personas/returning-user/report.json",
+    "personas/spec-auditor/report.json"
+  ],
+  "verdictPath": "verdict.json",
+  "startedAt": "2026-08-12T01:35:42.109Z",
+  "finishedAt": "2026-08-12T02:24:13.639Z",
+  "error": null
+}

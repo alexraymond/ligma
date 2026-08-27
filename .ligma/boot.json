@@ -1,0 +1,9 @@
+{
+  "appDir": "apps/web",
+  "install": ["pnpm", "install", "--prefer-offline"],
+  "dev": ["pnpm", "exec", "next", "dev"],
+  "portStrategy": { "kind": "flag", "flag": "-p" },
+  "healthPath": "/",
+  "healthMarker": "Ligma",
+  "seed": ["pnpm", "exec", "tsx", "../daemon/scripts/seed-demo.ts"]
+}

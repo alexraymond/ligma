@@ -1,0 +1,23 @@
+{
+  "id": "vrun_1786531953814",
+  "taskId": null,
+  "journeyId": "d1a-compose-promote",
+  "projectId": "proj_ligma",
+  "contractId": "ctr_1786531953815",
+  "contractVersion": 1,
+  "envId": null,
+  "baseCommit": "",
+  "status": "complete",
+  "pid": 4113,
+  "personaReports": [
+    "personas/naive-user-1/report.json",
+    "personas/naive-user-1/report.json",
+    "personas/naive-user-1/report.json",
+    "personas/returning-user/report.json",
+    "personas/spec-auditor/report.json"
+  ],
+  "verdictPath": "verdict.json",
+  "startedAt": "2026-08-12T10:52:33.816Z",
+  "finishedAt": "2026-08-12T12:03:04.650Z",
+  "error": null
+}

@@ -1,0 +1,17 @@
+{
+  "id": "d1c-green-check",
+  "title": "Follow a finished task's green check to the evidence behind it",
+  "goal": "A task says it is done and verified. You do not take that on trust: find it, and get from the green check to the actual verdict and the evidence that verdict cites, without leaving the app.",
+  "steps": [
+    "Find the task the build finished",
+    "See how it says its verification went",
+    "Get from that green check to the verdict that justifies it",
+    "Read the evidence the verdict cites, and check it is about this task",
+    "Satisfy yourself that a task with no verdict does not show you a green check"
+  ],
+  "tags": ["campaign", "d1", "ui", "browser"],
+  "origin": "human",
+  "schedule": null,
+  "createdAt": "2026-08-11T00:00:00.000Z",
+  "updatedAt": "2026-08-11T00:00:00.000Z"
+}

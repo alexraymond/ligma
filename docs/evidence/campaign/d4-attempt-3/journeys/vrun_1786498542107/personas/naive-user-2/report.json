@@ -1,0 +1,67 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786498542107",
+  "personaSeed": "You are a careful academic researcher. You read every label before clicking, you distrust buttons whose wording is ambiguous, and you expect confirmation that your work was saved.",
+  "goalAchieved": false,
+  "stepCount": 26,
+  "wrongTurns": 6,
+  "elapsedMs": 383346,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "The spot-check card's answer button does nothing: clicking \"Looks right\" (by mouse, role selector, or the advertised Tab+Enter) shows no confirmation or error, the card persists after reload, and each attempt fires a background request that fails with HTTP 405 on /api/dashboard. The verdict spot-check cannot be cleared at all.",
+      "evidence": [
+        "personas/naive-user-2/shots/05-click.png",
+        "personas/naive-user-2/shots/06-click.png",
+        "personas/naive-user-2/shots/10-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The \"See where this came from\" link on the spot-check card does not navigate when clicked — the page stays on /deck — even though the target URL (/verification/vrun_1786498540506) loads fine when entered directly.",
+      "evidence": [
+        "personas/naive-user-2/shots/21-click.png",
+        "personas/naive-user-2/shots/15-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Items the user is told are waiting on them never surface in the Deck: the design approval exists only as a blocked Board task whose click opens a task-edit form with no approve/request-changes action, and loading the Deck silently 404s on two project briefs (/api/projects/proj_demo_2/brief, proj_demo_3/brief) with no visible card or error, so nothing can be cleared from one place.",
+      "evidence": [
+        "personas/naive-user-2/shots/19-click.png",
+        "personas/naive-user-2/shots/02-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Answering and skipping give no durable feedback and the 10-second undo window is too short to use: the skip's Undo toast vanished before a deliberate click landed (click timed out waiting for it), and every answered decision in the list already reads \"Undo window closed\", so taking an answer back was impossible in practice.",
+      "evidence": [
+        "personas/naive-user-2/shots/11-click.png",
+        "personas/naive-user-2/shots/12-click-failed.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The Deck header badge says \"1 waiting\" while the List view of the same page says \"No pending decisions\" — the pending spot-check card is invisible in List view, so the two views of one queue contradict each other.",
+      "evidence": [
+        "personas/naive-user-2/shots/03-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "A skipped spot-check silently returns to the queue after a reload while the header badge (\"1 waiting\") never updated during the skip, leaving the \"Deck clear\" empty state and the badge in disagreement.",
+      "evidence": [
+        "personas/naive-user-2/shots/11-click.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-2/transcript.jsonl",
+  "invalid": false
+}

@@ -1,0 +1,62 @@
+{
+  "charter": "returning-user",
+  "runId": "vrun_1786581439197",
+  "personaSeed": null,
+  "goalAchieved": false,
+  "stepCount": 21,
+  "wrongTurns": 4,
+  "elapsedMs": 1018386,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "My change-request text is silently swallowed. I typed a 113-character reaction ('Approach 1 wins. One thing: the tip % buttons feel cramped — make them big thumb-sized pills, at least 48px tall.') into the Studio prompt and sent it; a new version v5 ('3 file(s) from prompt') was generated, but my exact words are never shown anywhere again — the conversation lane keeps showing only the original brief prompt, version rows show a bare 'prompt' chip with no text, and the Tweaks tab is a design-token editor. There is no way to verify what I entered came back intact; the input field comes back empty and the text is unrecoverable.",
+      "evidence": [
+        "personas/returning-user/shots/05-click.png",
+        "personas/returning-user/shots/12-requested.png",
+        "personas/returning-user/shots/19-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "An approved design cannot be handed to the builders: 'Promote to build' opens a dialog showing a prior attempt 'Deferred, resumes ~06:38', and clicking 'Confirm and compile' fails with 'Refusing to promote a preview that reported an error: the governor is holding sessions back (reserve) — no planner ran'. Tasks list shows (0), so my approved v5 never reached the Board while background autopilot kept consuming the same session budget (29/40 → 32/40 · 0 free during my session).",
+      "evidence": [
+        "personas/returning-user/shots/13-click.png",
+        "personas/returning-user/shots/14-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The design session got stuck in a 'drafting' state I never requested (after v5 completed and returned to 'approved'), with Approve and Promote disabled for over 8 minutes; the Stop button did nothing. Only a full page reload recovered the session to its true 'approved' state.",
+      "evidence": [
+        "personas/returning-user/shots/11-click.png",
+        "personas/returning-user/shots/12-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "At the default viewport, the Critique panel overlaps the Versions/Tweaks rail and intercepts all pointer events — clicks on 'v5' and 'Tweaks' time out repeatedly ('subtree intercepts pointer events'). The same elements become clickable only after enlarging the viewport to 1920×1400, and the bug returns in every new tab.",
+      "evidence": [
+        "personas/returning-user/shots/06-click-failed.png",
+        "personas/returning-user/shots/07-click-failed.png",
+        "personas/returning-user/shots/18-click-failed.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "What the product did store, it kept: version v5 created from my prompt, the 'approved' status, and all eight design files (approach 1–3 calculator + settings, merged calculator.html/settings.html) survived unchanged through /reload and through a brand-new tab navigating in fresh. The prototype batch stayed at the two screens I asked for — no scope padding.",
+      "evidence": [
+        "personas/returning-user/shots/04-requested.png",
+        "personas/returning-user/shots/12-requested.png",
+        "personas/returning-user/shots/17-requested.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/returning-user/transcript.jsonl",
+  "invalid": false
+}

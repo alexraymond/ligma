@@ -1,0 +1,43 @@
+{
+  "charter": "returning-user",
+  "runId": "vrun_1786515180343",
+  "personaSeed": null,
+  "goalAchieved": true,
+  "stepCount": 12,
+  "wrongTurns": 0,
+  "elapsedMs": 176227,
+  "findings": [
+    {
+      "severity": "note",
+      "summary": "Custom decision answer 'Re-run once with a human reviewer — Alex, 2026-08-12 (\"final\" attempt #4)' survived submit, page reload, and a fresh new-tab session byte-for-byte — em dash, quotes, and ordering all intact.",
+      "evidence": [
+        "personas/returning-user/shots/05-click.png",
+        "personas/returning-user/shots/11-requested.png",
+        "personas/returning-user/shots/13-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Undo works as promised: taking back 'Raise the attempt cap' within the 10-second window restored the decision to pending with all four options and the Deck badge count, and re-answering cleared it cleanly.",
+      "evidence": [
+        "personas/returning-user/shots/06-click.png",
+        "personas/returning-user/shots/07-click.png",
+        "personas/returning-user/shots/08-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Answering the spot-check verdict ('Looks right') leaves no entry in the Answered history and offers no undo window, unlike decisions — the verdict disappears with no visible record or take-back, an asymmetry a user may read as lost data.",
+      "evidence": [
+        "personas/returning-user/shots/09-click.png",
+        "personas/returning-user/shots/10-requested.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/returning-user/transcript.jsonl",
+  "invalid": false
+}

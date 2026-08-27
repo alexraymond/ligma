@@ -1,0 +1,53 @@
+{
+  "charter": "returning-user",
+  "runId": "vrun_1786501491178",
+  "personaSeed": null,
+  "goalAchieved": false,
+  "stepCount": 24,
+  "wrongTurns": 1,
+  "elapsedMs": 873077,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "Adopting a repo never succeeds: three attempts across two different repos all fail at 'pnpm install' in the product's staging harness (mission-control fails with 'ERROR packages field missing or empty'). The page calls it a 'harness malfunction' and says retrying is safe, but retries fail identically, so a returning user cannot bring a new repo into the system at all.",
+      "evidence": [
+        "personas/returning-user/shots/10-requested.png",
+        "personas/returning-user/shots/12-requested.png",
+        "personas/returning-user/shots/18-requested.png",
+        "personas/returning-user/shots/20-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Clicking the mode toggle 'Adopt a repo' while a repo path is already typed silently discards the typed path and resets the form to prompt mode with no confirmation or feedback; the user's entered data is lost without warning. The toggle and the 'Adopt' submit button also have overlapping accessible names, making the wrong target easy to hit.",
+      "evidence": [
+        "personas/returning-user/shots/03-requested.png",
+        "personas/returning-user/shots/04-click.png",
+        "personas/returning-user/shots/05-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The adoption failure page offers no retry button; to try again the user must navigate back to Home and re-type the full repo path from scratch.",
+      "evidence": [
+        "personas/returning-user/shots/12-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Data that was accepted persisted intact: both failed adoption run records (including the repo paths exactly as typed, character for character) survived a page reload and a fresh new-tab session, and failed adoptions left no orphan project stubs in the Missions list.",
+      "evidence": [
+        "personas/returning-user/shots/20-requested.png",
+        "personas/returning-user/shots/21-goto.png",
+        "personas/returning-user/shots/22-requested.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/returning-user/transcript.jsonl",
+  "invalid": false
+}

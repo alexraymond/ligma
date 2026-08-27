@@ -1,0 +1,19 @@
+{
+  "id": "vrun_fixture",
+  "taskId": "task_sf001",
+  "contractId": "ctr_1755000000000",
+  "contractVersion": 1,
+  "envId": "env_demo_1",
+  "baseCommit": "af3bef6",
+  "status": "complete",
+  "personaReports": [
+    "personas/naive-user-1/report.json",
+    "personas/naive-user-2/report.json",
+    "personas/saboteur/report.json",
+    "personas/spec-auditor/report.json"
+  ],
+  "verdictPath": "verdict.json",
+  "startedAt": "2026-08-09T14:02:11.000Z",
+  "finishedAt": "2026-08-09T14:11:47.000Z",
+  "error": null
+}

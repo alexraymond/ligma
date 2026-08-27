@@ -1,0 +1,32 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_fixture",
+  "personaSeed": "1",
+  "goalAchieved": true,
+  "stepCount": 10,
+  "wrongTurns": 2,
+  "elapsedMs": 58200,
+  "findings": [
+    {
+      "severity": "minor",
+      "summary": "The 'Create Character' button is below the fold on a 720p viewport; had to scroll to find it.",
+      "evidence": ["personas/naive-user-1/shots/01-landing.png"],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Character sheet form rendered correctly with all expected fields.",
+      "evidence": ["personas/naive-user-1/shots/02-character-sheet.png"],
+      "criterionId": "crit_1"
+    },
+    {
+      "severity": "note",
+      "summary": "Save confirmation toast is easy to miss — it disappears in under a second.",
+      "evidence": ["personas/naive-user-1/shots/03-save-confirmed.png"],
+      "criterionId": "crit_2"
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-1/transcript.jsonl",
+  "invalid": false
+}

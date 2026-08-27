@@ -1,0 +1,39 @@
+
+=== Mission Control Agent Daemon ===
+
+[36m[2026-08-12 17:00:38] [INFO] [config] No config file found, creating with defaults[0m
+[36m[2026-08-12 17:00:38] [INFO] [daemon] Backend health check (claude, codex, gemini)[0m
+[36m[2026-08-12 17:00:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-12 17:00:38] [INFO] [runner] Found claude at: /opt/homebrew/bin/claude[0m
+[36m[2026-08-12 17:00:38] [INFO] [daemon] Backend claude: available (/opt/homebrew/bin/claude)[0m
+[36m[2026-08-12 17:00:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-12 17:00:38] [WARN] [runner] Could not auto-detect codex binary. Set 'codexBinaryPath' in daemon-config.json or install Codex CLI globally.[0m
+[33m[2026-08-12 17:00:38] [WARN] [daemon] Backend codex: unavailable (codex) — Codex CLI binary not found. Install Codex CLI or set "codexBinaryPath" in daemon-config.json.[0m
+[36m[2026-08-12 17:00:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-12 17:00:38] [INFO] [runner] Found gemini at: /opt/homebrew/bin/gemini[0m
+[36m[2026-08-12 17:00:38] [INFO] [daemon] Backend gemini: available (/opt/homebrew/bin/gemini)[0m
+[36m[2026-08-12 17:00:38] [INFO] [daemon] API listening on http://127.0.0.1:56202[0m
+[36m[2026-08-12 17:00:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-12 17:00:38] [INFO] [daemon] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-12 17:00:38] [INFO] [daemon] Daemon started (PID: 77493)[0m
+[36m[2026-08-12 17:00:38] [INFO] [scheduler] Starting scheduler...[0m
+[36m[2026-08-12 17:00:38] [INFO] [scheduler] Task polling: every 5 minutes (*/5 * * * *)[0m
+[36m[2026-08-12 17:00:38] [INFO] [scheduler] Schedule "dailyPlan": 0 7 * * * → /daily-plan[0m
+[36m[2026-08-12 17:00:38] [INFO] [scheduler] Schedule "standup": 0 9 * * 1-5 → /standup[0m
+[36m[2026-08-12 17:00:38] [INFO] [scheduler] Schedule "weeklyReview": 0 17 * * 5 → /weekly-review[0m
+[36m[2026-08-12 17:00:38] [INFO] [scheduler] Smoke digest: 0 8 * * *[0m
+[36m[2026-08-12 17:00:38] [INFO] [scheduler] Scheduler started with 5 active schedule(s)[0m
+[36m[2026-08-12 17:00:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-12 17:00:38] [INFO] [daemon] Running initial task poll...[0m
+[36m[2026-08-12 17:00:38] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-12 17:00:38] [INFO] [daemon] Config: polling=true (every 5min), concurrency=3, maxTurns=25, timeout=30min, allowedTools=[Read,Edit,Write][0m
+[36m[2026-08-12 17:00:38] [INFO] [daemon] Daemon is running. Press Ctrl+C to stop.[0m
+[36m[2026-08-12 17:01:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-12 17:02:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-12 17:03:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-12 17:04:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-12 17:05:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-12 17:05:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-12 17:06:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-12 17:07:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-12 17:08:38] [INFO] [config] Allowed tools: Read, Edit, Write[0m

@@ -1,0 +1,319 @@
+{
+  "servers": {
+    "daemon": "started",
+    "web": "started"
+  },
+  "fixtures": {
+    "projects": 2,
+    "agents": 6,
+    "skills": 3
+  },
+  "routeInventory": {
+    "total": 35,
+    "static": 23,
+    "dynamic": 12,
+    "redirectPages": 8,
+    "checkable": 27,
+    "entries": [
+      {
+        "pattern": "/",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/activity",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/adoption/[runId]",
+        "type": "dynamic",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/board",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/board/matrix",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/brain-dump",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/checkpoints",
+        "type": "static",
+        "isRedirect": true
+      },
+      {
+        "pattern": "/crew",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/crew/new",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/decisions",
+        "type": "static",
+        "isRedirect": true
+      },
+      {
+        "pattern": "/deck",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/inbox",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/launch",
+        "type": "static",
+        "isRedirect": true
+      },
+      {
+        "pattern": "/library",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/library/[id]",
+        "type": "dynamic",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/library/new",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/objectives",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/priority-matrix",
+        "type": "static",
+        "isRedirect": true
+      },
+      {
+        "pattern": "/projects",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/projects/[id]",
+        "type": "dynamic",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/projects/[id]/board",
+        "type": "dynamic",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/projects/[id]/brief",
+        "type": "dynamic",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/projects/[id]/knowledge",
+        "type": "dynamic",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/projects/[id]/runs",
+        "type": "dynamic",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/projects/[id]/studio",
+        "type": "dynamic",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/projects/[id]/verify",
+        "type": "dynamic",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/runs",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/settings",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/settings/checkpoints",
+        "type": "static",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/skills",
+        "type": "static",
+        "isRedirect": true
+      },
+      {
+        "pattern": "/skills/[id]",
+        "type": "dynamic",
+        "isRedirect": true
+      },
+      {
+        "pattern": "/skills/new",
+        "type": "static",
+        "isRedirect": true
+      },
+      {
+        "pattern": "/status-board",
+        "type": "static",
+        "isRedirect": true
+      },
+      {
+        "pattern": "/team/[role]",
+        "type": "dynamic",
+        "isRedirect": false
+      },
+      {
+        "pattern": "/verification/[id]",
+        "type": "dynamic",
+        "isRedirect": false
+      }
+    ]
+  },
+  "crawl": {
+    "pagesVisited": 37,
+    "pathnamesReached": 37,
+    "reached": [
+      "/",
+      "/activity",
+      "/board",
+      "/board/matrix",
+      "/brain-dump",
+      "/crew",
+      "/crew/new",
+      "/deck",
+      "/inbox",
+      "/library",
+      "/library/new",
+      "/library/skill_demo_eisenhower",
+      "/library/skill_demo_research",
+      "/library/skill_demo_task_mgmt",
+      "/objectives",
+      "/projects",
+      "/projects/proj_ligma",
+      "/projects/proj_ligma/board",
+      "/projects/proj_ligma/brief",
+      "/projects/proj_ligma/knowledge",
+      "/projects/proj_ligma/runs",
+      "/projects/proj_ligma/studio",
+      "/projects/proj_ligma/verify",
+      "/projects/proj_oFbAe2ugPMBW",
+      "/projects/proj_oFbAe2ugPMBW/board",
+      "/projects/proj_oFbAe2ugPMBW/knowledge",
+      "/projects/proj_oFbAe2ugPMBW/runs",
+      "/projects/proj_oFbAe2ugPMBW/verify",
+      "/runs",
+      "/settings",
+      "/settings/checkpoints",
+      "/team/business-analyst",
+      "/team/developer",
+      "/team/marketer",
+      "/team/me",
+      "/team/researcher",
+      "/team/rules-lawyer"
+    ]
+  },
+  "orphans": [],
+  "conditionallyReached": [
+    {
+      "pattern": "/adoption/[runId]",
+      "reason": "no repo has been adopted in this checkout, so there is no adoption run to review; the family appears the moment F2 runs",
+      "instancesDir": "data/adoption-runs",
+      "wiredAt": [
+        "apps/web/src/lib/deck-cards.ts:230",
+        "apps/web/src/components/kickoff-composer.tsx:62"
+      ],
+      "instances": 0,
+      "brokenProofs": [],
+      "ok": true
+    },
+    {
+      "pattern": "/verification/[id]",
+      "reason": "no verification run has been recorded in this checkout, so every verdict link in the UI has nothing to point at",
+      "instancesDir": "data/verification-runs",
+      "wiredAt": [
+        "apps/web/src/app/projects/[id]/verify/page.tsx:97",
+        "apps/web/src/app/projects/[id]/knowledge/page.tsx:214",
+        "apps/web/src/components/task-detail-panel.tsx:70",
+        "apps/web/src/lib/deck-cards.ts:252"
+      ],
+      "instances": 0,
+      "brokenProofs": [],
+      "ok": true
+    }
+  ],
+  "brokenGates": [],
+  "redirects": [
+    {
+      "from": "/decisions",
+      "expected": "/deck",
+      "landed": "/deck",
+      "ok": true
+    },
+    {
+      "from": "/status-board",
+      "expected": "/board",
+      "landed": "/board",
+      "ok": true
+    },
+    {
+      "from": "/priority-matrix",
+      "expected": "/board/matrix",
+      "landed": "/board/matrix",
+      "ok": true
+    },
+    {
+      "from": "/skills",
+      "expected": "/library",
+      "landed": "/library",
+      "ok": true
+    },
+    {
+      "from": "/checkpoints",
+      "expected": "/settings/checkpoints",
+      "landed": "/settings/checkpoints",
+      "ok": true
+    },
+    {
+      "from": "/launch",
+      "expected": "/runs",
+      "landed": "/runs",
+      "ok": true
+    },
+    {
+      "from": "/skills/new",
+      "expected": "/library/new",
+      "landed": "/library/new",
+      "ok": true
+    },
+    {
+      "from": "/skills/skill_demo_research",
+      "expected": "/library/skill_demo_research",
+      "landed": "/library/skill_demo_research",
+      "ok": true
+    }
+  ],
+  "result": "PASS"
+}

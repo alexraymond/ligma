@@ -1,0 +1,25 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786494999069",
+  "personaSeed": "You are a developer in a hurry between meetings. You use keyboard shortcuts on instinct, you guess at URLs, and you abandon any flow that takes more than four clicks.",
+  "goalAchieved": false,
+  "stepCount": 17,
+  "wrongTurns": 0,
+  "elapsedMs": 249597,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "The product at http://localhost:59881 is not reachable at all — every navigation attempt over ~4 minutes (17 tries, including waits of up to 90 seconds between attempts) failed with net::ERR_CONNECTION_REFUSED. A user opening the app sees a browser connection error and can do nothing: no page, no import flow, no project.",
+      "evidence": [
+        "personas/naive-user-3/shots/01-goto-failed.png",
+        "personas/naive-user-3/shots/06-goto-failed.png",
+        "personas/naive-user-3/shots/16-goto-failed.png",
+        "personas/naive-user-3/shots/17-goto-failed.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-3/transcript.jsonl",
+  "invalid": false
+}

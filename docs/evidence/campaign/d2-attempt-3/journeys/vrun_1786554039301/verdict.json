@@ -1,0 +1,108 @@
+{
+  "runId": "vrun_1786554039301",
+  "taskId": null,
+  "contractId": "ctr_1786554039301",
+  "contractVersion": 1,
+  "outcome": "failed",
+  "criterionVerdicts": [
+    {
+      "criterionId": "crit_goal",
+      "status": "unknown",
+      "reasoning": "All 5 persona runs terminated with `invalid: true`. Every transcript ends the same way — `\"api_error_status\": 429`, `\"rateLimitType\": \"seven_day_overage_included\"`, `\"result\": \"You're out of usage credits...\"`, followed by `persona exited 1` (personas/spec-auditor/transcript.jsonl, personas/naive-user-2/transcript.jsonl). Three personas (naive-user-1, naive-user-3, returning-user, spec-auditor) produced zero steps — their steps.jsonl files are 0 bytes. Only naive-user-2 acted at all: 6 steps ending at the Inbox, with no prototype, no critique, no approval, no promotion reached. No persona completed or even approached the end-to-end journey, so the goal is untested. Note also that run.json lists `personas/naive-user-1/report.json` three times in `personaReports`, so the harness's own manifest is inconsistent with the persona directories on disk.",
+      "evidence": [
+        "personas/naive-user-2/steps.jsonl",
+        "personas/spec-auditor/transcript.jsonl",
+        "personas/naive-user-2/transcript.jsonl",
+        "run.json"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "unknown",
+      "reasoning": "naive-user-2 is the only persona that got as far as submitting a brief: step 4 filled the `Brain dump` field with the two-screen tip-calculator request and step 5 pressed Enter (personas/naive-user-2/steps.jsonl), both with `\"error\": null` but `\"screenshot\": null` — so there is no image of the submission or of any response to it. The persona then navigated to the Inbox (step 6) and the run died on the 429 before returning to the canvas. No screenshot in the run shows a prototype. The screenshots that do exist lag one action behind: 03-click (recorded on the 'Deck' click) shows the Projects/Missions page, and 04-click (recorded on the 'Inbox' click) shows the Deck reading \"Nothing is waiting on you\". No affirmative evidence of prototypes arriving on a canvas; also no clean contradiction, since the persona never looked again after submitting.",
+      "evidence": [
+        "personas/naive-user-2/steps.jsonl",
+        "personas/naive-user-2/shots/04-click.png",
+        "personas/naive-user-2/shots/03-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "unknown",
+      "reasoning": "No persona reached a state where a critique could exist. naive-user-2's last recorded view is the Inbox, whose accessibility snapshot in personas/naive-user-2/transcript.jsonl reads \"No messages — Messages from your AI agents and team will appear here.\" That is an empty inbox seconds after the brief was submitted, not an observation of a missing critique. Nobody visited Settings or looked for a critique surface before the run was killed by the credit exhaustion. Untested.",
+      "evidence": [
+        "personas/naive-user-2/transcript.jsonl",
+        "personas/naive-user-2/steps.jsonl"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "unknown",
+      "reasoning": "Pointing at a prototype requires a prototype. No persona ever saw one. naive-user-2's 6 steps are goto, click Projects, click Deck, fill brain dump, press Enter, click Inbox — no pin, annotate, or comment action of any kind. The other four personas recorded zero steps at all (0-byte steps.jsonl files).",
+      "evidence": [
+        "personas/naive-user-2/steps.jsonl",
+        "personas/naive-user-1/steps.jsonl",
+        "personas/spec-auditor/steps.jsonl"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "unknown",
+      "reasoning": "This criterion concerns a preview of what a comment will tell the designer before sending. No comment was ever composed by any persona, so no preview affordance was exercised or observed. The only persona with steps died at the Inbox after submitting the initial brief.",
+      "evidence": [
+        "personas/naive-user-2/steps.jsonl",
+        "personas/naive-user-2/report.json"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "unknown",
+      "reasoning": "No comment was applied, so no design change in response could be observed. All four screenshots in the run (personas/naive-user-2/shots/01–04) show empty first-run surfaces: the Deck reads \"Nothing is waiting on you\", Projects reads \"No missions yet\". Nothing depicts a design, let alone a revised one.",
+      "evidence": [
+        "personas/naive-user-2/shots/03-click.png",
+        "personas/naive-user-2/shots/04-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "unknown",
+      "reasoning": "No approval action appears in any steps.jsonl. The Deck's empty state (personas/naive-user-2/shots/04-click.png) advertises that \"a design to approve\" would surface there, but the panel was empty and no persona survived long enough to see one arrive. Copy describing a capability is not evidence the capability works.",
+      "evidence": [
+        "personas/naive-user-2/shots/04-click.png",
+        "personas/naive-user-2/steps.jsonl"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "unknown",
+      "reasoning": "Promotion into work — and the tasks/criteria/journeys/estimate review before confirming — is the deepest point of the journey and no persona got near it. The spec-auditor, the only charter whose `criterionResults` would be a direct claim about this, returned `criterionResults: null`, `stepCount: 0`, `invalid: true`, and died 4.8s in on the same 429. Nothing to judge from.",
+      "evidence": [
+        "personas/spec-auditor/report.json",
+        "personas/spec-auditor/transcript.jsonl"
+      ]
+    }
+  ],
+  "humanDecisions": [
+    {
+      "question": "This run tested nothing about the product — all 5 personas died on an Anthropic billing 429, not on a product defect. Should the run be re-executed with credits available before any verdict is recorded against this contract?",
+      "context": "Every transcript ends with `rateLimitType: \"seven_day_overage_included\"`, `overageDisabledReason: \"out_of_credits\"`, HTTP 429, then `persona exited 1`. Four of five personas died within 4–6 seconds of starting, before taking a single browser action. The one persona that acted (naive-user-2) survived ~200s and got 6 steps in. Every criterion above is `unknown` for want of evidence, so the computed outcome reflects harness failure, not product quality."
+    },
+    {
+      "question": "The harness recorded a submitted brief with no screenshot and no follow-up — is that acceptable evidence capture, or should fill/press steps also capture state?",
+      "context": "personas/naive-user-2/steps.jsonl steps 4 and 5 (fill the Brain dump field with the tip-calculator brief, press Enter) both have `\"screenshot\": null`. The only post-submit image, shots/04-click.png, was captured on the *next* click and shows the Deck still reading \"Nothing is waiting on you\" with the brain-dump field empty. That is suggestive of a submission that produced nothing visible, but the screenshot timing is one action behind throughout this run, so it cannot support a `not-met`. Worth a human eye on whether that brief actually landed."
+    },
+    {
+      "question": "run.json's `personaReports` manifest is wrong — should the runner be fixed before results from it are trusted?",
+      "context": "run.json lists `personas/naive-user-1/report.json` three times where naive-user-1, -2 and -3 exist on disk, and `status` is still `\"running\"` with `finishedAt: null` and `verdictPath: null` despite all five personas having exited. A judge reading only the manifest would have missed naive-user-2 — the sole persona with any evidence at all."
+    }
+  ],
+  "judgeModel": "opus",
+  "createdAt": "2026-08-12T17:08:56.539Z",
+  "signature": {
+    "payloadHash": "0520493d431c8cbb990ff5219b08b78a150f559cb89e1d9fc847aa5bd270475b",
+    "signature": "fdcf3dd2c31105b267ce0dedd1384a8fd019b2b3e8f52f0b79869973bf768e0c552406a166ae6511a5767fbdc0a85f82259e1769b63f350bcfb046cc44f6000b",
+    "publicKey": "MCowBQYDK2VwAyEAuCdQvfPWbtyeVg8T45YLTXFjdO4MXYx4qQTU/Wi4z0A="
+  },
+  "journeyId": "d2a-design-loop",
+  "projectId": "proj_ligma"
+}

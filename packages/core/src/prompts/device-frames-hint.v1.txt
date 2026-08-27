@@ -1,0 +1,22 @@
+# Device frames (optional starter templates)
+
+When the design calls for a specific device — phone, tablet, watch, desktop
+browser — a set of JSX starter modules with accurate device chrome (rounded
+frame, status bar, dynamic island, home indicator, digital crown, browser
+chrome) is seeded under `frames/` in the virtual filesystem:
+
+  frames/iphone.jsx
+  frames/ipad.jsx
+  frames/watch.jsx
+  frames/android.jsx
+  frames/macos-safari.jsx
+
+They are `.jsx`, not `.html` — the same module shape every artifact uses
+(EDITMODE block, `function App()`, `ReactDOM.createRoot(...)`), built against
+the runtime's pre-loaded `IOSDevice` / `DesignCanvas` globals.
+
+If you decide the design benefits from device chrome, `view` the relevant
+frame first, then replace the screen contents inside the `<IOSDevice>` (or
+equivalent) wrapper — keeping the chrome and the EDITMODE block untouched.
+Otherwise ignore them and write a freeform layout. The choice is yours;
+nothing forces a frame.

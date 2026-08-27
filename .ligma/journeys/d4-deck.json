@@ -1,0 +1,23 @@
+{
+ "id": "d4-deck",
+ "title": "Clear the day's queue from the Deck alone",
+ "goal": "Several things are waiting on you: decisions, a design to approve, a brief that has gone stale, and a verdict to spot-check. Clear them all from one place, deciding each one on what the card itself puts in front of you, and take one back straight away if you change your mind.",
+ "steps": [
+  "Find everything that is waiting on you in one place",
+  "Answer one remaining decision with a single plain mouse click on the option you want, using only what the card itself shows you \u2014 without navigating away and without the keyboard",
+  "Immediately after answering it \u2014 within a second or two, not later \u2014 take that same answer back using the undo the card offers (the window is ten seconds and it is honest about closing), and see the card return to the queue",
+  "Approve the design that is waiting, seeing what you are approving on the card, from the same place",
+  "Deal with the brief that is flagged as out of date, from the same place",
+  "Spot-check the verdict you are asked to check, with the criterion it was judged against and the judge's reasoning both on the card \u2014 without opening the run"
+ ],
+ "tags": [
+  "campaign",
+  "d4",
+  "ui",
+  "browser"
+ ],
+ "origin": "human",
+ "schedule": null,
+ "createdAt": "2026-08-11T00:00:00.000Z",
+ "updatedAt": "2026-08-12T03:00:00.000Z"
+}

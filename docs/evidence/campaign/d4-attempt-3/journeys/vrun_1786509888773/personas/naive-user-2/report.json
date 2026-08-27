@@ -1,0 +1,48 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786509888773",
+  "personaSeed": "You are a careful academic researcher. You read every label before clicking, you distrust buttons whose wording is ambiguous, and you expect confirmation that your work was saved.",
+  "goalAchieved": false,
+  "stepCount": 32,
+  "wrongTurns": 4,
+  "elapsedMs": 715338,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "The Deck promises 'Each answer can be taken back for 10 seconds', but after answering the spot-check card no countdown or undo control ever appeared, and the answer is not listed in the Answered section — there is no way to change your mind about an answer you just gave.",
+      "evidence": [
+        "personas/naive-user-2/shots/03-click.png",
+        "personas/naive-user-2/shots/04-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The Deck says 'Nothing is waiting on you' while a review task assigned to 'me' ('Review and approve landing page design') sits Blocked on the Board; the decisions, design approval, and stale brief the Deck's own copy says will appear there never surfaced in ~15 minutes of waiting, so the work cannot be cleared from one place.",
+      "evidence": [
+        "personas/naive-user-2/shots/17-requested.png",
+        "personas/naive-user-2/shots/13-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The agent session meant to produce the landing-page design failed twice ('error (failed)' in Runs), leaving the user's approval task permanently Blocked with no notification anywhere except digging into the Runs page.",
+      "evidence": [
+        "personas/naive-user-2/shots/15-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "All 12 previously answered decisions show 'Undo window closed' within minutes; combined with the missing countdown on my own answer, no active undo window was ever observed in the session.",
+      "evidence": [
+        "personas/naive-user-2/shots/03-click.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-2/transcript.jsonl",
+  "invalid": false
+}

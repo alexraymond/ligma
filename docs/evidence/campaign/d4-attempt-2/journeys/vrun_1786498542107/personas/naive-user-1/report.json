@@ -1,0 +1,68 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786498542107",
+  "personaSeed": "You are a developer in a hurry between meetings. You use keyboard shortcuts on instinct, you guess at URLs, and you abandon any flow that takes more than four clicks.",
+  "goalAchieved": false,
+  "stepCount": 29,
+  "wrongTurns": 9,
+  "elapsedMs": 551952,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "Deck card answer buttons do not respond to mouse clicks: 'Looks right' was clicked three times and 'Leave it, I was wrong' once with no visible effect and no state change. Answers only submit via keyboard (focusing the button and pressing Enter), so a mouse-only user cannot answer any card.",
+      "evidence": [
+        "personas/naive-user-3/shots/05-click.png",
+        "personas/naive-user-3/shots/07-click.png",
+        "personas/naive-user-3/shots/08-click.png",
+        "personas/naive-user-3/shots/09-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The spot-check answer was recorded as the opposite of intent: after clicking 'Looks right' (agreeing with the judge) and then pressing Tab+Enter, the system recorded a challenge — a follow-up card appeared saying the verdict 'was challenged by spot-check', forcing an extra calibration decision to walk it back.",
+      "evidence": [
+        "personas/naive-user-3/shots/08-click.png",
+        "personas/naive-user-3/shots/09-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Taking an answer back failed: the 'Undo · 9s' button was clicked while the countdown was visible, but the click never landed (it timed out after 10 seconds, suggesting the button re-renders every countdown tick), the window closed, and the answer was committed. The advertised 10-second take-back could not be used.",
+      "evidence": [
+        "personas/naive-user-3/shots/11-click-failed.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Of the four things supposedly waiting (decisions, a design to approve, a stale brief, a verdict spot-check), only the verdict spot-check ever appeared in the Deck. The design approval exists only as a Blocked task on the Board ('Review and approve landing page design', assigned to me) with no way to act on it, and no stale brief surfaced anywhere, so the items could not be cleared from one place.",
+      "evidence": [
+        "personas/naive-user-3/shots/02-goto.png",
+        "personas/naive-user-3/shots/22-requested.png",
+        "personas/naive-user-3/shots/24-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Deck's List tab says 'No pending decisions' while the page header says '1 waiting' and the Deck tab shows a pending spot-check card — spot-check cards are invisible in List view, so the two views contradict each other.",
+      "evidence": [
+        "personas/naive-user-3/shots/03-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Background requests fail repeatedly: /api/dashboard returns HTTP 405 roughly every 30 seconds (console fills with errors), and /api/projects/proj_demo_2/brief and /api/projects/proj_demo_3/brief return 404 on Deck/page load.",
+      "evidence": [
+        "personas/naive-user-3/shots/23-goto.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-3/transcript.jsonl",
+  "invalid": false
+}

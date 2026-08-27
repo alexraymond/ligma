@@ -1,0 +1,132 @@
+{
+  "charter": "spec-auditor",
+  "runId": "vrun_1786531953814",
+  "personaSeed": null,
+  "goalAchieved": null,
+  "stepCount": 21,
+  "wrongTurns": 3,
+  "elapsedMs": 548960,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "Submitting a product description on Home never produces the promised discovery questions: POST /api/briefs returns HTTP 500 on every attempt (3/3), the UI shows no error (status keeps promising 'Discovery will ask a few questions as a form'), and a page reload silently discards the pending state. The created project ends up with no brief, despite the brief page claiming 'Projects started from the Home composer arrive with one.'",
+      "evidence": [
+        "personas/spec-auditor/shots/03-click.png",
+        "personas/spec-auditor/shots/15-requested.png",
+        "personas/spec-auditor/shots/12-click.png"
+      ],
+      "criterionId": "crit_2"
+    },
+    {
+      "severity": "blocker",
+      "summary": "Promote to build never shows the contract: the dialog says 'Building the proposal…' then displays a raw '500 Internal Server Error' (GET/POST /api/projects/proj_odC4Q4kdTHIB/promote/preview failed twice). The user can never read the tasks, acceptance criteria, journeys or spend estimate before agreeing.",
+      "evidence": [
+        "personas/spec-auditor/shots/20-requested.png",
+        "personas/spec-auditor/shots/23-requested.png"
+      ],
+      "criterionId": "crit_5"
+    },
+    {
+      "severity": "major",
+      "summary": "Because the proposal compile fails, 'Confirm and compile' remains permanently disabled — there is no way to agree to the contract or land work on the Board. The disable is correct behavior given no proposal, but the end-to-end journey dead-ends here.",
+      "evidence": [
+        "personas/spec-auditor/shots/20-requested.png",
+        "personas/spec-auditor/shots/23-requested.png"
+      ],
+      "criterionId": "crit_6"
+    },
+    {
+      "severity": "major",
+      "summary": "Every failed Start attempt silently creates a duplicate project: three identical 'Build a REST API that shortens URLs, with rate limiting' projects now exist, all brief-less, with zero feedback to the user that anything was created or failed.",
+      "evidence": [
+        "personas/spec-auditor/shots/14-click.png",
+        "personas/spec-auditor/shots/15-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Dashboard stats go stale: the Home page reported '5 active projects' while seven mission cards were visible on the Projects page after the duplicates were created.",
+      "evidence": [
+        "personas/spec-auditor/shots/14-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "A raw '500 Internal Server Error' string is surfaced verbatim inside the Promote dialog instead of a human-readable failure message with a retry path.",
+      "evidence": [
+        "personas/spec-auditor/shots/20-requested.png"
+      ],
+      "criterionId": "crit_5"
+    },
+    {
+      "severity": "note",
+      "summary": "The Governor gauge reads '32/40 · 0 free' sessions throughout; if brief/proposal compilation depends on free agent sessions, exhaustion may be the cause of the 500s, but the UI never connects the two for the user.",
+      "evidence": [
+        "personas/spec-auditor/shots/01-goto.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-met",
+      "evidence": [
+        "personas/spec-auditor/shots/15-requested.png",
+        "personas/spec-auditor/shots/23-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/02-requested.png",
+        "personas/spec-auditor/shots/03-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "not-met",
+      "evidence": [
+        "personas/spec-auditor/shots/03-click.png",
+        "personas/spec-auditor/shots/15-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/05-requested.png",
+        "personas/spec-auditor/shots/18-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/18-requested.png",
+        "personas/spec-auditor/shots/19-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "not-met",
+      "evidence": [
+        "personas/spec-auditor/shots/20-requested.png",
+        "personas/spec-auditor/shots/23-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "not-met",
+      "evidence": [
+        "personas/spec-auditor/shots/20-requested.png",
+        "personas/spec-auditor/shots/23-requested.png"
+      ]
+    }
+  ],
+  "transcriptPath": "personas/spec-auditor/transcript.jsonl",
+  "invalid": false
+}

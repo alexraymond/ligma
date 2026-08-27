@@ -1,0 +1,621 @@
+{
+  "tasks": [
+    {
+      "id": "task_MfrK6hPoHyD8",
+      "title": "Bill input and display",
+      "description": "Implement the bill amount input field with currency symbol and validation",
+      "acceptanceCriteria": [
+        "User can enter a bill amount using the numeric input field",
+        "User sees a dollar sign ($) before the input value",
+        "User sees the bill amount displayed in the summary section",
+        "User sees the input field highlighted when focused"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:26:33.313Z",
+      "updatedAt": "2026-08-12T15:26:33.313Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_dVkw9mFi2WEk",
+      "title": "Tip percentage selection",
+      "description": "Implement the four preset tip buttons with visual selection state",
+      "acceptanceCriteria": [
+        "User can tap any of the four tip percentage buttons (15%, 18%, 20%, 25%)",
+        "User sees the selected button highlighted with the teal accent color",
+        "User sees only one tip percentage selected at a time",
+        "User sees the selected tip percentage labeled in the summary"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:26:33.313Z",
+      "updatedAt": "2026-08-12T15:26:33.313Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_ZA-egNFvui84",
+      "title": "Tip and total calculation",
+      "description": "Calculate and display tip amount and final total based on bill and tip percentage",
+      "acceptanceCriteria": [
+        "User sees the calculated tip amount update when bill or tip percentage changes",
+        "User sees the final total amount displayed prominently in large teal numbers",
+        "User sees all amounts formatted with dollar sign and two decimal places",
+        "User sees calculations update immediately without needing to tap a calculate button"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:26:33.313Z",
+      "updatedAt": "2026-08-12T15:26:33.313Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_Fu7S6xoZXagN",
+      "title": "Navigation between calculator and settings",
+      "description": "Implement navigation from calculator to settings and back",
+      "acceptanceCriteria": [
+        "User can tap the settings button to navigate to the settings screen",
+        "User can tap the back button to return to the calculator screen",
+        "User sees their entered bill amount preserved when returning from settings"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html",
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:26:33.313Z",
+      "updatedAt": "2026-08-12T15:26:33.313Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_-pBrsJzX51PN",
+      "title": "Default tip percentage setting",
+      "description": "Allow users to set and persist their preferred default tip percentage",
+      "acceptanceCriteria": [
+        "User can select one of four tip percentages (15%, 18%, 20%, 25%) as their default",
+        "User sees the selected default marked with a filled radio indicator",
+        "User sees their chosen default tip pre-selected when opening the app",
+        "User's default tip preference persists after closing and reopening the app"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "settings.html",
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:26:33.313Z",
+      "updatedAt": "2026-08-12T15:26:33.313Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_mWY4APAQKDUL",
+      "title": "Rounding options setting",
+      "description": "Allow users to configure how the final total is rounded",
+      "acceptanceCriteria": [
+        "User can choose from four rounding options (none, nearest dollar, up to dollar, nearest $5)",
+        "User sees the selected rounding option marked with a filled radio indicator",
+        "User sees the final total rounded according to their selected preference",
+        "User sees rounding applied only to the final total, not to the bill or tip amounts",
+        "User's rounding preference persists after closing and reopening the app"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "settings.html",
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:26:33.313Z",
+      "updatedAt": "2026-08-12T15:26:33.313Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_nqnZxiZuw9fx",
+      "title": "Calculator Screen Structure",
+      "description": "Build the main calculator screen layout with header, bill input section, tip button grid, and summary section",
+      "acceptanceCriteria": [
+        "User sees a phone-sized calculator screen with clean, light design",
+        "User sees the title 'Tip Calculator' at the top",
+        "User sees a settings button in the header",
+        "User sees labeled sections for bill amount, tip percentage, and summary"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:42:07.294Z",
+      "updatedAt": "2026-08-12T15:42:07.294Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_IZrfNUKRnx8m",
+      "title": "Bill Amount Input",
+      "description": "Implement the bill amount input field with currency symbol and numeric validation",
+      "acceptanceCriteria": [
+        "User can tap the bill input field and enter an amount",
+        "User sees a $ symbol before their input",
+        "User sees the input value update as they type",
+        "User sees the field highlighted when focused"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:42:07.294Z",
+      "updatedAt": "2026-08-12T15:42:07.294Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_VcMBr9oNU7Sa",
+      "title": "Tip Percentage Selection",
+      "description": "Implement the four tip percentage buttons (15%, 18%, 20%, 25%) with active state indication",
+      "acceptanceCriteria": [
+        "User sees four tip buttons displaying 15%, 18%, 20%, and 25%",
+        "User can tap any tip button to select it",
+        "User sees the selected button highlighted in teal with white text",
+        "User sees the previously selected button return to its normal state"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:42:07.294Z",
+      "updatedAt": "2026-08-12T15:42:07.294Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_HXsaKiiNkGT0",
+      "title": "Tip and Total Calculation",
+      "description": "Calculate tip amount and total based on bill amount and selected tip percentage, updating in real-time",
+      "acceptanceCriteria": [
+        "User sees the bill amount displayed in the summary",
+        "User sees the tip amount calculated and displayed with its percentage",
+        "User sees the total prominently displayed in large teal text",
+        "User sees all values update immediately when changing the bill amount or tip percentage"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:42:07.294Z",
+      "updatedAt": "2026-08-12T15:42:07.294Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_cR9F36LV14dw",
+      "title": "Settings Screen Structure",
+      "description": "Build the settings screen with back navigation, default tip section, and rounding section",
+      "acceptanceCriteria": [
+        "User sees a settings screen with the title 'Settings'",
+        "User sees a back button in the header",
+        "User sees two sections labeled 'Default Tip' and 'Rounding'",
+        "User sees descriptive text below each section explaining its purpose"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:42:07.294Z",
+      "updatedAt": "2026-08-12T15:42:07.294Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_gKZnj8AVrvyb",
+      "title": "Default Tip Preference",
+      "description": "Implement default tip percentage selection with radio buttons showing 15%, 18%, 20%, 25%",
+      "acceptanceCriteria": [
+        "User sees four radio options for default tip percentages",
+        "User can tap any option to select it as their default",
+        "User sees the selected option marked with a filled teal radio indicator",
+        "User sees only one option selected at a time"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:42:07.294Z",
+      "updatedAt": "2026-08-12T15:42:07.294Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_VuKbV-Uj0OOu",
+      "title": "Rounding Preference",
+      "description": "Implement rounding option selection with radio buttons for none, nearest dollar, round up, and nearest $5",
+      "acceptanceCriteria": [
+        "User sees four rounding options: no rounding, round to nearest dollar, round up to dollar, and round to nearest $5",
+        "User can tap any rounding option to select it",
+        "User sees the selected option marked with a filled teal radio indicator",
+        "User sees only one rounding option selected at a time"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:42:07.294Z",
+      "updatedAt": "2026-08-12T15:42:07.294Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_sBpT04guwuvl",
+      "title": "Screen Navigation",
+      "description": "Implement navigation between calculator and settings screens",
+      "acceptanceCriteria": [
+        "User can tap the settings button on the calculator to open the settings screen",
+        "User can tap the back button on the settings screen to return to the calculator",
+        "User sees smooth transitions between screens"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html",
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:42:07.294Z",
+      "updatedAt": "2026-08-12T15:42:07.294Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_dTt1c5AIZtVn",
+      "title": "Apply Settings to Calculator",
+      "description": "Apply user's saved settings (default tip and rounding) to calculator behavior",
+      "acceptanceCriteria": [
+        "User sees their default tip percentage automatically selected when opening the calculator",
+        "User sees the total rounded according to their rounding preference",
+        "User's settings persist when navigating between screens",
+        "User sees rounding applied only to the final total, not to individual components"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html",
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:42:07.294Z",
+      "updatedAt": "2026-08-12T15:42:07.294Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_gpEkAhYI8vqj",
+      "title": "Build calculator screen structure",
+      "description": "Create the main calculator screen with header, bill input section, tip percentage buttons grid, and summary display area. Implement all styling including the phone-sized frame, clean light theme, and layout.",
+      "acceptanceCriteria": [
+        "User sees a phone-sized calculator screen with a header showing 'Tip Calculator' and a settings button",
+        "User sees a bill input field with a dollar sign",
+        "User sees four tip percentage buttons (15%, 18%, 20%, 25%) arranged in a 2x2 grid",
+        "User sees a summary section showing bill, tip, and total labels"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:59:23.094Z",
+      "updatedAt": "2026-08-12T15:59:23.094Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_AcS759PrDW_K",
+      "title": "Implement bill amount input",
+      "description": "Make the bill input functional with numeric validation, decimal support, and proper formatting. Handle edge cases like empty input, zero, and invalid characters.",
+      "acceptanceCriteria": [
+        "User can type a bill amount using numbers and decimal point",
+        "User sees the entered amount displayed in the bill input field",
+        "User cannot enter non-numeric characters (except decimal point)"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:59:23.094Z",
+      "updatedAt": "2026-08-12T15:59:23.094Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_Wk6ahIREoLfQ",
+      "title": "Implement tip button selection",
+      "description": "Make tip percentage buttons interactive with single-selection behavior and visual active state. When a button is clicked, it becomes active and others become inactive.",
+      "acceptanceCriteria": [
+        "User can tap any tip percentage button and see it become highlighted",
+        "User sees only one tip button highlighted at a time",
+        "User sees the previously selected button become unhighlighted when selecting a new one"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:59:23.094Z",
+      "updatedAt": "2026-08-12T15:59:23.094Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_MC-38aH75SHm",
+      "title": "Implement tip calculation and display",
+      "description": "Calculate tip amount and total based on bill amount and selected tip percentage. Update the summary display in real-time whenever bill or tip changes. Display values with proper currency formatting.",
+      "acceptanceCriteria": [
+        "User sees the tip amount update when they change the bill amount",
+        "User sees the tip amount update when they select a different tip percentage",
+        "User sees the total amount update when either bill or tip changes",
+        "User sees all amounts displayed with dollar signs and two decimal places"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:59:23.094Z",
+      "updatedAt": "2026-08-12T15:59:23.094Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_5Tam_3nYExkQ",
+      "title": "Build settings screen structure",
+      "description": "Create the settings screen with header, back button, and two sections: Default Tip and Rounding. Implement all styling and radio button UI elements.",
+      "acceptanceCriteria": [
+        "User sees a settings screen with a back button and 'Settings' title",
+        "User sees a 'Default Tip' section with four radio options (15%, 18%, 20%, 25%)",
+        "User sees a 'Rounding' section with four radio options (no rounding, round to nearest dollar, round up to dollar, round to nearest $5)",
+        "User sees descriptive text under each section explaining what it does"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:59:23.094Z",
+      "updatedAt": "2026-08-12T15:59:23.094Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_dtEnYvZnrDLy",
+      "title": "Implement default tip setting",
+      "description": "Make the default tip radio buttons functional with single-selection behavior and visual selected state.",
+      "acceptanceCriteria": [
+        "User can tap any default tip option and see it become selected",
+        "User sees only one default tip option selected at a time",
+        "User sees the radio indicator fill when an option is selected"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:59:23.094Z",
+      "updatedAt": "2026-08-12T15:59:23.094Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_PtdEFwrRK3wV",
+      "title": "Implement rounding setting",
+      "description": "Make the rounding radio buttons functional with single-selection behavior and visual selected state.",
+      "acceptanceCriteria": [
+        "User can tap any rounding option and see it become selected",
+        "User sees only one rounding option selected at a time",
+        "User sees the radio indicator fill when an option is selected"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:59:23.094Z",
+      "updatedAt": "2026-08-12T15:59:23.094Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_NK6Ed4msRQXl",
+      "title": "Implement screen navigation",
+      "description": "Connect the calculator and settings screens with navigation. The settings button on calculator opens settings, and the back button on settings returns to calculator.",
+      "acceptanceCriteria": [
+        "User can tap the settings button on the calculator and see the settings screen appear",
+        "User can tap the back button on the settings screen and see the calculator screen appear"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html",
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:59:23.094Z",
+      "updatedAt": "2026-08-12T15:59:23.094Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_7XwBy8UfZaNC",
+      "title": "Apply rounding to total",
+      "description": "Apply the selected rounding option to the final total amount. Implement all four rounding modes and update the display when rounding changes.",
+      "acceptanceCriteria": [
+        "User sees the total remain exact when 'No rounding' is selected",
+        "User sees the total rounded to the nearest whole dollar when 'Round to nearest dollar' is selected",
+        "User sees the total rounded up to the next whole dollar when 'Round up to dollar' is selected",
+        "User sees the total rounded to the nearest $5 when 'Round to nearest $5' is selected",
+        "User sees the tip amount adjust to reflect the rounding difference"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html",
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:59:23.094Z",
+      "updatedAt": "2026-08-12T15:59:23.094Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_01cbvPTBNpY1",
+      "title": "Persist settings to storage",
+      "description": "Save the user's selected default tip percentage and rounding option to local storage whenever they change. Load saved settings when the app opens.",
+      "acceptanceCriteria": [
+        "User's default tip selection is remembered when they close and reopen the app",
+        "User's rounding selection is remembered when they close and reopen the app"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:59:23.094Z",
+      "updatedAt": "2026-08-12T15:59:23.094Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_4aT_xYOJe2Hb",
+      "title": "Apply default tip on launch",
+      "description": "When the calculator loads, automatically select the user's saved default tip percentage. If no default is saved, select a sensible default (e.g., 18%).",
+      "acceptanceCriteria": [
+        "User sees their saved default tip percentage already selected when opening the calculator",
+        "User sees 18% selected when opening the app for the first time"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:59:23.094Z",
+      "updatedAt": "2026-08-12T15:59:23.094Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_LmhQUgODRYl-",
+      "title": "Preserve calculator state during navigation",
+      "description": "Maintain the bill amount and selected tip percentage when user navigates to settings and back.",
+      "acceptanceCriteria": [
+        "User sees their entered bill amount unchanged after going to settings and returning",
+        "User sees their selected tip percentage unchanged after going to settings and returning (unless they changed the default)"
+      ],
+      "projectId": "proj_Ym6IWfgcyZEr",
+      "designId": "dsn_YuzuJVcd7Z9w",
+      "designFilePaths": [
+        "calculator.html",
+        "settings.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T15:59:23.094Z",
+      "updatedAt": "2026-08-12T15:59:23.094Z",
+      "dependsOn": []
+    }
+  ]
+}

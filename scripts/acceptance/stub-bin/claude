@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+/**
+ * A fake `claude` for campaign REHEARSAL only.
+ *
+ * The booted instance is pinned at this binary through its own
+ * `daemon-config.json` (`execution.claudeBinaryPath`), so every spawn still
+ * goes through findCliBinary → validateBinary → the quota governor → the
+ * dispatcher's real accounting. Only the model is absent: this prints a result
+ * envelope in claude's `--output-format json` shape and exits 0.
+ *
+ * It deliberately does NOT pretend to be a builder (it writes no files) and
+ * does NOT emit a judge verdict. A rehearsal must not manufacture a result the
+ * campaign would then export as evidence — a link that needs a real model is
+ * reported as unrehearsable, never as green.
+ */
+const argv = process.argv.slice(2);
+
+if (argv.includes("--version")) {
+  console.log("0.0.0-ligma-campaign-stub");
+  process.exit(0);
+}
+
+const promptIndex = argv.indexOf("-p");
+const chars = promptIndex >= 0 && argv[promptIndex + 1] ? argv[promptIndex + 1].length : 0;
+
+process.stdout.write(
+  `${JSON.stringify({
+    type: "result",
+    subtype: "success",
+    is_error: false,
+    num_turns: 1,
+    result:
+      "LIGMA_CAMPAIGN_STUB: no model ran. This spawn was made by a rehearsal of the acceptance " +
+      `campaign against a stubbed binary (prompt was ${chars} characters). Nothing was produced.`,
+  })}\n`,
+);
+process.exit(0);

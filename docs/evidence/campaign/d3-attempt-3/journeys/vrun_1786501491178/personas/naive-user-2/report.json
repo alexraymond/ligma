@@ -1,0 +1,67 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786501491178",
+  "personaSeed": "You are a careful academic researcher. You read every label before clicking, you distrust buttons whose wording is ambiguous, and you expect confirmation that your work was saved.",
+  "goalAchieved": false,
+  "stepCount": 20,
+  "wrongTurns": 4,
+  "elapsedMs": 369265,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "Adopting a repo is impossible: every attempt (3x /Users/alexraymond/open-design, 1x /Users/alexraymond/mission-control) ends in 'Harness malfunction — not a verdict: Command failed: pnpm install'. The review sheet that should let the user confirm the boot recipe never appears, and no project is created.",
+      "evidence": [
+        "personas/naive-user-2/shots/04-requested.png",
+        "personas/naive-user-2/shots/15-requested.png",
+        "personas/naive-user-2/shots/19-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The adoption failure page tells the user 'Adopting again is safe' but retrying reproduces the identical failure, and the page offers no retry button, no run log, and no diagnostic detail; the adoption runs also do not appear anywhere on the Runs page, so there is nowhere to investigate.",
+      "evidence": [
+        "personas/naive-user-2/shots/04-requested.png",
+        "personas/naive-user-2/shots/11-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "For the second repo the error surfaced raw tool output ('pnpm install ERROR packages field missing or empty') while still calling itself a harness fault; the Environment Preflight on Runs simultaneously flags 'git worktree support: HEAD is detached — envs will branch off a bare commit' as needing attention, but nothing connects that warning to the failed adoptions or tells the user what to do about it.",
+      "evidence": [
+        "personas/naive-user-2/shots/17-click.png",
+        "personas/naive-user-2/shots/11-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Each failed adoption silently consumed Claude quota sessions (Governor gauge climbed from 4/40 to 8/40 across the attempts) while delivering nothing.",
+      "evidence": [
+        "personas/naive-user-2/shots/01-goto.png",
+        "personas/naive-user-2/shots/17-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The dashboard polls an endpoint that repeatedly fails: /api/dashboard returns HTTP 405 (Method Not Allowed) roughly every 30–45 seconds, filling the browser console with errors on the Home page.",
+      "evidence": [
+        "personas/naive-user-2/shots/01-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "The failure page explicitly promises 'nothing was written into the repo', which matches the user's expectation that adoption must not touch their code; as a browser-only user this claim could be read but not independently verified.",
+      "evidence": [
+        "personas/naive-user-2/shots/04-requested.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-2/transcript.jsonl",
+  "invalid": false
+}

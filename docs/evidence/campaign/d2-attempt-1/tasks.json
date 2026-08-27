@@ -1,0 +1,489 @@
+{
+  "tasks": [
+    {
+      "id": "task_-w-plOC8hL_D",
+      "title": "Service Selection Screen",
+      "description": "First step in the booking flow where customers choose their grooming service",
+      "acceptanceCriteria": [
+        "Customer can view all available grooming services with visual cards",
+        "Each service displays its name, description, duration, and pricing for all dog sizes",
+        "Customer can select one service by clicking its card",
+        "Selected service is visually highlighted with a checkmark",
+        "Continue button advances to the next step",
+        "Progress indicator shows step 1 of 4"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "01-select-service.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:27:23.736Z",
+      "updatedAt": "2026-08-12T13:27:23.736Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_a5tFX0Tnh0Ls",
+      "title": "Dog Size Selection Screen",
+      "description": "Second step where customers specify their dog's size category",
+      "acceptanceCriteria": [
+        "Customer sees their previously selected service in a summary box",
+        "Customer can choose from 4 size options: Small, Medium, Large, and X-Large",
+        "Each size displays weight range, example breeds, and a size-appropriate illustration",
+        "Selected size is visually highlighted",
+        "Back button returns to service selection without losing data",
+        "Continue button advances to time selection",
+        "Progress indicator shows step 2 of 4",
+        "Helpful message explains that size can be confirmed on arrival"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "02-select-size.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:27:23.736Z",
+      "updatedAt": "2026-08-12T13:27:23.736Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_InCuuqqLLM4_",
+      "title": "Time Selection Screen",
+      "description": "Third step with calendar and time slot picker",
+      "acceptanceCriteria": [
+        "Customer sees summary of selected service and dog size",
+        "Customer can view a monthly calendar with navigation arrows",
+        "Past dates are shown as disabled and cannot be selected",
+        "Available time slots are displayed for the selected date",
+        "Unavailable/booked time slots are shown with strikethrough and cannot be selected",
+        "Selected date and time are visually highlighted",
+        "Back button returns to size selection",
+        "Continue button advances to payment",
+        "Progress indicator shows step 3 of 4"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "03-select-time.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:27:23.736Z",
+      "updatedAt": "2026-08-12T13:27:23.736Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_bhyHmKqgNwNY",
+      "title": "Payment & Deposit Screen",
+      "description": "Fourth step where customers pay the $20 deposit to secure their booking",
+      "acceptanceCriteria": [
+        "Complete booking summary is displayed (service, dog size, date, time, duration)",
+        "Deposit amount of exactly $20 is prominently shown",
+        "Clear message explains the deposit secures the appointment and remaining balance is due after service",
+        "Customer can enter card details: card number, name on card, expiration date, and CVV",
+        "Accepted card types are displayed (Visa, MC, Amex, Discover)",
+        "Security messaging assures customer their payment is encrypted",
+        "Cancellation policy is shown with link",
+        "Back button allows returning to previous steps",
+        "Pay button submits the payment",
+        "Progress indicator shows step 4 of 4"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "04-payment.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:27:23.736Z",
+      "updatedAt": "2026-08-12T13:27:23.736Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_TQgvC8us83xF",
+      "title": "Confirmation Screen",
+      "description": "Final success screen showing booking details and reference number",
+      "acceptanceCriteria": [
+        "Success message with animated checkmark is displayed",
+        "Customer receives a unique booking reference number (format: PG-####)",
+        "Complete appointment details are shown: date, time, service, dog size, location with address",
+        "Deposit paid amount ($20) is confirmed",
+        "What to Expect section shows 3 clear steps for the appointment day",
+        "Customer can add appointment to their calendar",
+        "Customer can view all their bookings",
+        "Contact information (phone and email) is provided for changes",
+        "Confirmation email message is mentioned"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "05-confirmation.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:27:23.736Z",
+      "updatedAt": "2026-08-12T13:27:23.736Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_FvTNDigfJcfP",
+      "title": "Admin Schedule Dashboard",
+      "description": "Administrative view showing all appointments and daily statistics",
+      "acceptanceCriteria": [
+        "Current date is prominently displayed",
+        "Dashboard shows 4 key statistics: Total Appointments, Completed, Upcoming, and Revenue Today",
+        "Each appointment card displays: time, duration, customer name, pet name, dog size, service type, phone number, and booking reference",
+        "Appointment status is shown with color-coded badges (Confirmed, Pending)",
+        "Admin can filter view by: All, Today, Tomorrow, or Week",
+        "Admin can refresh the schedule",
+        "Admin can create a new booking",
+        "Appointments are sorted by time"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "06-admin-schedule.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:27:23.736Z",
+      "updatedAt": "2026-08-12T13:27:23.736Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_sIsmTifSF6iF",
+      "title": "Booking Flow Navigation",
+      "description": "Multi-step flow controller that manages progression and state preservation",
+      "acceptanceCriteria": [
+        "Customer cannot skip steps in the booking process",
+        "Back buttons preserve all previously entered information",
+        "Progress bar accurately reflects current step (1-4 of 4)",
+        "Completed steps are visually indicated in the progress bar",
+        "Customer selections remain visible in summary boxes on subsequent screens",
+        "Navigation is smooth without page refreshes where possible"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "01-select-service.html",
+        "02-select-size.html",
+        "03-select-time.html",
+        "04-payment.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:27:23.736Z",
+      "updatedAt": "2026-08-12T13:27:23.736Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_FP7qAw-AGA3F",
+      "title": "Appointment Booking System",
+      "description": "Backend system that creates, stores, and retrieves booking records",
+      "acceptanceCriteria": [
+        "Successfully completed bookings appear in the admin dashboard immediately",
+        "Each booking generates a unique reference number",
+        "Booking stores all customer information: name, phone, service, dog size, date, time",
+        "Time slots that are booked become unavailable for other customers",
+        "Booking status can be Confirmed or Pending",
+        "Bookings persist across sessions",
+        "Revenue calculations are automatically updated",
+        "Admin can view booking details by reference number"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "05-confirmation.html",
+        "06-admin-schedule.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:27:23.736Z",
+      "updatedAt": "2026-08-12T13:27:23.736Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_Xle3vrHYlqI0",
+      "title": "Service Selection Screen",
+      "description": "Customer-facing screen where users browse and select from available grooming services",
+      "acceptanceCriteria": [
+        "Customer sees 5 service options: Bath & Brush, Full Groom, Haircut Only, Nail Trim & File, and Teeth Brushing",
+        "Each service card displays a photo, description, duration, and pricing by dog size",
+        "Customer can click a service card to select it, and the card shows a checkmark",
+        "Selected service card has a visual highlight (colored border)",
+        "Continue button is visible and takes customer to the next step",
+        "Progress indicator shows step 1 of 4"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "01-select-service.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:56:48.682Z",
+      "updatedAt": "2026-08-12T13:56:48.682Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_Q9fLCV-nxNiE",
+      "title": "Dog Size Selection Screen",
+      "description": "Customer selects their dog's size category to determine final pricing",
+      "acceptanceCriteria": [
+        "Customer sees 4 size options: Small, Medium, Large, and X-Large with weight ranges",
+        "Each size card shows an illustration and example breeds",
+        "Customer can click a size card to select it, and the card shows a checkmark",
+        "Selected size card has a warm yellow background color",
+        "Customer sees their previously selected service at the top of the screen",
+        "Info message explains that weight will be confirmed at arrival",
+        "Back button is visible and returns to service selection",
+        "Progress indicator shows step 2 of 4"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "02-select-size.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:56:48.682Z",
+      "updatedAt": "2026-08-12T13:56:48.682Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_8s8qDBABmt9m",
+      "title": "Time Slot Selection Screen",
+      "description": "Customer picks their preferred appointment date and time",
+      "acceptanceCriteria": [
+        "Customer sees a calendar view for the current month (August 2026)",
+        "Past dates are visually disabled and cannot be selected",
+        "Customer can click an available date to select it",
+        "After selecting a date, customer sees available time slots for that day",
+        "Unavailable time slots are grayed out with strikethrough and cannot be selected",
+        "Customer can click an available time slot to select it",
+        "Selected time slot has an orange background",
+        "Customer sees their service and dog size summary at the top",
+        "Back button returns to size selection",
+        "Progress indicator shows step 3 of 4"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "03-select-time.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:56:48.682Z",
+      "updatedAt": "2026-08-12T13:56:48.682Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_gF0F4kLGAMzZ",
+      "title": "Payment & Deposit Screen",
+      "description": "Customer reviews their booking and pays the $20 deposit",
+      "acceptanceCriteria": [
+        "Customer sees complete booking summary: service, dog size, date/time, and duration",
+        "Deposit amount of $20 is prominently displayed in a highlighted card",
+        "Deposit card explains that $20 will be deducted from final service price",
+        "Customer sees payment form with fields for card number, name, expiration, and CVV",
+        "Card type icons (VISA, MC, AMEX, DISC) are visible below card number field",
+        "Security message confirms payment information is encrypted",
+        "Pay button clearly shows '$20 Deposit' as the amount",
+        "Cancellation policy is visible with 24-hour refund terms",
+        "Back button returns to time selection",
+        "Progress indicator shows step 4 of 4"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "04-payment.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:56:48.682Z",
+      "updatedAt": "2026-08-12T13:56:48.682Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_ZCg-iqzCkrQE",
+      "title": "Booking Confirmation Screen",
+      "description": "Customer receives confirmation after successful payment",
+      "acceptanceCriteria": [
+        "Customer sees a success checkmark animation and 'You're All Set!' message",
+        "Booking reference number is displayed prominently (format: PG-####)",
+        "Complete appointment details are shown: date, time, service, dog size, and location",
+        "Deposit paid amount ($20.00) is confirmed",
+        "Phone number for the grooming shop is displayed as a clickable link",
+        "Email confirmation message is mentioned",
+        "Customer sees 3 steps explaining what to expect (arrive early, bring leash, text notification)",
+        "'Add to Calendar' button is visible",
+        "'View My Bookings' button is visible",
+        "Email contact link is provided"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "05-confirmation.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:56:48.682Z",
+      "updatedAt": "2026-08-12T13:56:48.682Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_IDe3JXe8uYNa",
+      "title": "Admin Schedule Dashboard",
+      "description": "Staff view to see and manage daily appointments",
+      "acceptanceCriteria": [
+        "Admin sees current date displayed at top of screen",
+        "4 stat cards show: Total Appointments, Completed, Upcoming, and Revenue Today",
+        "Stats update to reflect current day's data",
+        "Admin sees filter tabs: All, Today, Tomorrow, Week",
+        "Appointment list shows all bookings with time, duration, customer name, pet name/size, service, and phone",
+        "Each appointment displays booking reference number",
+        "Status badges show 'Confirmed' or 'Pending' for each appointment",
+        "Appointments are sorted by time",
+        "Refresh button reloads the latest data",
+        "New Booking button is visible to create walk-in appointments"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "06-admin-schedule.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:56:48.682Z",
+      "updatedAt": "2026-08-12T13:56:48.682Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_aPjWLlNqQndM",
+      "title": "Booking Data Persistence",
+      "description": "Store and retrieve customer booking information",
+      "acceptanceCriteria": [
+        "Customer's selected service persists when moving to next screen",
+        "Customer's selected dog size persists when moving to next screen",
+        "Customer's selected date and time persists when moving to next screen",
+        "Customer can use back button without losing their selections",
+        "Booking reference number is unique for each completed booking",
+        "Customer booking appears in admin dashboard after completion"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:56:48.682Z",
+      "updatedAt": "2026-08-12T13:56:48.682Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_GP6Q1ooR7WZs",
+      "title": "Availability Management",
+      "description": "Track and display available appointment time slots",
+      "acceptanceCriteria": [
+        "Time slots already booked by other customers show as unavailable",
+        "Same time slot cannot be selected by two different customers",
+        "Calendar only shows future dates as available",
+        "After a booking is confirmed, that time slot becomes unavailable to other customers",
+        "Admin dashboard shows which time slots are filled"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:56:48.682Z",
+      "updatedAt": "2026-08-12T13:56:48.682Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_qcR7Fsx0vC5j",
+      "title": "Payment Processing Integration",
+      "description": "Handle deposit payment collection securely",
+      "acceptanceCriteria": [
+        "Customer is charged exactly $20 for the deposit",
+        "Payment processes when customer clicks 'Pay $20 Deposit' button",
+        "Customer sees confirmation screen only after successful payment",
+        "Failed payment shows an error message without creating a booking",
+        "Receipt confirmation is mentioned in the confirmation screen"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:56:48.682Z",
+      "updatedAt": "2026-08-12T13:56:48.682Z",
+      "dependsOn": []
+    },
+    {
+      "id": "task_nbRMrrOZBw5B",
+      "title": "Design System Foundation",
+      "description": "Shared visual design, colors, and component styles",
+      "acceptanceCriteria": [
+        "All screens use the warm yellow background (#fefce8)",
+        "All screens use consistent orange primary color (#d97706) for buttons and highlights",
+        "Progress indicator appears consistently across all 4 customer screens",
+        "Cards and buttons have consistent rounded corners (12px radius)",
+        "All screens are mobile-responsive with max-width of 480px for customer flow",
+        "Typography and spacing is consistent across all screens"
+      ],
+      "projectId": "proj_PbyC5QqgjFAx",
+      "designId": "dsn_p-L4Y5Ue42XB",
+      "designFilePaths": [
+        "01-select-service.html",
+        "02-select-size.html",
+        "03-select-time.html",
+        "04-payment.html",
+        "05-confirmation.html",
+        "06-admin-schedule.html"
+      ],
+      "kanban": "not-started",
+      "status": "not-started",
+      "assignedTo": "builder",
+      "priority": "medium",
+      "createdAt": "2026-08-12T13:56:48.682Z",
+      "updatedAt": "2026-08-12T13:56:48.682Z",
+      "dependsOn": []
+    }
+  ]
+}

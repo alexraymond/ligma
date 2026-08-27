@@ -1,0 +1,58 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786501491178",
+  "personaSeed": "You are a developer in a hurry between meetings. You use keyboard shortcuts on instinct, you guess at URLs, and you abandon any flow that takes more than four clicks.",
+  "goalAchieved": true,
+  "stepCount": 60,
+  "wrongTurns": 10,
+  "elapsedMs": 1348639,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "Adopting a repo that pnpm can't install is impossible and opaque: /Users/alexraymond/open-design failed three times in a row at 'pnpm install', each time labeled 'Harness malfunction — not a verdict' with no command output shown, no retry button on the failure page, and no way anywhere in the UI to view logs or adjust the install/boot commands before adoption. A second repo (mission-control) failed the same way but did include pnpm stderr ('packages field missing or empty'), so error detail is inconsistent between failures.",
+      "evidence": [
+        "personas/naive-user-3/shots/10-requested.png",
+        "personas/naive-user-3/shots/21-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The adoption review sheet's final confirm action sits below roughly five screens of boot-recipe JSON and journey proposals with no sticky footer; a user in a hurry sees 'Correct it', 'Accept all' and per-journey toggles but has to scroll a very long page to find the button that actually creates the project. I only located it by blind-probing button names (it matched /adopt/i).",
+      "evidence": [
+        "personas/naive-user-3/shots/36-requested.png",
+        "personas/naive-user-3/shots/44-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The dashboard fires a POST to /api/dashboard that returns HTTP 405 (Method Not Allowed) repeatedly (roughly every 30 seconds while sitting on pages), filling the console with 'Failed to load resource' errors; the first occurrence coincided with my first Adopt submission, which also reset the form silently with no visible error or toast text.",
+      "evidence": [
+        "personas/naive-user-3/shots/03-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "On the adopted project's Knowledge tab, the boot recipe panel (install 'pnpm install', dev 'pnpm dev', fixed port 5173, health marker '/@vite/client', rationale citing a 'Vite renderer + Electron main' layout) directly contradicts the repo's own project.md rendered just below it, which says boot.json boots a Next.js app in apps/web on an OS-assigned port with health marker 'Ligma'. A user reading the page cannot tell which description of 'how it runs' is true.",
+      "evidence": [
+        "personas/naive-user-3/shots/56-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "The happy path did work end to end once a pnpm-installable repo was used: adoption crawled the repo, produced a review sheet where I confirmed the inferred boot recipe (the one confirmation asked of me) and accepted 5 proposed user journeys, and created a project whose Verify tab lists those journeys ('PROPOSED BY CRAWL') and whose Knowledge tab holds the ready boot recipe plus a 'First UX audit (adoption crawl)' describing what the app currently does; failure pages explicitly stated nothing was written into the repo.",
+      "evidence": [
+        "personas/naive-user-3/shots/54-requested.png",
+        "personas/naive-user-3/shots/56-requested.png",
+        "personas/naive-user-3/shots/44-click.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-3/transcript.jsonl",
+  "invalid": false
+}

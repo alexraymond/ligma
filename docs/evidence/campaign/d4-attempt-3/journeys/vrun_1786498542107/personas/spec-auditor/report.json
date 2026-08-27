@@ -1,0 +1,159 @@
+{
+  "charter": "spec-auditor",
+  "runId": "vrun_1786498542107",
+  "personaSeed": null,
+  "goalAchieved": null,
+  "stepCount": 55,
+  "wrongTurns": 4,
+  "elapsedMs": 899578,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "There is no design waiting to approve anywhere in the product, and no deck card type for design approval was ever shown. The only related item is a board task 'Review and approve landing page design' (assigned to me, Blocked) with no design visible on it, so a user cannot approve a design from the Deck or see what they are approving.",
+      "evidence": [
+        "personas/spec-auditor/shots/19-goto.png",
+        "personas/spec-auditor/shots/44-goto.png",
+        "personas/spec-auditor/shots/42-goto.png"
+      ],
+      "criterionId": "crit_3"
+    },
+    {
+      "severity": "major",
+      "summary": "The spot-check card shows the judge's reasoning and the verdict, but not the criterion being judged ('CTA button is above the fold on mobile' — visible only after opening the run page). A user must open the run to know what the verdict was about.",
+      "evidence": [
+        "personas/spec-auditor/shots/08-click.png",
+        "personas/spec-auditor/shots/18-goto.png"
+      ],
+      "criterionId": "crit_5"
+    },
+    {
+      "severity": "major",
+      "summary": "In Deck (card) view, a single click on an answer option does nothing and gives no visible selected state — the answer only registers after click + Enter. The same option answers instantly with one click in List view. Twice I concluded the buttons were broken before discovering the two-step flow.",
+      "evidence": [
+        "personas/spec-auditor/shots/05-click.png",
+        "personas/spec-auditor/shots/09-click.png",
+        "personas/spec-auditor/shots/10-click.png",
+        "personas/spec-auditor/shots/07-click.png"
+      ],
+      "criterionId": "crit_2"
+    },
+    {
+      "severity": "minor",
+      "summary": "Undo on a stale-brief acknowledgment reports a successful click on the toast's Undo button, but the stale-brief card never returns to the queue — after reload the deck showed only a regenerated decision, not the stale-brief card. Undo works for decisions but silently fails for stale-brief acknowledgments.",
+      "evidence": [
+        "personas/spec-auditor/shots/35-click.png",
+        "personas/spec-auditor/shots/36-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The stale-brief card offers only one resolution — 'Acknowledge — the change is cosmetic' — even when the brief edit added a substantive functional requirement (a new above-the-fold CTA constraint). There is no path from the card to recompile or propagate the change.",
+      "evidence": [
+        "personas/spec-auditor/shots/27-goto.png"
+      ],
+      "criterionId": "crit_4"
+    },
+    {
+      "severity": "minor",
+      "summary": "Background polling errors accumulate in the console: /api/dashboard returns HTTP 405 roughly every 30 seconds, and /api/projects/{id}/brief returns 404 for projects without briefs.",
+      "evidence": [
+        "personas/spec-auditor/shots/20-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Batch controls exist in List view (Select all pending, an 'Answer all selected with…' box, batch Dismiss and Defer 7d) and successfully batch-answered a selection, but the queue never held more than 2 items in this environment so a ten-plus batch could not be observed.",
+      "evidence": [
+        "personas/spec-auditor/shots/39-click.png",
+        "personas/spec-auditor/shots/40-click.png"
+      ],
+      "criterionId": "crit_6"
+    },
+    {
+      "severity": "note",
+      "summary": "At session start the Deck held only a decision and a verdict spot-check. The design-to-approve and the pre-flagged stale brief promised by the scenario were absent; the stale-brief card only appeared after I edited a brief myself, and the same decision regenerates every few minutes after being answered.",
+      "evidence": [
+        "personas/spec-auditor/shots/02-goto.png",
+        "personas/spec-auditor/shots/26-click.png",
+        "personas/spec-auditor/shots/27-goto.png"
+      ],
+      "criterionId": "crit_1"
+    }
+  ],
+  "criterionResults": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-met",
+      "evidence": [
+        "personas/spec-auditor/shots/02-goto.png",
+        "personas/spec-auditor/shots/44-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "not-met",
+      "evidence": [
+        "personas/spec-auditor/shots/02-goto.png",
+        "personas/spec-auditor/shots/19-goto.png",
+        "personas/spec-auditor/shots/17-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/04-click.png",
+        "personas/spec-auditor/shots/07-click.png",
+        "personas/spec-auditor/shots/15-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "not-met",
+      "evidence": [
+        "personas/spec-auditor/shots/19-goto.png",
+        "personas/spec-auditor/shots/42-goto.png",
+        "personas/spec-auditor/shots/44-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/27-goto.png",
+        "personas/spec-auditor/shots/28-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "not-met",
+      "evidence": [
+        "personas/spec-auditor/shots/08-click.png",
+        "personas/spec-auditor/shots/10-click.png",
+        "personas/spec-auditor/shots/18-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/39-click.png",
+        "personas/spec-auditor/shots/40-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/36-click.png",
+        "personas/spec-auditor/shots/37-click.png",
+        "personas/spec-auditor/shots/38-click.png",
+        "personas/spec-auditor/shots/39-click.png"
+      ]
+    }
+  ],
+  "transcriptPath": "personas/spec-auditor/transcript.jsonl",
+  "invalid": false
+}

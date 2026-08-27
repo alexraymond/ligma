@@ -1,0 +1,35 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_fixture",
+  "personaSeed": "2",
+  "goalAchieved": false,
+  "stepCount": 12,
+  "wrongTurns": 4,
+  "elapsedMs": 74300,
+  "findings": [
+    {
+      "severity": "note",
+      "summary": "Landing page and roster list loaded fine at the start of the attempt.",
+      "evidence": ["personas/naive-user-2/shots/01-landing.png"],
+      "criterionId": null
+    },
+    {
+      "severity": "blocker",
+      "summary": "Could not find any control to save an already-existing character. The save action is inside an unlabeled icon-only overflow menu, indistinguishable from the delete action next to it.",
+      "evidence": [
+        "personas/naive-user-2/shots/02-lost-in-menu.png",
+        "personas/naive-user-2/shots/03-dead-end.png"
+      ],
+      "criterionId": "crit_3"
+    },
+    {
+      "severity": "minor",
+      "summary": "Browser back button after the failed save attempt lost the in-progress edits with no warning.",
+      "evidence": ["personas/naive-user-2/shots/03-dead-end.png"],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-2/transcript.jsonl",
+  "invalid": false
+}

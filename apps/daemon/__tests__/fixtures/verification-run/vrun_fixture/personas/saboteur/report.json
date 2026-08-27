@@ -1,0 +1,23 @@
+{
+  "charter": "saboteur",
+  "runId": "vrun_fixture",
+  "personaSeed": null,
+  "goalAchieved": true,
+  "stepCount": 9,
+  "wrongTurns": 0,
+  "elapsedMs": 33500,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "Submitting a negative hit-point value via a direct API call (bypassing the client form validation) returned HTTP 200 instead of a 4xx rejection. Could not confirm from the bridge session whether the stored game state was actually corrupted, since the session ended before a follow-up read.",
+      "evidence": [
+        "personas/saboteur/shots/01-negative-hp-input.png",
+        "personas/saboteur/shots/02-state-corrupted.png"
+      ],
+      "criterionId": "crit_5"
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/saboteur/transcript.jsonl",
+  "invalid": false
+}

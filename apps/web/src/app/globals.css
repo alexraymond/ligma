@@ -1,0 +1,277 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0.064 270.94);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0.064 270.94);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0.022 270.94);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0.064 270.94);
+  --destructive: oklch(0.577 0.245 27.33);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0.165 254.62);
+  --radius: 0.625rem;
+
+  --chart-1: oklch(0.646 0.222 41.12);
+  --chart-2: oklch(0.6 0.118 184.71);
+  --chart-3: oklch(0.398 0.07 227.39);
+  --chart-4: oklch(0.828 0.189 84.43);
+  --chart-5: oklch(0.769 0.188 70.08);
+
+  --sidebar-background: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.556 0.022 270.94);
+  --sidebar-primary: oklch(0.205 0.064 270.94);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0.064 270.94);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0.165 254.62);
+
+  /* Eisenhower quadrant accent colors — light mode */
+  --quadrant-do: oklch(0.55 0.22 25);
+  --quadrant-schedule: oklch(0.5 0.22 265);
+  --quadrant-delegate: oklch(0.55 0.18 80);
+  --quadrant-eliminate: oklch(0.45 0.03 260);
+
+  /* Status colors — light mode */
+  --status-not-started: oklch(0.55 0.03 260);
+  --status-in-progress: oklch(0.5 0.22 265);
+  --status-done: oklch(0.5 0.2 155);
+
+  /* Success / Warning / Info — light mode */
+  --success: oklch(0.5 0.2 155);
+  --warning: oklch(0.6 0.2 80);
+  --info: oklch(0.5 0.22 265);
+}
+
+.dark {
+  /* Deep navy blue base — identifiably blue, not black */
+  --background: oklch(0.17 0.035 250);
+  --foreground: oklch(0.93 0.008 250);
+  /* Elevated card surface */
+  --card: oklch(0.2 0.035 250);
+  --card-foreground: oklch(0.93 0.008 250);
+  /* Popovers slightly above cards */
+  --popover: oklch(0.22 0.035 250);
+  --popover-foreground: oklch(0.93 0.008 250);
+  /* Vibrant indigo primary */
+  --primary: oklch(0.65 0.2 265);
+  --primary-foreground: oklch(0.98 0 0);
+  /* Subtle secondary surface */
+  --secondary: oklch(0.25 0.03 250);
+  --secondary-foreground: oklch(0.88 0.008 250);
+  /* Muted for subdued backgrounds */
+  --muted: oklch(0.23 0.03 250);
+  --muted-foreground: oklch(0.7 0.02 250);
+  /* Accent — slightly brighter surface */
+  --accent: oklch(0.26 0.035 250);
+  --accent-foreground: oklch(0.93 0.008 250);
+  /* Destructive red */
+  --destructive: oklch(0.65 0.2 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  /* Subtle borders with blue tint */
+  --border: oklch(0.28 0.025 250);
+  --input: oklch(0.25 0.025 250);
+  --ring: oklch(0.65 0.2 265);
+
+  /* Chart colors — vibrant on dark */
+  --chart-1: oklch(0.65 0.2 265);
+  --chart-2: oklch(0.7 0.17 162);
+  --chart-3: oklch(0.75 0.18 80);
+  --chart-4: oklch(0.65 0.22 310);
+  --chart-5: oklch(0.65 0.22 25);
+
+  /* Sidebar — deeper navy for visual hierarchy */
+  --sidebar-background: oklch(0.14 0.04 250);
+  --sidebar-foreground: oklch(0.7 0.02 250);
+  --sidebar-primary: oklch(0.65 0.2 265);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.21 0.035 250);
+  --sidebar-accent-foreground: oklch(0.93 0.008 250);
+  --sidebar-border: oklch(0.23 0.025 250);
+  --sidebar-ring: oklch(0.65 0.2 265);
+
+  /* Eisenhower quadrant accent colors */
+  --quadrant-do: oklch(0.55 0.18 25);
+  --quadrant-schedule: oklch(0.55 0.18 265);
+  --quadrant-delegate: oklch(0.6 0.16 80);
+  --quadrant-eliminate: oklch(0.4 0.025 250);
+
+  /* Status colors */
+  --status-not-started: oklch(0.5 0.025 250);
+  --status-in-progress: oklch(0.6 0.18 265);
+  --status-done: oklch(0.6 0.17 155);
+
+  /* Success / Warning / Info */
+  --success: oklch(0.6 0.17 155);
+  --warning: oklch(0.7 0.18 80);
+  --info: oklch(0.65 0.2 265);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar-background: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  /* Semantic colors */
+  --color-quadrant-do: var(--quadrant-do);
+  --color-quadrant-schedule: var(--quadrant-schedule);
+  --color-quadrant-delegate: var(--quadrant-delegate);
+  --color-quadrant-eliminate: var(--quadrant-eliminate);
+  --color-status-not-started: var(--status-not-started);
+  --color-status-in-progress: var(--status-in-progress);
+  --color-status-done: var(--status-done);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  /* Radii */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Smooth transitions for interactive elements */
+@layer base {
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    @apply transition-colors duration-150;
+  }
+}
+
+/* Enhanced focus visibility for accessibility */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* Skip to content link for keyboard navigation */
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0 0 0.5rem 0;
+}
+
+.skip-to-content:focus {
+  left: 0;
+}
+
+/* Card entrance animation */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s ease-out both;
+}
+
+/* Hide Next.js dev mode indicator */
+[data-next-mark],
+nextjs-portal {
+  display: none !important;
+}
+
+/* Custom scrollbar — light mode */
+@layer base {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.8 0.01 260);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.7 0.015 260);
+  }
+}
+
+/* Custom scrollbar — dark theme override */
+@layer base {
+  .dark ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .dark ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background: oklch(0.32 0.02 250);
+    border-radius: 4px;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.4 0.025 250);
+  }
+}

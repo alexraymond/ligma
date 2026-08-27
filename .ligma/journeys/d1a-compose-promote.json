@@ -1,0 +1,18 @@
+{
+  "id": "d1a-compose-promote",
+  "title": "Start a headless product from the composer and promote it to a build",
+  "goal": "You want a REST API that shortens URLs, with rate limiting. Starting from ligma's home page and using nothing but the app itself, get that product described, agreed and handed to the builders — no terminal, no config file, no CLI.",
+  "steps": [
+    "Describe the product you want in your own words on the home page: Build a REST API that shortens URLs, with rate limiting",
+    "Answer whatever the system asks in order to pin down what is being built, and confirm the shape it inferred for it",
+    "Satisfy yourself there is nowhere in this project to design screens — a service with no interface should not offer you a Studio",
+    "Open the step that turns the brief into work, directly from the brief itself",
+    "Read what it is about to commit to before you agree: the tasks, the acceptance criteria, the journeys and what it estimates it will spend",
+    "Confirm it, and find the resulting work on the board"
+  ],
+  "tags": ["campaign", "d1", "ui", "browser"],
+  "origin": "human",
+  "schedule": null,
+  "createdAt": "2026-08-11T00:00:00.000Z",
+  "updatedAt": "2026-08-11T00:00:00.000Z"
+}

@@ -1,0 +1,57 @@
+{
+  "root": "/Users/alexraymond/ligma/apps/web/src",
+  "filesScanned": 224,
+  "rules": [
+    {
+      "id": "one-status-pill-vocabulary",
+      "description": "Verification/execution states are drawn by components/status-pill.tsx and nowhere else",
+      "status": "pass",
+      "violations": [],
+      "notes": [
+        "exempt: components/status-pill.tsx — the canonical implementation — this IS the vocabulary",
+        "exempt: components/run-status-badge.tsx — a wrapper: maps run status onto ExecutionPill and paints nothing itself",
+        "exempt: components/run-row.tsx — status words are comparison logic (elapsed display, stoppable, sort) and status paint goes through RunStatusBadge; the one styled line is the destructive Interrupt action button, not a pill",
+        "exempt: lib/kanban.ts — the single source of kanban labels/dots, deliberately data-only",
+        "exempt: components/failure/classify.ts — failure-class vocabulary (UX spec §7), not a pill",
+        "exempt: components/failure/failure-card.tsx — failure-class vocabulary (UX spec §7), one error model"
+      ]
+    },
+    {
+      "id": "one-shimmer-primitive",
+      "description": "The loading shimmer is defined exactly once",
+      "status": "pass",
+      "violations": [],
+      "notes": [
+        "1 definition site(s) found"
+      ]
+    },
+    {
+      "id": "green-check-needs-verdict-link",
+      "description": "A green check never renders without a verdict to link to (UX spec §8.8)",
+      "status": "pass",
+      "violations": [],
+      "notes": [
+        "VerificationPill downgrades an unbacked `passed` and gates its link"
+      ]
+    },
+    {
+      "id": "error-distinct-from-failed",
+      "description": "`error` (harness malfunction) is not styled like `failed` (product defect)",
+      "status": "pass",
+      "violations": [],
+      "notes": [
+        "failed: \"border-destructive/60 text-destructive\"",
+        "error: \"border-amber-600/60 text-amber-700 dark:text-amber-500\""
+      ]
+    }
+  ],
+  "result": "PASS"
+}
+
+[seam-audit] 224 files under /Users/alexraymond/ligma/apps/web/src
+  PASS  one-status-pill-vocabulary — Verification/execution states are drawn by components/status-pill.tsx and nowhere else
+  PASS  one-shimmer-primitive — The loading shimmer is defined exactly once
+  PASS  green-check-needs-verdict-link — A green check never renders without a verdict to link to (UX spec §8.8)
+  PASS  error-distinct-from-failed — `error` (harness malfunction) is not styled like `failed` (product defect)
+[seam-audit] PASS
+

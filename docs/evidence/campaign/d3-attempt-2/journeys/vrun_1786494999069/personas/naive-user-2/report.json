@@ -1,0 +1,24 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786494999069",
+  "personaSeed": "You are a careful academic researcher. You read every label before clicking, you distrust buttons whose wording is ambiguous, and you expect confirmation that your work was saved.",
+  "goalAchieved": false,
+  "stepCount": 36,
+  "wrongTurns": 0,
+  "elapsedMs": 841966,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "The product at http://localhost:59881 never responded — every page load over ~15 minutes of retries failed with net::ERR_CONNECTION_REFUSED, so a new user sees only a browser error page and can do nothing at all.",
+      "evidence": [
+        "personas/naive-user-2/shots/01-goto-failed.png",
+        "personas/naive-user-2/shots/02-goto-failed.png",
+        "personas/naive-user-2/shots/08-goto-failed.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-2/transcript.jsonl",
+  "invalid": false
+}

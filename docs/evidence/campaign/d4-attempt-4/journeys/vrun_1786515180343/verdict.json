@@ -1,0 +1,117 @@
+{
+  "runId": "vrun_1786515180343",
+  "taskId": null,
+  "contractId": "ctr_1786515180343",
+  "contractVersion": 4,
+  "outcome": "failed",
+  "criterionVerdicts": [
+    {
+      "criterionId": "crit_goal",
+      "status": "met",
+      "reasoning": "naive-user-1 cleared the whole queue from /deck in one unbroken session (all 21 steps stay on http://localhost:60964/deck per personas/naive-user-1/steps.jsonl): 12 decisions answered by clicking card options, the design approval (shot 19), the stale brief (shot 20), the verdict spot-check (shot 21), and one answer taken back straight away (shots 05→06→07). Final state in shot 22 is 'Nothing is waiting on you' with an Answered (12) history. spec-auditor marked this not-tested, but it hit an already-drained queue; naive-user-1's evidence is affirmative and first-hand. Note this covers the goal sentence as written — it does not cover the batch step of crit_2.",
+      "evidence": [
+        "personas/naive-user-1/shots/03-click.png",
+        "personas/naive-user-1/shots/19-click.png",
+        "personas/naive-user-1/shots/20-click.png",
+        "personas/naive-user-1/shots/21-click.png",
+        "personas/naive-user-1/shots/22-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "reasoning": "naive-user-1 shot 03 shows the Deck at '15 waiting' with a decision card; shots 19, 20 and the page text captured after step 20 in personas/naive-user-1/transcript.jsonl show the design-approval card, the stale-brief card and the spot-check card all rendered in that same /deck view. So decisions, design approval, stale brief and verdict spot-check all surface in one place. spec-auditor independently rated crit_1 met.",
+      "evidence": [
+        "personas/naive-user-1/shots/03-click.png",
+        "personas/naive-user-1/shots/19-click.png",
+        "personas/naive-user-1/shots/20-click.png",
+        "personas/naive-user-1/transcript.jsonl"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "unknown",
+      "reasoning": "The offer exists — naive-user-1 shot 03 shows the banner '15 cards are waiting. One at a time will take a while — review the decisions together instead.' with a 'Batch review' button — but no persona ever clicked it. grep over all five steps.jsonl files returns zero batch actions; naive-user-1 answered card-by-card instead, and by the time naive-user-2, naive-user-3 and spec-auditor arrived the queue was down to 1–3 items so the offer was gone (spec-auditor saw only a List-view '2 selected' action bar, shot 10). Selecting five, acting in one pass, and the count dropping by five were never exercised in either direction, so this is untested, not failing.",
+      "evidence": [
+        "personas/naive-user-1/shots/03-click.png",
+        "personas/spec-auditor/shots/10-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "met",
+      "reasoning": "naive-user-1 step 5 clicked 'Bold/Visionary (thought-leadership)' with a single mouse click. Shot 05 shows that card carried everything needed to decide (question, asker, linked task, rationale paragraph, three options); the step URL stayed http://localhost:60964/deck and the recorded action is a click, not a key press. Shot 06 shows the resulting 'Answered — What tone should the launch blog post u…' toast and the count moved 14→13. spec-auditor also rated crit_3 met.",
+      "evidence": [
+        "personas/naive-user-1/shots/05-click.png",
+        "personas/naive-user-1/shots/06-click.png",
+        "personas/spec-auditor/shots/13-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "met",
+      "reasoning": "naive-user-1's steps.jsonl shows the Undo click starting 68ms after the answer; shot 06 captures the toast 'Answered … Undoing…' with the countdown badge at 10, and shot 07 shows the deck back at '14 waiting' with the same 'What tone should the launch blog post use?' card returned to the front with all three options. returning-user corroborates (shots 06–08, take-back of 'Raise the attempt cap' restored the decision and the badge). The window is honestly labelled — 'Each answer can be taken back for 10 seconds' (shot 22) — and closes: naive-user-1 and naive-user-3 each lost one late attempt (shots 04-click-failed, 15-click-failed).",
+      "evidence": [
+        "personas/naive-user-1/shots/06-click.png",
+        "personas/naive-user-1/shots/07-click.png",
+        "personas/returning-user/shots/07-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "met",
+      "reasoning": "naive-user-1 shot 19 shows the Deck at '3 waiting' with 'Approve \"Landing page — hero and CTA\"?' tagged Design approval, a rendered preview of the design, and Versions/Critique score 82/Open pins 0, plus Approve and Keep iterating buttons — so what is being approved is on the card. Step 19 clicked Approve without error and shot 20 shows the count dropped to '2 waiting' with that card gone. spec-auditor rated this not-tested because it arrived after naive-user-1 had already cleared the card.",
+      "evidence": [
+        "personas/naive-user-1/shots/19-click.png",
+        "personas/naive-user-1/shots/20-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "met",
+      "reasoning": "naive-user-1 shot 20 shows the card 'The brief changed after its contract was compiled' tagged Stale brief, with the explanation ('the designs and tasks built from it are flagged stale, not invalidated') and the brief text, plus 'Acknowledge — the change is cosmetic'. Step 20's tool result in personas/naive-user-1/transcript.jsonl records ok:true, url still /deck, and the page text immediately after reads '1 waiting' with a 'Staleness acknowledged' toast offering Undo — the brief was dealt with from the Deck itself.",
+      "evidence": [
+        "personas/naive-user-1/shots/20-click.png",
+        "personas/naive-user-1/transcript.jsonl",
+        "personas/naive-user-1/shots/21-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "met",
+      "reasoning": "The page text captured after naive-user-1's step 20 (personas/naive-user-1/transcript.jsonl) shows the spot-check card in the Deck carrying both required pieces: 'CRITERION UNDER REVIEW / CTA button is above the fold on mobile' and 'The judge said — not-met: At 390×844 the CTA sits 60px below the fold — the subheadline runs to four lines and pushes it down…', with 'Looks right' / 'The judge got this wrong'. naive-user-1 step 21 then clicked 'Looks right' while still on /deck (never opening the run), and shot 21 shows the 'Verdict confirmed' toast. spec-auditor rated crit_7 met and the same card text appears in naive-user-2 and naive-user-3 transcripts.",
+      "evidence": [
+        "personas/naive-user-1/transcript.jsonl",
+        "personas/naive-user-1/shots/21-click.png",
+        "personas/spec-auditor/shots/17-click.png"
+      ]
+    }
+  ],
+  "humanDecisions": [
+    {
+      "question": "crit_2 was never exercised because the personas shared one live instance — the first persona drained the queue below the ten-card threshold for everyone after it. Re-run with per-persona isolated state, or accept a batch-review test that only one persona can ever run?",
+      "context": "naive-user-1 (06:13–06:18) saw '15 waiting' with the Batch review offer on screen and answered card-by-card anyway. naive-user-2 (06:35), naive-user-3 (06:50) and spec-auditor (07:00) all arrived at 1–3 waiting; spec-auditor explicitly planned to test batch first and found the offer gone. Several of their 'major' findings — no design-approval card, no stale-brief card, Deck stuck at 'Nothing is waiting on you' — are the drained queue, not missing features; naive-user-1 acted on those exact cards earlier."
+    },
+    {
+      "question": "The spot-check verdict's take-back behaviour is reported inconsistently. Is the undo genuinely offered for spot-checks, or only sometimes?",
+      "context": "naive-user-1 shot 21 and spec-auditor shot 17 both show a 'Verdict confirmed' toast with an Undo button and a 10-second countdown. But naive-user-2, naive-user-3 and returning-user each report the opposite — no countdown, and no entry in the Answered list (the list stayed at 12 / 18 entries). The toast may appear while the answer is never recorded in history, which is what those three saw."
+    },
+    {
+      "question": "The ten-second undo window is honest but tight — two of five personas lost their first take-back to it, and the Answered list then offers no other way to change an answer. Accept?",
+      "context": "naive-user-1 shot 04-click-failed and naive-user-3 shot 15-click-failed are both Undo clicks that timed out because the button had gone; the Answered list then reads 'Undo window closed' on every row (naive-user-1 shot 22)."
+    },
+    {
+      "question": "Two 'verification attempts exhausted' decisions keep respawning after being answered. Product behaviour to accept, or a queue that never converges?",
+      "context": "spec-auditor's Answered (18) list (shot 02-goto) shows the same two questions — hero section and competitor pricing — answered repeatedly at 2m/4m/6m/10m/11m intervals, including 'Re-run once with a human reviewer — Alex, 2026-08-12 (\"final\" attempt #4)'. naive-user-3 saw the same pair return minutes after answering. naive-user-2 traced the root cause in the task panel: verification exits 1 with 'spawn pnpm ENOENT', so every run fails and the decision is minted again."
+    }
+  ],
+  "judgeModel": "opus",
+  "createdAt": "2026-08-12T07:04:01.719Z",
+  "signature": {
+    "payloadHash": "52c84dcf61a5956656b112950a585cb875fdbd5af5f1f1b65d0cbce5b53d9a8b",
+    "signature": "efff2870418781baffa595b4ec625d1d4b2a857f97dc07a152d43f080dc4456f783cca3fa84cd3123494c85d6c32d6cb7606f2942d083993ea11a70b26302103",
+    "publicKey": "MCowBQYDK2VwAyEAuCdQvfPWbtyeVg8T45YLTXFjdO4MXYx4qQTU/Wi4z0A="
+  },
+  "journeyId": "d4-deck",
+  "projectId": "proj_ligma"
+}

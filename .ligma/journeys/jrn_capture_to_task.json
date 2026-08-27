@@ -1,0 +1,16 @@
+{
+  "id": "jrn_capture_to_task",
+  "title": "Capture a thought and turn it into a task",
+  "goal": "You had an idea you do not want to lose. Get it into the system, then turn it into a real task on the board that an agent could pick up.",
+  "steps": [
+    "Find somewhere to write the raw thought down without filling in a form",
+    "See the captured thought listed where it was saved",
+    "Turn that captured thought into a task",
+    "Find the new task on the board, with the thought's wording still recognisable"
+  ],
+  "tags": ["core", "capture", "board"],
+  "origin": "human",
+  "schedule": null,
+  "createdAt": "2026-08-11T00:00:00.000Z",
+  "updatedAt": "2026-08-11T00:00:00.000Z"
+}

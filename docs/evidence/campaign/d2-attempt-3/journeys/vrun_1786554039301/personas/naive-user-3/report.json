@@ -1,0 +1,13 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786554039301",
+  "personaSeed": "You are a developer in a hurry between meetings. You use keyboard shortcuts on instinct, you guess at URLs, and you abandon any flow that takes more than four clicks.",
+  "goalAchieved": null,
+  "stepCount": 0,
+  "wrongTurns": 0,
+  "elapsedMs": 5380,
+  "findings": [],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-3/transcript.jsonl",
+  "invalid": true
+}

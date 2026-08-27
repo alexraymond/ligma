@@ -1,0 +1,47 @@
+{
+  "name": "@ligma/daemon",
+  "version": "0.2.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "tsx src/engine/index.ts start",
+    "serve": "tsx src/server.ts",
+    "dev": "tsx src/engine/index.ts start",
+    "daemon:start": "tsx src/engine/index.ts start",
+    "daemon:stop": "tsx src/engine/index.ts stop",
+    "daemon:status": "tsx src/engine/index.ts status",
+    "governor:status": "tsx src/engine/governor-status.ts",
+    "env:acceptance": "tsx src/env/acceptance-phase1.ts",
+    "seed:demo": "tsx scripts/seed-demo.ts",
+    "gen:context": "tsx scripts/generate-context.ts",
+    "mcp:server": "tsx src/mcp-server.ts",
+    "test": "vitest run",
+    "test:integration": "vitest run --config vitest.config.integration.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ligma/api": "workspace:*",
+    "@ligma/core": "workspace:*",
+    "@ligma/exporters": "workspace:*",
+    "@ligma/shared": "workspace:*",
+    "@anthropic-ai/claude-agent-sdk": "^0.2.117",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "async-mutex": "^0.5.0",
+    "express": "^5.1.0",
+    "nanoid": "^5.1.6",
+    "node-cron": "^4.2.1",
+    "tree-kill": "^1.2.2",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.15.0",
+    "@types/node-cron": "^3.0.11",
+    "tsx": "^4.21.0",
+    "typescript": "^5.8.0",
+    "vitest": "^4.0.18"
+  }
+}

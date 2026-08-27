@@ -1,0 +1,68 @@
+{
+  "runId": "vrun_1786579347407",
+  "taskId": null,
+  "contractId": "ctr_1786579347408",
+  "contractVersion": 3,
+  "outcome": "error",
+  "criterionVerdicts": [
+    {
+      "criterionId": "crit_goal",
+      "status": "unknown",
+      "reasoning": "Harness error: judge spawn failed (exit 1) on backend claude",
+      "evidence": []
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "unknown",
+      "reasoning": "Harness error: judge spawn failed (exit 1) on backend claude",
+      "evidence": []
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "unknown",
+      "reasoning": "Harness error: judge spawn failed (exit 1) on backend claude",
+      "evidence": []
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "unknown",
+      "reasoning": "Harness error: judge spawn failed (exit 1) on backend claude",
+      "evidence": []
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "unknown",
+      "reasoning": "Harness error: judge spawn failed (exit 1) on backend claude",
+      "evidence": []
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "unknown",
+      "reasoning": "Harness error: judge spawn failed (exit 1) on backend claude",
+      "evidence": []
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "unknown",
+      "reasoning": "Harness error: judge spawn failed (exit 1) on backend claude",
+      "evidence": []
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "unknown",
+      "reasoning": "Harness error: judge spawn failed (exit 1) on backend claude",
+      "evidence": []
+    }
+  ],
+  "humanDecisions": [],
+  "judgeModel": "opus",
+  "causeKind": "backend",
+  "createdAt": "2026-08-13T00:30:05.634Z",
+  "signature": {
+    "payloadHash": "57860f721084282b56be059b5584972cfce0d21f21c64735649c344ef248ec98",
+    "signature": "4e3bbdc2a5b1b7e3ea84163aa800181238fdbd03b3206ed834e33bc8491f08ebb174f2037333e4fb80a7266bb96b2423943d64551a949e1743ac132b8f110601",
+    "publicKey": "MCowBQYDK2VwAyEAuCdQvfPWbtyeVg8T45YLTXFjdO4MXYx4qQTU/Wi4z0A="
+  },
+  "journeyId": "d2a-design-loop",
+  "projectId": "proj_ligma"
+}

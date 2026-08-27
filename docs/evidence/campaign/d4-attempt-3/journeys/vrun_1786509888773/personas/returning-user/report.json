@@ -1,0 +1,61 @@
+{
+  "charter": "returning-user",
+  "runId": "vrun_1786509888773",
+  "personaSeed": null,
+  "goalAchieved": false,
+  "stepCount": 19,
+  "wrongTurns": 2,
+  "elapsedMs": 306250,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "The promised 10-second take-back never materializes for a spot-check answer: I confirmed the judge's verdict ('Looks right'), the card vanished with a 'Verdict confirmed' toast, but no undo countdown appeared and the answer is absent from the 'Answered' list — even though the Deck's own copy says 'Each answer can be taken back for 10 seconds'. Changing my mind was impossible, and there is no visible record that I ever answered.",
+      "evidence": [
+        "personas/returning-user/shots/02-goto.png",
+        "personas/returning-user/shots/05-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The always-visible header 'Brain dump — capture anything' box captures on Enter completely silently — no toast, and the To Process list on the Brain Dump page itself stayed at 3. Believing it failed, I retyped the note in the page's capture box, and after reload my note appeared twice (To Process went 3 → 4 → 5). The silent success manufactures duplicates.",
+      "evidence": [
+        "personas/returning-user/shots/11-requested.png",
+        "personas/returning-user/shots/12-requested.png",
+        "personas/returning-user/shots/14-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Text fidelity is excellent: the note 'Spot-check follow-up: shrink the hero subheadline to ≤2 lines at 390px — retest CTA \"above the fold\" (mobile-first!)' came back character-for-character identical — ≤, em-dashes, straight quotes, parentheses and punctuation all intact — after both a reload and a brand-new tab/session.",
+      "evidence": [
+        "personas/returning-user/shots/12-requested.png",
+        "personas/returning-user/shots/13-goto.png",
+        "personas/returning-user/shots/14-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Clearing the Deck persisted correctly: after confirming the verdict, the Deck shows 'Nothing is waiting on you', the sidebar badge dropped from 1 to none, and this state survived reload and a fresh session — the cleared card did not resurrect.",
+      "evidence": [
+        "personas/returning-user/shots/05-click.png",
+        "personas/returning-user/shots/15-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The charter expected decisions, a design to approve, and a stale brief alongside the verdict, but the Deck only ever held the one spot-check card; the 12 seeded decisions were already answered with every undo window closed ('Undo window closed'), and no new cards arrived after the autopilot's next sweep — so a returning user has nothing left to decide and nothing left to take back.",
+      "evidence": [
+        "personas/returning-user/shots/03-click.png",
+        "personas/returning-user/shots/08-goto.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/returning-user/transcript.jsonl",
+  "invalid": false
+}

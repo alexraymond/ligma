@@ -1,0 +1,81 @@
+{
+  "charter": "spec-auditor",
+  "runId": "vrun_1786494086592",
+  "personaSeed": null,
+  "goalAchieved": null,
+  "stepCount": 10,
+  "wrongTurns": 0,
+  "elapsedMs": 216841,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "The product is completely unreachable: every attempt to load http://localhost:55784/ over ~4 minutes (10 tries with backoff up to 60s) failed with net::ERR_CONNECTION_REFUSED at the TCP level. A user sees nothing at all — no page ever loads, so no criterion in the contract can even be attempted.",
+      "evidence": [
+        "personas/spec-auditor/shots/01-goto-failed.png",
+        "personas/spec-auditor/shots/05-goto-failed.png",
+        "personas/spec-auditor/shots/10-goto-failed.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/10-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/10-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/10-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/10-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/10-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/10-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/10-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/10-goto-failed.png"
+      ]
+    }
+  ],
+  "transcriptPath": "personas/spec-auditor/transcript.jsonl",
+  "invalid": false
+}

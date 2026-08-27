@@ -1,0 +1,169 @@
+{
+  "projectId": "proj_om9xZjLi7v1S",
+  "journeyId": "jrn_turn-a-prompt-into-a-design",
+  "runId": "vrun_1786521406438",
+  "recordedAt": "2026-08-12T08:25:21.498Z",
+  "steps": [
+    {
+      "index": 0,
+      "step": "Land on the empty Home canvas, which points at the prompt bar: 'start with a prompt, iterate on the canvas'",
+      "outcome": "not-attempted",
+      "note": "not reported by the panel",
+      "screenshot": null
+    },
+    {
+      "index": 1,
+      "step": "Type an idea into the prompt bar or open the 'Start a new project' modal",
+      "outcome": "not-attempted",
+      "note": "not reported by the panel",
+      "screenshot": null
+    },
+    {
+      "index": 2,
+      "step": "Optionally sharpen the brief: pick a workspace folder, choose a design system, set fidelity (auto / wireframe / high-fidelity), attach files, add reference URLs",
+      "outcome": "not-attempted",
+      "note": "not reported by the panel",
+      "screenshot": null
+    },
+    {
+      "index": 3,
+      "step": "Hit 'Start designing' (or ⌘↵) to kick off generation",
+      "outcome": "not-attempted",
+      "note": "not reported by the panel",
+      "screenshot": null
+    },
+    {
+      "index": 4,
+      "step": "Iterate on the resulting design on the canvas",
+      "outcome": "not-attempted",
+      "note": "not reported by the panel",
+      "screenshot": null
+    }
+  ],
+  "screenshots": [
+    "personas/naive-user-1/shots/01-goto.png",
+    "personas/naive-user-1/shots/02-click.png",
+    "personas/naive-user-1/shots/03-click.png",
+    "personas/naive-user-1/shots/04-click.png",
+    "personas/naive-user-1/shots/05-click.png",
+    "personas/naive-user-1/shots/06-click.png",
+    "personas/naive-user-1/shots/07-click.png",
+    "personas/naive-user-1/shots/08-requested.png",
+    "personas/naive-user-1/shots/09-click.png",
+    "personas/naive-user-1/shots/10-click-failed.png",
+    "personas/naive-user-1/shots/11-click.png",
+    "personas/naive-user-1/shots/12-click.png",
+    "personas/naive-user-1/shots/13-click.png",
+    "personas/naive-user-1/shots/14-click.png",
+    "personas/naive-user-1/shots/15-click.png",
+    "personas/naive-user-1/shots/16-click.png",
+    "personas/naive-user-1/shots/17-click.png",
+    "personas/naive-user-1/shots/18-click-failed.png",
+    "personas/naive-user-2/shots/01-goto.png",
+    "personas/naive-user-2/shots/02-click.png",
+    "personas/naive-user-2/shots/03-requested.png",
+    "personas/naive-user-2/shots/04-click.png",
+    "personas/naive-user-2/shots/05-click.png",
+    "personas/naive-user-2/shots/06-click.png",
+    "personas/naive-user-2/shots/07-click.png",
+    "personas/naive-user-2/shots/08-click.png",
+    "personas/naive-user-2/shots/09-click.png",
+    "personas/naive-user-2/shots/10-click.png",
+    "personas/naive-user-2/shots/11-click.png",
+    "personas/naive-user-2/shots/12-click.png",
+    "personas/naive-user-2/shots/13-click.png",
+    "personas/naive-user-2/shots/14-click.png",
+    "personas/naive-user-2/shots/15-click-failed.png",
+    "personas/naive-user-2/shots/16-click.png",
+    "personas/naive-user-3/shots/01-goto.png",
+    "personas/naive-user-3/shots/02-click.png",
+    "personas/naive-user-3/shots/03-click.png",
+    "personas/naive-user-3/shots/04-click.png",
+    "personas/naive-user-3/shots/05-click.png",
+    "personas/naive-user-3/shots/06-click.png",
+    "personas/naive-user-3/shots/07-click.png",
+    "personas/naive-user-3/shots/08-click.png",
+    "personas/naive-user-3/shots/09-click-failed.png",
+    "personas/naive-user-3/shots/10-click.png",
+    "personas/naive-user-3/shots/11-click.png",
+    "personas/naive-user-3/shots/12-click.png",
+    "personas/naive-user-3/shots/13-click.png",
+    "personas/naive-user-3/shots/14-click.png",
+    "personas/naive-user-3/shots/15-goto.png",
+    "personas/naive-user-3/shots/16-requested.png",
+    "personas/returning-user/shots/01-goto.png",
+    "personas/returning-user/shots/02-click.png",
+    "personas/returning-user/shots/03-requested.png",
+    "personas/returning-user/shots/04-click.png",
+    "personas/returning-user/shots/05-requested.png",
+    "personas/returning-user/shots/06-click.png",
+    "personas/returning-user/shots/07-click.png",
+    "personas/returning-user/shots/08-click.png",
+    "personas/returning-user/shots/09-click.png",
+    "personas/returning-user/shots/10-click.png",
+    "personas/returning-user/shots/11-click.png",
+    "personas/returning-user/shots/12-click-failed.png",
+    "personas/returning-user/shots/13-click.png",
+    "personas/returning-user/shots/14-click.png",
+    "personas/returning-user/shots/15-click.png",
+    "personas/returning-user/shots/16-click.png",
+    "personas/returning-user/shots/17-click.png",
+    "personas/returning-user/shots/18-requested.png",
+    "personas/returning-user/shots/19-click.png",
+    "personas/returning-user/shots/20-click.png",
+    "personas/spec-auditor/shots/01-goto.png",
+    "personas/spec-auditor/shots/02-requested.png",
+    "personas/spec-auditor/shots/03-click.png",
+    "personas/spec-auditor/shots/04-click.png",
+    "personas/spec-auditor/shots/05-click.png",
+    "personas/spec-auditor/shots/06-click.png",
+    "personas/spec-auditor/shots/07-click.png",
+    "personas/spec-auditor/shots/08-click.png",
+    "personas/spec-auditor/shots/09-click-failed.png",
+    "personas/spec-auditor/shots/10-click.png",
+    "personas/spec-auditor/shots/11-click.png",
+    "personas/spec-auditor/shots/12-click.png",
+    "personas/spec-auditor/shots/13-click.png",
+    "personas/spec-auditor/shots/14-click.png",
+    "personas/spec-auditor/shots/15-click.png",
+    "personas/spec-auditor/shots/16-click.png",
+    "personas/spec-auditor/shots/17-click.png",
+    "personas/spec-auditor/shots/18-requested.png",
+    "personas/spec-auditor/shots/19-click.png",
+    "personas/spec-auditor/shots/20-click.png",
+    "personas/spec-auditor/shots/21-click.png",
+    "personas/spec-auditor/shots/22-requested.png"
+  ],
+  "metrics": {
+    "timeOnTaskMs": 265352,
+    "misclicks": 0,
+    "stepCount": 27,
+    "goalAchieved": null
+  },
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "The primary flow is dead: after describing a design in the 'Start a new project' dialog, clicking the enabled 'Start designing' button (and the advertised ⌘↵ shortcut) does nothing — the dialog stays open with no spinner, no error message, no network request, and no draft ever appears on the canvas. I could not get a first draft by any route."
+    },
+    {
+      "severity": "major",
+      "summary": "The header prompt box ('Describe a design…') silently swallows input: typing a design description and pressing Enter clears the text but produces nothing — no navigation, no error, no network activity, and the canvas keeps showing the '↑ start with a prompt' empty state."
+    },
+    {
+      "severity": "major",
+      "summary": "'Pick a folder…' in the new-project dialog does nothing when clicked — no file picker opens and there is no feedback, so a user cannot set the Workspace the dialog asks for."
+    },
+    {
+      "severity": "major",
+      "summary": "Settings → Models is stuck indefinitely on 'Checking Claude Code CLI…' and 'Loading…' for API Providers, with zero network requests observed, so a user can never see or configure a working model — and nothing in the start-project flow tells them a model might be required."
+    },
+    {
+      "severity": "minor",
+      "summary": "The header '0 unread error' button navigates to Settings → Diagnostics, which reports 'No diagnostic events recorded yet' even immediately after multiple silently failed actions — failures are neither surfaced in the moment nor logged where the app says errors live."
+    },
+    {
+      "severity": "note",
+      "summary": "The browser console repeatedly warns '[useUpdateWiring] window.codesign missing; update notifications disabled', consistent with the web page expecting a desktop-app backend that is absent — which would explain why every backend-dependent control no-ops silently."
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "runId": "vrun_1786531953814",
+  "taskId": null,
+  "contractId": "ctr_1786531953815",
+  "contractVersion": 1,
+  "outcome": "failed",
+  "criterionVerdicts": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-met",
+      "reasoning": "No persona completed the journey by the product's own route. The intended path (Brief → Promote to build → Confirm and compile → tasks on the Board) failed for every persona who reached it: spec-auditor (personas/spec-auditor/shots/20-requested.png, 23-requested.png), naive-user-1 (4/4 attempts), naive-user-2, naive-user-3 and returning-user (personas/returning-user/shots/45-click-failed.png) all saw a raw '500 Internal Server Error' with 'Confirm and compile' disabled. The three personas that self-reported goalAchieved=true reached the builders only by improvising outside the described flow — hand-creating a Board task and assigning it to a Developer (naive-user-2 finding, personas/naive-user-2/shots/48-requested.png). The contract was never compiled or agreed: project Health still reads 'No criteria frozen yet' (personas/spec-auditor/shots/05-requested.png). Additionally, spec-auditor's own three attempts to start from Home produced brief-less projects (POST /api/briefs 500, 3/3), so it could not even begin the journey on a project of its own.",
+      "evidence": [
+        "personas/spec-auditor/shots/20-requested.png",
+        "personas/spec-auditor/shots/23-requested.png",
+        "personas/spec-auditor/shots/15-requested.png",
+        "personas/returning-user/shots/45-click-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "reasoning": "spec-auditor typed 'Build a REST API that shortens URLs, with rate limiting' into the Home composer's 'What are we making?' field and pressed Start (personas/spec-auditor/shots/03-click.png). The description does reach a project: naive-user-2's project carries its ask verbatim — 'I want a REST API that shortens URLs. It must include rate limiting so it cannot be abused.' (personas/naive-user-2/shots/20-click.png), and returning-user's ask survives reload byte-for-byte (personas/returning-user/shots/20-click.png). Free-text description on the home page works; what happens after Start is judged under crit_2.",
+      "evidence": [
+        "personas/spec-auditor/shots/03-click.png",
+        "personas/naive-user-2/shots/20-click.png",
+        "personas/returning-user/shots/20-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "met",
+      "reasoning": "Affirmative evidence against spec-auditor's not-met claim: naive-user-2's Brief page shows two full rounds of discovery questions answered ('What is this, shaped like?' → 'Headless — an API, CLI, library or service', client identity, rate-limit shape, custom aliases, expiry, analytics), the header reads '· shape: headless', and the page offers 'Lock the brief' with 'Discovery has what it needs' (personas/naive-user-2/shots/20-click.png). returning-user shows the same form with the inferred shape explicitly selectable and confirmed (personas/returning-user/shots/20-click.png), and spec-auditor's own later screenshot of a locked brief shows all 13 answers with 'shape: headless' (personas/spec-auditor/shots/18-requested.png). spec-auditor's not-met rests on its own three attempts where POST /api/briefs returned 500 and no brief was created (personas/spec-auditor/shots/15-requested.png) — that is a real intermittent reliability failure, but it does not negate the observed working path. Note the friction all four personas hit: HTTP 400/409 on submit with no visible error and answers wiped on reload (personas/naive-user-3/shots/19-click.png).",
+      "evidence": [
+        "personas/naive-user-2/shots/20-click.png",
+        "personas/returning-user/shots/20-click.png",
+        "personas/spec-auditor/shots/18-requested.png",
+        "personas/naive-user-3/shots/19-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "met",
+      "reasoning": "spec-auditor's project (headless shape) exposes tabs Overview, Board, Runs, Verify, Knowledge — no Studio (personas/spec-auditor/shots/05-requested.png), and the same holds on the project with a locked brief where the tab row is Overview, Brief, Board, Runs, Verify, Knowledge (personas/spec-auditor/shots/18-requested.png). The pipeline strip renders only 'Brief' and 'Build'. The discovery form states the rule explicitly: 'This decides the pipeline — a headless project never gets a Studio stage' (personas/returning-user/shots/20-click.png).",
+      "evidence": [
+        "personas/spec-auditor/shots/05-requested.png",
+        "personas/spec-auditor/shots/18-requested.png",
+        "personas/returning-user/shots/20-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "met",
+      "reasoning": "From the Brief page itself, spec-auditor opened the promote step: the 'Promote to build' dialog appears over the brief's questions with the text 'One confirm compiles and signs the contract, freezes the oracle and lands the tasks on the Board' and 'Building the proposal…' (personas/spec-auditor/shots/19-click.png). Corroborated by naive-user-1 and returning-user reaching the same dialog from the brief (personas/returning-user/shots/44-click.png). The step opens; what it then shows is crit_5.",
+      "evidence": [
+        "personas/spec-auditor/shots/19-click.png",
+        "personas/returning-user/shots/44-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "not-met",
+      "reasoning": "The proposal is never shown. After 'Building the proposal…' the dialog replaces it with the literal string '500 Internal Server Error' — no tasks, no acceptance criteria, no journeys, no spend estimate (personas/spec-auditor/shots/20-requested.png and 23-requested.png, two separate attempts against /api/projects/{id}/promote/preview). Every other persona observed the identical failure: naive-user-1 4/4 attempts (personas/naive-user-1/shots/41-requested.png), naive-user-3 3/3 (personas/naive-user-3/shots/47-click-failed.png), returning-user 3/3 (personas/returning-user/shots/45-click-failed.png). Nobody in this run ever read what the system was about to commit to.",
+      "evidence": [
+        "personas/spec-auditor/shots/20-requested.png",
+        "personas/spec-auditor/shots/23-requested.png",
+        "personas/naive-user-1/shots/41-requested.png",
+        "personas/returning-user/shots/45-click-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "not-met",
+      "reasoning": "There is nothing to confirm: with no proposal built, 'Confirm and compile' stays disabled in every screenshot of the dialog (personas/spec-auditor/shots/20-requested.png, 23-requested.png; personas/returning-user/shots/45-click-failed.png). No compiled work ever landed on the Board — the project Overview still reads 0 Not started / 0 In progress / 0 Done and 'No criteria frozen yet' (personas/spec-auditor/shots/05-requested.png). The tasks personas later saw on the Board were ones they hand-created via the New Task dialog (personas/naive-user-2/shots/48-requested.png), not work produced by confirming the promotion, so they do not satisfy this criterion.",
+      "evidence": [
+        "personas/spec-auditor/shots/20-requested.png",
+        "personas/spec-auditor/shots/23-requested.png",
+        "personas/spec-auditor/shots/05-requested.png",
+        "personas/returning-user/shots/45-click-failed.png"
+      ]
+    }
+  ],
+  "humanDecisions": [
+    {
+      "question": "crit_2 passes on evidence but is intermittently broken — is a discovery step that works for some sessions and silently 500s for others acceptable to ship?",
+      "context": "naive-user-2, naive-user-3 and returning-user all completed discovery and locked a brief, so the criterion has affirmative evidence. But spec-auditor's POST /api/briefs returned 500 on 3/3 attempts, leaving three duplicate brief-less projects with no user-visible error (personas/spec-auditor/shots/15-requested.png), and the three who succeeded each hit spurious HTTP 400/409 rejections that showed nothing on screen and wiped their answers on reload (personas/returning-user/shots/11-click.png, personas/naive-user-3/shots/19-click.png). returning-user notes the same answers were later accepted unchanged."
+    },
+    {
+      "question": "Three personas self-reported goalAchieved=true via a hand-built Board task. Should that manual route count as 'handed to the builders' for this contract?",
+      "context": "With promote broken, naive-user-2, naive-user-3 and returning-user created a task from the locked brief, assigned it to a Developer, and got a real delegation ('New assignment: Build the URL shortener REST API…') and a running developer session (personas/naive-user-2/shots/48-requested.png, personas/naive-user-3/shots/68-requested.png). I judged crit_goal not-met because no contract was compiled and no acceptance criteria were frozen, but the substantive handoff did happen without a terminal or CLI."
+    },
+    {
+      "question": "Is the Home 'Start' button's silent behaviour a defect worth blocking on independently of the 500s?",
+      "context": "Two personas read Start as broken: it shows no navigation or confirmation, and naive-user-2 had to hunt through Projects and sub-tabs to find the promised discovery form (personas/naive-user-2/shots/03-click.png). Every failed Start still silently created a project, producing duplicates with no feedback (personas/spec-auditor/shots/14-click.png)."
+    },
+    {
+      "question": "Board task cards cannot be opened — every click is swallowed by drag-and-drop. Out of contract scope, but shipping-relevant?",
+      "context": "naive-user-1 could not view, edit or assign an existing task and had to create a duplicate task just to set an assignee (personas/naive-user-1/shots/51-click.png, 53-requested.png). Also flagged: a brand-new task with default Importance/Urgency lands in the Priority Matrix's 'ELIMINATE' quadrant."
+    },
+    {
+      "question": "Could the Governor budget be the cause of the 500s rather than a code fault?",
+      "context": "spec-auditor observed the Governor gauge reading '32/40 · 0 free' sessions throughout its run (personas/spec-auditor/shots/01-goto.png), while naive-user-2's successful discovery ran at '11/40 · 21 free' (personas/naive-user-2/shots/20-click.png). If brief/proposal compilation needs a free agent session, exhaustion may explain the pattern — but the UI never connects the two, and returning-user's promote failed regardless."
+    }
+  ],
+  "judgeModel": "opus",
+  "createdAt": "2026-08-12T12:03:04.647Z",
+  "signature": {
+    "payloadHash": "73f9d3b207051989a05c5eaea31b46a3b3c6c5ac0b96bdbac67455e585e8cd8f",
+    "signature": "3ab573b3a511d75781f569bc963dba4e77e7ddd74bbd818820161c1956e77a00b3a0d5d96c311f2abe4507c882203d50100d102e97256b6df0295d370c0de80f",
+    "publicKey": "MCowBQYDK2VwAyEAuCdQvfPWbtyeVg8T45YLTXFjdO4MXYx4qQTU/Wi4z0A="
+  },
+  "journeyId": "d1a-compose-promote",
+  "projectId": "proj_ligma"
+}

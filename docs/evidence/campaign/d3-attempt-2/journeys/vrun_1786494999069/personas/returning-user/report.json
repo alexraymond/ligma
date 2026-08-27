@@ -1,0 +1,25 @@
+{
+  "charter": "returning-user",
+  "runId": "vrun_1786494999069",
+  "personaSeed": null,
+  "goalAchieved": false,
+  "stepCount": 27,
+  "wrongTurns": 0,
+  "elapsedMs": 524646,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "The product at http://localhost:59881 is completely unreachable — every page load over ~10 minutes (26 attempts) failed with net::ERR_CONNECTION_REFUSED, so a returning user cannot reach their data or the app at all. No product functionality could be exercised or judged.",
+      "evidence": [
+        "personas/returning-user/shots/01-goto-failed.png",
+        "personas/returning-user/shots/06-goto-failed.png",
+        "personas/returning-user/shots/27-goto-failed.png",
+        "personas/returning-user/shots/28-requested.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/returning-user/transcript.jsonl",
+  "invalid": false
+}

@@ -1,0 +1,18 @@
+{
+  "id": "d2b-verify-retry",
+  "title": "Walk the built app and see a failure come back proven and then fixed",
+  "goal": "The app has been built from a design you approved. Walk it as a first-time user would, then satisfy yourself that where it did not match the design, the failure was scored against that design, sent back to the builder with the reasoning, and settled within the retry cap — with the whole chain on the record.",
+  "steps": [
+    "Walk the built app the way a first-time user would, doing what it says it is for",
+    "Find where the app was scored against the design it was supposed to match",
+    "Read what the judge said was wrong, not just that something was wrong",
+    "See that the same reasoning went back to the builder rather than a bare failure",
+    "See the retry, and that it was capped rather than open-ended",
+    "See the outcome of the retry recorded, with its own evidence"
+  ],
+  "tags": ["campaign", "d2", "ui", "browser"],
+  "origin": "human",
+  "schedule": null,
+  "createdAt": "2026-08-11T00:00:00.000Z",
+  "updatedAt": "2026-08-11T00:00:00.000Z"
+}

@@ -1,0 +1,112 @@
+{
+  "runId": "vrun_1786494086592",
+  "taskId": null,
+  "contractId": "ctr_1786494086592",
+  "contractVersion": 1,
+  "outcome": "failed",
+  "criterionVerdicts": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-met",
+      "reasoning": "No persona completed the journey. naive-user-1 got furthest (63 steps) and answered only the two decisions; the design approval, the brief, the verdict and the undo were all unavailable or non-functional (personas/naive-user-1/shots/59-click.png shows the design task as a plain edit panel with no approve action; personas/naive-user-1/shots/32-click.png shows the verdict as the bare word 'Error'; personas/naive-user-1/shots/39-click.png shows answered decisions with no way to take one back). naive-user-2 crashed mid-session, and naive-user-3, returning-user and spec-auditor never loaded the app at all (personas/spec-auditor/shots/10-goto-failed.png). spec-auditor recorded crit_goal as not-tested; the two personas who did reach the product observed it failing, so this is not-met rather than unknown.",
+      "evidence": [
+        "personas/naive-user-1/shots/59-click.png",
+        "personas/naive-user-1/shots/32-click.png",
+        "personas/naive-user-1/shots/39-click.png",
+        "personas/spec-auditor/shots/10-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "not-met",
+      "reasoning": "The Deck — the page the product itself frames as 'when your AI agents need your input' — holds only agent decisions. personas/naive-user-1/shots/03-click.png shows the Deck at '2 waiting' containing exactly two decision cards and nothing else: no design approval, no brief, no verdict. naive-user-1 then had to go to the Inbox for the report, to the board side panel for the completed-task review, and to Projects → proj_demo_1 → Verify for the verdict (personas/naive-user-1/shots/18-click.png). personas/naive-user-1/shots/39-click.png shows the Deck reading 'No pending decisions' while a design approval and a verdict were still outstanding elsewhere. naive-user-2 independently reported the same split.",
+      "evidence": [
+        "personas/naive-user-1/shots/03-click.png",
+        "personas/naive-user-1/shots/18-click.png",
+        "personas/naive-user-1/shots/39-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "met",
+      "reasoning": "personas/naive-user-1/shots/03-click.png shows the animation-library decision card carrying its own context inline ('The hero section needs smooth entrance animations… Framer Motion integrates well with React but adds ~30kb. CSS-only is lighter but harder to maintain…'), the related task, and three labelled option buttons plus a custom-answer field. personas/naive-user-1/shots/04-click.png shows the state one click later: the card has moved to 'Answered (1)' with the chosen option recorded ('Answered: Framer Motion (full-featured, larger bundle)'), with no navigation away from /deck between the two shots. naive-user-1's own note records the same, and that answering visibly unblocked the dependent task.",
+      "evidence": [
+        "personas/naive-user-1/shots/03-click.png",
+        "personas/naive-user-1/shots/04-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "not-met",
+      "reasoning": "No design approval exists on the Deck (personas/naive-user-1/shots/03-click.png). The only candidate, the task 'Review and approve landing page design' assigned to Me, opens as a generic task edit panel — title, description, importance, status, collaborators — with no design artifact, no preview, and no approve or request-changes control, despite its own description saying 'Approve or request changes' (personas/naive-user-1/shots/59-click.png). naive-user-2 hit the same task in the Priority Matrix and clicking it produced nothing at all (personas/naive-user-2/shots/18-click.png).",
+      "evidence": [
+        "personas/naive-user-1/shots/59-click.png",
+        "personas/naive-user-1/shots/03-click.png",
+        "personas/naive-user-2/shots/18-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "not-met",
+      "reasoning": "The Deck contains no brief item of any kind (personas/naive-user-1/shots/03-click.png, and personas/naive-user-1/shots/39-click.png reading 'No pending decisions'), so it cannot be dealt with 'from the same place'. naive-user-1 additionally searched project Overview/Knowledge, Library, Objectives, Crew, Brain Dump and global search and found no brief surface anywhere (personas/naive-user-1/shots/33-goto.png, personas/naive-user-1/shots/19-click.png), while the app's own background calls to /api/projects/{id}/brief returned 404. naive-user-2 reported the same absence.",
+      "evidence": [
+        "personas/naive-user-1/shots/03-click.png",
+        "personas/naive-user-1/shots/39-click.png",
+        "personas/naive-user-1/shots/33-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "not-met",
+      "reasoning": "The verification run page is reachable only via Projects → project → Verify, not from the Deck, and once loaded it shows a banner promising 'screenshots and criterion results below prove (or disprove) the contract' followed by a single row reading 'Error 8/12/2026, 1:25:00 AM · Run vrun_1786494300690 · contract v1' — no criterion results, no evidence, no accept/reject control (personas/naive-user-1/shots/32-click.png; the same page mid-load at personas/naive-user-1/shots/31-goto.png). naive-user-2 saw the identical 'Error'-only page and found its Timeline tab equally empty (personas/naive-user-2/shots/13-click.png). The Runs page attributes it to 'Harness malfunction — not a verdict — verification exited 1' (personas/naive-user-1/shots/21-goto.png).",
+      "evidence": [
+        "personas/naive-user-1/shots/32-click.png",
+        "personas/naive-user-1/shots/21-goto.png",
+        "personas/naive-user-2/shots/13-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "unknown",
+      "reasoning": "No persona ever saw ten or more waiting items — the Deck held two decisions at most (personas/naive-user-1/shots/03-click.png, '2 waiting'), and no persona attempted a batch action. There is a visible per-card checkbox on the Deck cards in that shot, hinting at a multi-select affordance, but nothing in the evidence shows it being selected, shows a bulk action bar, or shows a batch answer taking effect. spec-auditor recorded this as not-tested. No affirmative evidence either way.",
+      "evidence": [
+        "personas/naive-user-1/shots/03-click.png",
+        "personas/spec-auditor/shots/10-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "not-met",
+      "reasoning": "personas/naive-user-1/shots/39-click.png shows the post-answer Deck: an 'Answered (2)' log listing both decisions with their recorded choices and no undo control, no revert link, and no recall toast. naive-user-1 clicked the answered cards and nothing happened (personas/naive-user-1/shots/40-click.png), and reported that 'Mark Reviewed' on the completed task is likewise one-way — the button disappears after use (personas/naive-user-1/shots/51-click.png, personas/naive-user-1/shots/55-click.png). They could only simulate changing their mind by hand-editing a task's status in the edit panel, which is not the answered item coming back. naive-user-2 independently observed answered Deck cards to be inert (personas/naive-user-2/shots/09-click.png).",
+      "evidence": [
+        "personas/naive-user-1/shots/39-click.png",
+        "personas/naive-user-1/shots/40-click.png",
+        "personas/naive-user-1/shots/55-click.png",
+        "personas/naive-user-2/shots/09-click.png"
+      ]
+    }
+  ],
+  "humanDecisions": [
+    {
+      "question": "Three of five personas never reached the product at all and a fourth lost it mid-session — is this a product stability defect or a broken test harness/environment, and should the run be re-executed before the verdicts above are treated as the product's final word?",
+      "context": "naive-user-3, returning-user and spec-auditor logged net::ERR_CONNECTION_REFUSED on localhost:55784 across 2.5, 13 and 4 minutes of retries respectively, without ever seeing a page (personas/returning-user/shots/01-goto-failed.png). naive-user-2 loaded the app normally for 18 steps, then the server went down after ordinary navigation and stayed down for 30+ consecutive failed loads (personas/naive-user-2/shots/19-goto-failed.png onward). Meanwhile naive-user-1 completed 63 steps against a working instance. Only crit_2 has affirmative evidence; crit_6 is untested largely because most personas never got in."
+    },
+    {
+      "question": "The Deck cards carry per-card checkboxes but the seeded data never reached ten items — is the batch path meant to be exercised by this contract, and if so should the fixture be reseeded so crit_6 can actually be judged?",
+      "context": "personas/naive-user-1/shots/03-click.png shows a checkbox on each Deck card, so a multi-select affordance appears to exist, but with only two decisions present no persona had reason to use it and no bulk action UI was ever observed. crit_6 is currently unjudgeable for lack of data volume rather than lack of feature."
+    },
+    {
+      "question": "Both reachable personas hit a blank/skeleton Deck on first load before data arrived — cosmetic slowness or a first-impression defect worth blocking on?",
+      "context": "personas/naive-user-2/shots/08-goto.png shows the Deck as grey skeleton placeholders with the sidebar degraded to 'Governor offline'; naive-user-2 reported needing a manual reload. naive-user-1 logged the same blank-then-populate behaviour as a minor finding. It resolves on its own or on reload, so it is not a criterion failure, but it is what a first-time user sees."
+    }
+  ],
+  "judgeModel": "opus",
+  "createdAt": "2026-08-12T01:07:58.134Z",
+  "signature": {
+    "payloadHash": "9e721ae5919f1b7e2d63c9844a68eae668995fd693fb7357429bc4e2ee7b759c",
+    "signature": "628723a0c82caa1f80db76cd541aa7e758dd655120b4fb8d924b3b4b0e993953950e02409a1d94d6293b27c766e76f93409cc7bb75d6f0ea57f9aa4163ea7e04",
+    "publicKey": "MCowBQYDK2VwAyEAuCdQvfPWbtyeVg8T45YLTXFjdO4MXYx4qQTU/Wi4z0A="
+  },
+  "journeyId": "d4-deck",
+  "projectId": "proj_ligma"
+}

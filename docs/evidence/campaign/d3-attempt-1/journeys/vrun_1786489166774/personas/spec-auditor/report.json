@@ -1,0 +1,124 @@
+{
+  "charter": "spec-auditor",
+  "runId": "vrun_1786489166774",
+  "personaSeed": null,
+  "goalAchieved": null,
+  "stepCount": 29,
+  "wrongTurns": 1,
+  "elapsedMs": 519552,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "Adopting /Users/alexraymond/ligma-classic fails reproducibly: after 'Adopt' the run sits in 'crawling' for ~2-4 minutes, then dead-ends with 'Harness malfunction — not a verdict / Env … never became healthy at http://localhost:5173'. Two consecutive attempts failed identically, so a user can never get past the crawl stage; the failure page offers no retry button — the user must navigate back home and start over.",
+      "evidence": [
+        "personas/spec-auditor/shots/10-requested.png",
+        "personas/spec-auditor/shots/14-requested.png",
+        "personas/spec-auditor/shots/13-click.png"
+      ],
+      "criterionId": "crit_goal"
+    },
+    {
+      "severity": "major",
+      "summary": "The adoption page promises the run 'is watchable like any other run on Runs', but while the adoption crawl was actively running, the Runs page showed 'Active Sessions 0 / 3' and listed no adoption run entry anywhere — the user cannot actually watch it there.",
+      "evidence": [
+        "personas/spec-auditor/shots/09-goto.png",
+        "personas/spec-auditor/shots/16-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Each failed adoption attempt still consumes Claude session quota: the Governor gauge went from 25/40 to 27/40 across the two failed runs, with only 5 sessions left before the user reserve — repeated harness faults silently burn the user's budget.",
+      "evidence": [
+        "personas/spec-auditor/shots/01-goto.png",
+        "personas/spec-auditor/shots/16-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The Runs environment preflight itself flags '1 of 10 checks need attention': 'git worktree support … HEAD is detached — envs will branch off a bare commit'. This is the product's own signal that ephemeral env creation is degraded, shown while env boots were failing.",
+      "evidence": [
+        "personas/spec-auditor/shots/09-goto.png",
+        "personas/spec-auditor/shots/16-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Background polling errors accumulate in the browser: repeated HTTP 405 responses on /api/dashboard and a React hydration-mismatch error is logged on page load (observed via the bridge's console and network endpoints; no visible breakage to the user).",
+      "evidence": [],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-met",
+      "evidence": [
+        "personas/spec-auditor/shots/10-requested.png",
+        "personas/spec-auditor/shots/14-requested.png",
+        "personas/spec-auditor/shots/15-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "not-met",
+      "evidence": [
+        "personas/spec-auditor/shots/01-goto.png",
+        "personas/spec-auditor/shots/06-click.png",
+        "personas/spec-auditor/shots/13-click.png",
+        "personas/spec-auditor/shots/14-requested.png",
+        "personas/spec-auditor/shots/15-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/13-click.png",
+        "personas/spec-auditor/shots/14-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "not-met",
+      "evidence": [
+        "personas/spec-auditor/shots/13-click.png",
+        "personas/spec-auditor/shots/10-requested.png",
+        "personas/spec-auditor/shots/14-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/14-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/15-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/15-goto.png",
+        "personas/spec-auditor/shots/17-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "not-tested",
+      "evidence": [
+        "personas/spec-auditor/shots/14-requested.png"
+      ]
+    }
+  ],
+  "transcriptPath": "personas/spec-auditor/transcript.jsonl",
+  "invalid": false
+}

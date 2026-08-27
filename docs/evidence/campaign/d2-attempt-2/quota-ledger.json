@@ -1,0 +1,197 @@
+{
+  "spawns": [
+    {
+      "ts": "2026-08-12T14:52:38.309Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "brief/brf_AmlouB6nyYpt"
+    },
+    {
+      "ts": "2026-08-12T14:54:47.425Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "brief/brf_AmlouB6nyYpt"
+    },
+    {
+      "ts": "2026-08-12T14:55:42.088Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "brief/brf_AmlouB6nyYpt"
+    },
+    {
+      "ts": "2026-08-12T14:56:57.424Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "studio-turn/dsn_YuzuJVcd7Z9w"
+    },
+    {
+      "ts": "2026-08-12T14:58:41.729Z",
+      "backend": "claude",
+      "role": "judge",
+      "ref": "studio-critique/dsn_YuzuJVcd7Z9w"
+    },
+    {
+      "ts": "2026-08-12T15:11:43.036Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "studio-turn/dsn_YuzuJVcd7Z9w"
+    },
+    {
+      "ts": "2026-08-12T15:12:43.980Z",
+      "backend": "claude",
+      "role": "judge",
+      "ref": "studio-critique/dsn_YuzuJVcd7Z9w"
+    },
+    {
+      "ts": "2026-08-12T15:24:37.769Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "promote-plan"
+    },
+    {
+      "ts": "2026-08-12T15:30:00.009Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_MfrK6hPoHyD8"
+    },
+    {
+      "ts": "2026-08-12T15:30:00.013Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_dVkw9mFi2WEk"
+    },
+    {
+      "ts": "2026-08-12T15:30:00.015Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_ZA-egNFvui84"
+    },
+    {
+      "ts": "2026-08-12T15:31:02.544Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "studio-turn/dsn_YuzuJVcd7Z9w"
+    },
+    {
+      "ts": "2026-08-12T15:32:01.589Z",
+      "backend": "claude",
+      "role": "judge",
+      "ref": "studio-critique/dsn_YuzuJVcd7Z9w"
+    },
+    {
+      "ts": "2026-08-12T15:35:00.005Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_MfrK6hPoHyD8"
+    },
+    {
+      "ts": "2026-08-12T15:35:00.007Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_dVkw9mFi2WEk"
+    },
+    {
+      "ts": "2026-08-12T15:35:00.007Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_ZA-egNFvui84"
+    },
+    {
+      "ts": "2026-08-12T15:40:00.007Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_MfrK6hPoHyD8"
+    },
+    {
+      "ts": "2026-08-12T15:40:00.010Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_dVkw9mFi2WEk"
+    },
+    {
+      "ts": "2026-08-12T15:40:00.013Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_ZA-egNFvui84"
+    },
+    {
+      "ts": "2026-08-12T15:40:28.525Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "promote-plan"
+    },
+    {
+      "ts": "2026-08-12T15:45:00.011Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_MfrK6hPoHyD8"
+    },
+    {
+      "ts": "2026-08-12T15:45:00.015Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_dVkw9mFi2WEk"
+    },
+    {
+      "ts": "2026-08-12T15:45:00.017Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_ZA-egNFvui84"
+    },
+    {
+      "ts": "2026-08-12T15:46:52.816Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "studio-turn/dsn_YuzuJVcd7Z9w"
+    },
+    {
+      "ts": "2026-08-12T15:47:54.115Z",
+      "backend": "claude",
+      "role": "judge",
+      "ref": "studio-critique/dsn_YuzuJVcd7Z9w"
+    },
+    {
+      "ts": "2026-08-12T15:50:00.008Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_MfrK6hPoHyD8"
+    },
+    {
+      "ts": "2026-08-12T15:50:00.011Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_dVkw9mFi2WEk"
+    },
+    {
+      "ts": "2026-08-12T15:50:00.014Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_ZA-egNFvui84"
+    },
+    {
+      "ts": "2026-08-12T15:55:00.008Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_MfrK6hPoHyD8"
+    },
+    {
+      "ts": "2026-08-12T15:55:00.012Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_dVkw9mFi2WEk"
+    },
+    {
+      "ts": "2026-08-12T15:55:00.014Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "task_ZA-egNFvui84"
+    },
+    {
+      "ts": "2026-08-12T15:57:34.210Z",
+      "backend": "claude",
+      "role": "builder",
+      "ref": "promote-plan"
+    }
+  ],
+  "backends": {}
+}

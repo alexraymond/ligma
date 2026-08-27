@@ -1,0 +1,200 @@
+[31m[2026-08-13 01:45:41] [ERROR] [dispatcher] Task task_zrdjUtXVAUU3 permanently failed after 2 attempts[0m
+[36m[2026-08-13 01:46:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:46:52] [INFO] [governor] Backend claude recovered — cooling cleared[0m
+[36m[2026-08-13 01:46:52] [INFO] [health] Session completed: session_1786585500003_7l6e (1.88min)[0m
+[harness/verdict] contract ctr_1786584461814 v1 ready for task_gNh4L3Mg9K5y
+[36m[2026-08-13 01:46:52] [INFO] [dispatcher] Task task_gNh4L3Mg9K5y builder finished (awaiting-verification) by builder via claude[0m
+[36m[2026-08-13 01:47:14] [INFO] [health] Session completed: session_1786585500007_yihu (2.23min)[0m
+[harness/verdict] contract ctr_1786584461815 v1 ready for task_wAc4zz39eQde
+[36m[2026-08-13 01:47:14] [INFO] [dispatcher] Task task_wAc4zz39eQde builder finished (awaiting-verification) by builder via claude[0m
+[36m[2026-08-13 01:47:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:48:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:49:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:50:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 01:50:00] [INFO] [dispatcher] Found 18 pending task(s)[0m
+[36m[2026-08-13 01:50:00] [INFO] [dispatcher] Dispatching task task_zrdjUtXVAUU3 to agent "builder"[0m
+[36m[2026-08-13 01:50:00] [INFO] [health] Session started: session_1786585800005_ffnx (agent=builder, task=task_zrdjUtXVAUU3, pid=0)[0m
+[36m[2026-08-13 01:50:00] [INFO] [dispatcher] Marked task task_zrdjUtXVAUU3 as in-progress[0m
+[36m[2026-08-13 01:50:00] [INFO] [dispatcher] Task task_zrdjUtXVAUU3 builds in /var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/products/a-tip-calculator-web-app-just-two-screens-the-ca[0m
+[36m[2026-08-13 01:50:00] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 01:50:00] [WARN] [dispatcher] Skipping backend gemini for task task_zrdjUtXVAUU3: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[33m[2026-08-13 01:50:00] [WARN] [dispatcher] Skipping backend codex for task task_zrdjUtXVAUU3: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[36m[2026-08-13 01:50:00] [INFO] [runner] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:50:00] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/projects/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/tasks.json) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/tasks.json)[0m
+[36m[2026-08-13 01:50:00] [INFO] [runner] Backend: claude[0m
+[36m[2026-08-13 01:50:00] [INFO] [dispatcher] Dispatching task task_rYf27EIr-wTl to agent "builder"[0m
+[36m[2026-08-13 01:50:00] [INFO] [health] Session started: session_1786585800015_0kcx (agent=builder, task=task_rYf27EIr-wTl, pid=0)[0m
+[36m[2026-08-13 01:50:00] [INFO] [dispatcher] Marked task task_rYf27EIr-wTl as in-progress[0m
+[36m[2026-08-13 01:50:00] [INFO] [dispatcher] Task task_rYf27EIr-wTl builds in /var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/products/a-tip-calculator-web-app-just-two-screens-the-ca[0m
+[36m[2026-08-13 01:50:00] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 01:50:00] [WARN] [dispatcher] Skipping backend gemini for task task_rYf27EIr-wTl: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[33m[2026-08-13 01:50:00] [WARN] [dispatcher] Skipping backend codex for task task_rYf27EIr-wTl: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[36m[2026-08-13 01:50:00] [INFO] [runner] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:50:00] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/projects/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/tasks.json) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/tasks.json)[0m
+[36m[2026-08-13 01:50:00] [INFO] [runner] Backend: claude[0m
+[36m[2026-08-13 01:50:00] [INFO] [dispatcher] Dispatching task task_Aj9G6E3i48AN to agent "builder"[0m
+[36m[2026-08-13 01:50:00] [INFO] [health] Session started: session_1786585800018_9d6e (agent=builder, task=task_Aj9G6E3i48AN, pid=0)[0m
+[36m[2026-08-13 01:50:00] [INFO] [dispatcher] Marked task task_Aj9G6E3i48AN as in-progress[0m
+[36m[2026-08-13 01:50:00] [INFO] [dispatcher] Task task_Aj9G6E3i48AN builds in /var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/products/a-tip-calculator-web-app-just-two-screens-the-ca[0m
+[36m[2026-08-13 01:50:00] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 01:50:00] [WARN] [dispatcher] Skipping backend gemini for task task_Aj9G6E3i48AN: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[33m[2026-08-13 01:50:00] [WARN] [dispatcher] Skipping backend codex for task task_Aj9G6E3i48AN: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[36m[2026-08-13 01:50:00] [INFO] [runner] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:50:00] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/projects/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/tasks.json) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/tasks.json)[0m
+[36m[2026-08-13 01:50:00] [INFO] [runner] Backend: claude[0m
+[36m[2026-08-13 01:50:00] [INFO] [dispatcher] 10 task(s) awaiting verification but no concurrency slots[0m
+[36m[2026-08-13 01:50:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:51:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:52:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:52:33] [INFO] [health] Session completed: session_1786585800018_9d6e (2.56min)[0m
+[harness/verdict] contract ctr_1786584461816 v1 ready for task_Aj9G6E3i48AN
+[36m[2026-08-13 01:52:33] [INFO] [dispatcher] Task task_Aj9G6E3i48AN builder finished (awaiting-verification) by builder via claude[0m
+[36m[2026-08-13 01:52:49] [INFO] [studio] Design turn dt_LS3H_ESSbZy0 (prompt) claimed a claude builder slot[0m
+[36m[2026-08-13 01:52:49] [INFO] [studio] Generation turn via claude subscription (4 scoped tools)[0m
+[36m[2026-08-13 01:52:53] [INFO] [health] Session completed: session_1786585800015_0kcx (2.89min)[0m
+[harness/verdict] contract ctr_1786584461815 v1 ready for task_rYf27EIr-wTl
+[36m[2026-08-13 01:52:53] [INFO] [dispatcher] Task task_rYf27EIr-wTl builder finished (awaiting-verification) by builder via claude[0m
+[36m[2026-08-13 01:53:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:53:28] [INFO] [health] Session completed: session_1786585800005_ffnx (3.47min)[0m
+[harness/verdict] contract ctr_1786583943311 v1 ready for task_zrdjUtXVAUU3
+[36m[2026-08-13 01:53:28] [INFO] [dispatcher] Task task_zrdjUtXVAUU3 builder finished (awaiting-verification) by builder via claude[0m
+[36m[2026-08-13 01:54:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:54:42] [INFO] [studio] Critique for dsn_09NtYUPGUBrh claimed a claude judge slot[0m
+[36m[2026-08-13 01:54:42] [INFO] [studio] Generation turn via claude subscription (3 scoped tools)[0m
+[36m[2026-08-13 01:55:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 01:55:00] [INFO] [dispatcher] Found 15 pending task(s)[0m
+[36m[2026-08-13 01:55:00] [INFO] [dispatcher] Dispatching task task_xKTCJfGbJxCH to agent "builder"[0m
+[36m[2026-08-13 01:55:00] [INFO] [health] Session started: session_1786586100010_o7yx (agent=builder, task=task_xKTCJfGbJxCH, pid=0)[0m
+[36m[2026-08-13 01:55:00] [INFO] [dispatcher] Marked task task_xKTCJfGbJxCH as in-progress[0m
+[36m[2026-08-13 01:55:00] [INFO] [dispatcher] Task task_xKTCJfGbJxCH builds in /var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/products/a-tip-calculator-web-app-just-two-screens-the-ca[0m
+[36m[2026-08-13 01:55:00] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 01:55:00] [WARN] [dispatcher] Skipping backend gemini for task task_xKTCJfGbJxCH: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[33m[2026-08-13 01:55:00] [WARN] [dispatcher] Skipping backend codex for task task_xKTCJfGbJxCH: it cannot honour allowedTools=[Read, Edit, Write] with skipPermissions=false[0m
+[36m[2026-08-13 01:55:00] [INFO] [runner] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:55:00] [INFO] [runner] Denied: Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/contracts/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/contracts/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/projects/**) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/projects/**) Read(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/tasks.json) Edit(//var/folders/8b/p7zp2tt54lqcdfmw0kqtx0cr0000gn/T/ligma-campaign-data-J93bKG/tasks.json)[0m
+[36m[2026-08-13 01:55:00] [INFO] [runner] Backend: claude[0m
+[33m[2026-08-13 01:55:00] [WARN] [dispatcher] Quota governor deferred 2 pending task(s): reserve — retry in 13398s (work stays queued)[0m
+[33m[2026-08-13 01:55:00] [WARN] [dispatcher] Quota governor deferred 13 task(s) awaiting verification: reserve — retry in 13398s (work stays queued)[0m
+[36m[2026-08-13 01:55:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:56:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:57:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:58:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 01:58:29] [INFO] [health] Session completed: session_1786586100010_o7yx (3.48min)[0m
+[harness/verdict] contract ctr_1786584461816 v1 ready for task_xKTCJfGbJxCH
+[36m[2026-08-13 01:58:29] [INFO] [dispatcher] Task task_xKTCJfGbJxCH builder finished (awaiting-verification) by builder via claude[0m
+[36m[2026-08-13 01:59:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:00:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 02:00:00] [INFO] [dispatcher] Found 14 pending task(s)[0m
+[33m[2026-08-13 02:00:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 13098s (work stays queued)[0m
+[33m[2026-08-13 02:00:00] [WARN] [dispatcher] Quota governor deferred 14 task(s) awaiting verification: reserve — retry in 13098s (work stays queued)[0m
+[36m[2026-08-13 02:00:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:01:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:02:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:03:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:04:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:05:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 02:05:00] [INFO] [dispatcher] Found 14 pending task(s)[0m
+[33m[2026-08-13 02:05:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 12798s (work stays queued)[0m
+[33m[2026-08-13 02:05:00] [WARN] [dispatcher] Quota governor deferred 14 task(s) awaiting verification: reserve — retry in 12798s (work stays queued)[0m
+[31m[2026-08-13 02:05:09] [ERROR] [studio] Promote preview for proj_i9xvEEgwd08s failed: the governor is holding sessions back (reserve) — no planner ran[0m
+[36m[2026-08-13 02:05:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:06:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:07:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:08:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:09:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:10:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 02:10:00] [INFO] [dispatcher] Found 14 pending task(s)[0m
+[33m[2026-08-13 02:10:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 12498s (work stays queued)[0m
+[33m[2026-08-13 02:10:00] [WARN] [dispatcher] Quota governor deferred 14 task(s) awaiting verification: reserve — retry in 12498s (work stays queued)[0m
+[36m[2026-08-13 02:10:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:10:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12472s[0m
+[33m[2026-08-13 02:10:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12442s[0m
+[36m[2026-08-13 02:11:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:11:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12412s[0m
+[33m[2026-08-13 02:11:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12382s[0m
+[36m[2026-08-13 02:12:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:12:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12352s[0m
+[33m[2026-08-13 02:12:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12322s[0m
+[36m[2026-08-13 02:13:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:13:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12292s[0m
+[33m[2026-08-13 02:13:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12262s[0m
+[36m[2026-08-13 02:14:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:14:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12232s[0m
+[33m[2026-08-13 02:14:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12202s[0m
+[36m[2026-08-13 02:15:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 02:15:00] [INFO] [dispatcher] Found 14 pending task(s)[0m
+[33m[2026-08-13 02:15:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 12198s (work stays queued)[0m
+[33m[2026-08-13 02:15:00] [WARN] [dispatcher] Quota governor deferred 14 task(s) awaiting verification: reserve — retry in 12198s (work stays queued)[0m
+[36m[2026-08-13 02:15:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:15:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12172s[0m
+[33m[2026-08-13 02:15:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12142s[0m
+[36m[2026-08-13 02:16:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:16:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12112s[0m
+[33m[2026-08-13 02:16:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12082s[0m
+[36m[2026-08-13 02:17:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:17:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12052s[0m
+[33m[2026-08-13 02:17:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 12022s[0m
+[36m[2026-08-13 02:18:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:18:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11992s[0m
+[33m[2026-08-13 02:18:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11962s[0m
+[36m[2026-08-13 02:19:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:19:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11932s[0m
+[33m[2026-08-13 02:19:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11902s[0m
+[36m[2026-08-13 02:20:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 02:20:00] [INFO] [dispatcher] Found 14 pending task(s)[0m
+[33m[2026-08-13 02:20:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 11898s (work stays queued)[0m
+[33m[2026-08-13 02:20:00] [WARN] [dispatcher] Quota governor deferred 14 task(s) awaiting verification: reserve — retry in 11898s (work stays queued)[0m
+[36m[2026-08-13 02:20:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:20:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11872s[0m
+[33m[2026-08-13 02:20:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11842s[0m
+[36m[2026-08-13 02:21:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:21:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11812s[0m
+[33m[2026-08-13 02:21:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11782s[0m
+[36m[2026-08-13 02:22:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:22:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11752s[0m
+[33m[2026-08-13 02:22:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11722s[0m
+[36m[2026-08-13 02:23:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:23:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11692s[0m
+[33m[2026-08-13 02:23:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11662s[0m
+[36m[2026-08-13 02:24:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:24:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11632s[0m
+[33m[2026-08-13 02:24:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11602s[0m
+[36m[2026-08-13 02:25:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 02:25:00] [INFO] [dispatcher] Found 14 pending task(s)[0m
+[33m[2026-08-13 02:25:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 11598s (work stays queued)[0m
+[33m[2026-08-13 02:25:00] [WARN] [dispatcher] Quota governor deferred 14 task(s) awaiting verification: reserve — retry in 11598s (work stays queued)[0m
+[36m[2026-08-13 02:25:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:25:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11572s[0m
+[33m[2026-08-13 02:25:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11542s[0m
+[36m[2026-08-13 02:26:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:26:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11512s[0m
+[33m[2026-08-13 02:26:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11482s[0m
+[36m[2026-08-13 02:27:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:27:25] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11452s[0m
+[33m[2026-08-13 02:27:55] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11422s[0m
+[36m[2026-08-13 02:28:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[33m[2026-08-13 02:28:26] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11392s[0m
+[33m[2026-08-13 02:28:56] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11362s[0m
+[36m[2026-08-13 02:29:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[31m[2026-08-13 02:29:25] [ERROR] [studio] Promote preview for proj_i9xvEEgwd08s failed: the governor is holding sessions back (reserve) — no planner ran[0m
+[33m[2026-08-13 02:29:26] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11332s[0m
+[33m[2026-08-13 02:29:56] [WARN] [governor] studio prompt turn for dsn_XBdJZLFFrl5j waiting on quota: reserve, retry in 11302s[0m
+[36m[2026-08-13 02:30:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 02:30:00] [INFO] [dispatcher] Found 14 pending task(s)[0m
+[33m[2026-08-13 02:30:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 11298s (work stays queued)[0m
+[33m[2026-08-13 02:30:00] [WARN] [dispatcher] Quota governor deferred 14 task(s) awaiting verification: reserve — retry in 11298s (work stays queued)[0m
+[31m[2026-08-13 02:30:03] [ERROR] [studio] Promote preview for proj_i9xvEEgwd08s failed: the governor is holding sessions back (reserve) — no planner ran[0m
+[36m[2026-08-13 02:30:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[31m[2026-08-13 02:30:26] [ERROR] [studio] Design turn dt_ZL3nWABVZkvC deferred by the governor: governor denied studio prompt turn for dsn_XBdJZLFFrl5j for 20min (last reason: reserve)[0m
+[36m[2026-08-13 02:31:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:32:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:33:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:34:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:35:00] [INFO] [dispatcher] Polling for pending tasks...[0m
+[36m[2026-08-13 02:35:00] [INFO] [dispatcher] Found 14 pending task(s)[0m
+[33m[2026-08-13 02:35:00] [WARN] [dispatcher] Quota governor deferred 3 pending task(s): reserve — retry in 10998s (work stays queued)[0m
+[33m[2026-08-13 02:35:00] [WARN] [dispatcher] Quota governor deferred 14 task(s) awaiting verification: reserve — retry in 10998s (work stays queued)[0m
+[36m[2026-08-13 02:35:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:36:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:37:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m
+[36m[2026-08-13 02:38:18] [INFO] [config] Allowed tools: Read, Edit, Write[0m

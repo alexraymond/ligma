@@ -1,0 +1,19 @@
+{
+  "id": "d2a-design-loop",
+  "title": "Shape a multi-screen web app in the Studio and promote the approved design",
+  "goal": "You want a small two-screen web app — a tip calculator with a separate settings screen is exactly the size you mean, and you would be annoyed if anyone padded it out with more screens — and you want a say in how it looks before anyone builds it. You are deliberately economical: one batch of prototypes, one pointed reaction, approve, hand it over. Get prototypes on screen, react to ONE thing the way you would react to a colleague's draft, see your reaction taken up, approve what you end up with, and hand that to the builders. The feedback loop is the part you actually care about: you will not approve or hand anything over until you have typed one comment on a prototype, read what it will tell the designer before sending it, sent it, and watched the design change in response — if you cannot manage that, walking away without promoting anything is the honest outcome.",
+  "steps": [
+    "Ask for the small two-screen app and watch the prototypes arrive on the canvas as they are made",
+    "Find the critique of what was generated without going into settings to switch anything on",
+    "Point at something on a prototype and say what you want changed about it",
+    "See exactly what your comment will tell the designer before anything is sent",
+    "Apply it, and see the design change in response",
+    "Approve the design you have arrived at",
+    "Promote that approved design into work, and read the tasks, criteria, journeys and estimate before confirming"
+  ],
+  "tags": ["campaign", "d2", "ui", "browser"],
+  "origin": "human",
+  "schedule": null,
+  "createdAt": "2026-08-11T00:00:00.000Z",
+  "updatedAt": "2026-08-11T00:00:00.000Z"
+}

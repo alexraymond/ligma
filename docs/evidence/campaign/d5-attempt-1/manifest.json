@@ -1,0 +1,48 @@
+{
+  "chainId": "d5",
+  "title": "Seam audit",
+  "brief": "An automated crawl from the rail reaches every routable surface (zero orphans); a component audit finds one status-pill vocabulary, one shimmer primitive, no green check without a verdict link, and `error` visually distinct from `failed`.",
+  "mode": "live",
+  "result": "green",
+  "bootedInstance": null,
+  "links": [
+    {
+      "kind": "audit-script",
+      "id": "d5-nav-crawl",
+      "description": "Zero orphan routes from the rail, and every retired mission-control URL still redirects.",
+      "script": "scripts/audit/nav-crawl.ts",
+      "args": [],
+      "timeoutMs": 1200000,
+      "status": "green",
+      "detail": "scripts/audit/nav-crawl.ts exited 0",
+      "evidence": [
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d5/audits/d5-nav-crawl.stdout.txt",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d5/audits/d5-nav-crawl.log",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d5/audits/d5-nav-crawl.json"
+      ],
+      "signaturesVerified": 0,
+      "startedAt": "2026-08-11T22:55:41.372Z",
+      "finishedAt": "2026-08-11T22:58:03.964Z"
+    },
+    {
+      "kind": "audit-script",
+      "id": "d5-seam-audit",
+      "description": "One status-pill vocabulary; one shimmer primitive; no green check without a verdict link; `error` styled distinctly from `failed`.",
+      "script": "scripts/audit/seam-audit.ts",
+      "args": [],
+      "timeoutMs": 300000,
+      "status": "green",
+      "detail": "scripts/audit/seam-audit.ts exited 0",
+      "evidence": [
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d5/audits/d5-seam-audit.stdout.txt",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d5/audits/d5-seam-audit.log",
+        "/Users/alexraymond/ligma/docs/evidence/campaign/d5/audits/d5-seam-audit.json"
+      ],
+      "signaturesVerified": 0,
+      "startedAt": "2026-08-11T22:58:03.964Z",
+      "finishedAt": "2026-08-11T22:58:04.300Z"
+    }
+  ],
+  "startedAt": "2026-08-11T22:55:41.371Z",
+  "finishedAt": "2026-08-11T22:58:04.300Z"
+}

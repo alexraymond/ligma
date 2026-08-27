@@ -1,0 +1,126 @@
+{
+  "runId": "vrun_1786498542107",
+  "taskId": null,
+  "contractId": "ctr_1786498542108",
+  "contractVersion": 2,
+  "outcome": "failed",
+  "criterionVerdicts": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-met",
+      "reasoning": "No persona completed the whole journey. naive-user-1 was the only one who met a fully seeded queue and did clear all four kinds of card (12 decisions, design approval, stale brief, spot-check — shots 05/29/30/31), but the 'take one back straight away' leg failed for them: the Undo click timed out (personas/naive-user-1/shots/21-click-failed.png) and their own report says the 10s window had already closed on every earlier answer. They also lost ~10 steps to Deck-view option buttons that do nothing on a plain mouse click (shots 03-click.png, 04-click.png) before stumbling into List view — 'without help' is not what the evidence shows. The spec-auditor, who did get a take-back to work, never had a design approval to clear. Two of the three goal-bearing personas reported goalAchieved:false.",
+      "evidence": [
+        "personas/naive-user-1/shots/21-click-failed.png",
+        "personas/naive-user-1/shots/03-click.png",
+        "personas/naive-user-1/shots/04-click.png",
+        "personas/naive-user-2/shots/12-click-failed.png",
+        "personas/naive-user-3/shots/11-click-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "reasoning": "The spec-auditor called this not-met, but their evidence is from a depleted environment and I am not treating it as authority. All five personas hit the same instance (localhost:58423) sequentially; naive-user-1 ran first (01:35–01:41) and saw the full queue in the Deck: personas/naive-user-1/shots/05-click.png shows header '15 waiting' with 12 decisions listed, and the same session's Deck holds the design-approval card (29-click.png), the stale-brief card marked '2h old' — i.e. pre-flagged, not self-created (30-click.png), and the spot-check card (31-click.png). All four kinds of waiting item were findable in one place. The later personas' 'items never surfaced' findings are consistent with naive-user-1 having consumed those one-shot cards minutes earlier.",
+      "evidence": [
+        "personas/naive-user-1/shots/05-click.png",
+        "personas/naive-user-1/shots/29-click.png",
+        "personas/naive-user-1/shots/30-click.png",
+        "personas/naive-user-1/shots/31-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "met",
+      "reasoning": "Decision cards carry the context needed to decide: personas/naive-user-1/shots/05-click.png shows 'Which animation library should we use for the hero section?' with the trade-off spelled out on the card (Framer Motion ~30kb vs CSS-only) and the options inline; naive-user-1 answered 12 such decisions without leaving the page and personas/naive-user-1/shots/32-requested.png shows 'Answered (12)' with each choice recorded. Corroborated by personas/spec-auditor/shots/38-click.png (card shows 'verification attempts exhausted: 3/3 runs started, none produced a passing verdict' plus four options and a custom-answer box). The information sufficiency the criterion asks for is present; the mouse-click defect is raised separately below.",
+      "evidence": [
+        "personas/naive-user-1/shots/05-click.png",
+        "personas/naive-user-1/shots/32-requested.png",
+        "personas/spec-auditor/shots/38-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "met",
+      "reasoning": "Contradicts the spec-auditor's not-met, which was recorded after the card had been consumed. personas/naive-user-1/shots/29-click.png shows a Deck card 'Approve \"Landing page — hero and CTA\"?' tagged 'Design approval' with a rendered preview of the design on the card, Versions 1 / Critique score 82 / Open pins 0, and Approve / Keep iterating buttons — you can see what you are approving, from the Deck. The next screenshot, personas/naive-user-1/shots/30-click.png, shows the header dropped from '3 waiting' to '2 waiting' with the design card gone after Approve+Enter, so the approval took effect.",
+      "evidence": [
+        "personas/naive-user-1/shots/29-click.png",
+        "personas/naive-user-1/shots/30-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "met",
+      "reasoning": "personas/naive-user-1/shots/30-click.png shows the card 'The brief changed after its contract was compiled' (tag 'Stale brief', 2h old, so pre-existing) in the Deck with the brief text and an 'Acknowledge — the change is cosmetic' action; the following screenshot personas/naive-user-1/shots/31-click.png shows the confirmation toast 'Staleness acknowledged' with an Undo, and the card is gone from the queue. Independently reproduced by the spec-auditor (personas/spec-auditor/shots/34-click.png, card present) after which it did not return.",
+      "evidence": [
+        "personas/naive-user-1/shots/30-click.png",
+        "personas/naive-user-1/shots/31-click.png",
+        "personas/spec-auditor/shots/34-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "not-met",
+      "reasoning": "The card carries the judge's reasoning but not the criterion. In both personas/spec-auditor/shots/08-click.png and personas/naive-user-1/shots/31-click.png the card reads 'Spot-check: did the judge get \"task_demo_1\" right?' — a task id — with the reasoning 'not-met: At 390×844 the CTA sits 60px below the fold…'. The criterion itself, 'CTA button is above the fold on mobile' (crit_2 of that run), appears only after opening the run page: personas/spec-auditor/shots/18-goto.png. So you cannot see what was being judged without opening the run, which is exactly what the criterion forbids.",
+      "evidence": [
+        "personas/spec-auditor/shots/08-click.png",
+        "personas/naive-user-1/shots/31-click.png",
+        "personas/spec-auditor/shots/18-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "unknown",
+      "reasoning": "The ten-plus affordance and the batch machinery were each seen, but never together. personas/naive-user-1/shots/05-click.png shows the banner appear at 12 pending — '12 decisions waiting — select several and act on them in one pass' with a 'Select all' button — yet that persona then answered all 12 one at a time and never used it. The spec-auditor did execute a batch answer (personas/spec-auditor/shots/40-click.png: '1 selected', answer box 'Send back to the builder', Answer / Dismiss / Defer 7d) but with a single item, and said so themselves. No persona batched ten or more and observed the result.",
+      "evidence": [
+        "personas/naive-user-1/shots/05-click.png",
+        "personas/spec-auditor/shots/39-click.png",
+        "personas/spec-auditor/shots/40-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "met",
+      "reasoning": "personas/spec-auditor/shots/37-click.png shows the just-answered decision under 'Answered (18)' with a live 'Undo · 26s' control; after clicking it, personas/spec-auditor/shots/38-click.png shows 'Answered (17)' and the same decision back under 'Needs Your Input (1)' with its options — the answer returned to the queue. Corroborated by the returning-user, who saw the answered count fall 15→14 after an undo. Caveats below: three personas' undo clicks timed out, and the countdown durations do not match the '10 seconds' copy.",
+      "evidence": [
+        "personas/spec-auditor/shots/37-click.png",
+        "personas/spec-auditor/shots/38-click.png",
+        "personas/naive-user-1/shots/24-click.png"
+      ]
+    }
+  ],
+  "humanDecisions": [
+    {
+      "question": "Deck-view option buttons need click-then-Enter, with no selected state shown. A mouse-only user is silently stuck in the default view. Accept, or is this a release blocker?",
+      "context": "Four personas independently hit this. naive-user-1 clicked the same option twice with reloads and nothing happened (shots 03-click.png, 04-click.png) then answered fine with one click in List view; naive-user-3 and naive-user-2 called it a blocker; the spec-auditor twice concluded the buttons were broken before finding the two-step flow. It does not map cleanly to one criterion — the card does show enough to decide — but it is the single biggest obstacle in the evidence."
+    },
+    {
+      "question": "The undo control appears to re-render every countdown tick, so deliberate clicks on it time out. Fix before shipping, or accept that take-back works only when you catch it?",
+      "context": "Undo works when it lands (spec-auditor 37→38-click). But naive-user-1 (21-click-failed.png), naive-user-2 (12-click-failed.png) and naive-user-3 (11-click-failed.png) all had a click on a visibly-counting 'Undo · 9s' button time out after 10s. Separately the page copy says 'Each answer can be taken back for 10 seconds' while live countdowns showed 26s (spec-auditor 37-click.png) and 87s (returning-user) — pick one and make the copy true."
+    },
+    {
+      "question": "The design-approval and stale-brief cards are one-shot fixtures on a shared instance, so only the first persona could test them. Re-seed per persona before the next run?",
+      "context": "All five personas used localhost:58423 sequentially. naive-user-1 (01:35–01:41) cleared the design approval and the stale brief; every later persona reported them 'missing from the product', and the spec-auditor marked crit_1 and crit_3 not-met on that basis. I overrode those calls from naive-user-1's screenshots, but the run produced three misleading major findings because of it."
+    },
+    {
+      "question": "Spot-check answers may be recorded with the wrong polarity, and one persona could not clear the spot-check at all. Worth a look before accepting crit_5's fix?",
+      "context": "naive-user-3 clicked 'Looks right' (agreeing with the judge) and got a follow-up card saying the verdict 'was challenged by spot-check'; the spec-auditor's answered list is full of 'Judge calibration: … was challenged by spot-check' entries. naive-user-2 reported the spot-check card persisting through reload with every answer attempt firing a request that 405'd. Not enough clean evidence to rule on, but it points at a real bug next to the criterion-missing one."
+    },
+    {
+      "question": "The stale-brief card offers only 'Acknowledge — the change is cosmetic' even when the edit was substantive. Enough for now?",
+      "context": "The spec-auditor edited the brief to add a real functional requirement ('CTA must be above the fold at 390px') and the only resolution offered was to call it cosmetic (personas/spec-auditor/shots/28-click.png). There is no path from the card to recompile or propagate. crit_4 is met as written, but the card can only ever be dismissed."
+    },
+    {
+      "question": "Counts disagree across views and the console errors on every load. Cosmetic, or fix now?",
+      "context": "Sidebar badge 12 vs Deck header 15 (naive-user-1 05-click.png) because the sidebar counts decisions only; List view hides spot-check and design/stale cards entirely, so it reads 'No pending decisions' while the header says '1 waiting' (three personas). Every page load 404s on /api/projects/proj_demo_2/brief and proj_demo_3/brief, and a poll to /api/dashboard returns 405 roughly every 30 seconds."
+    }
+  ],
+  "judgeModel": "opus",
+  "createdAt": "2026-08-12T02:24:13.637Z",
+  "signature": {
+    "payloadHash": "ca3554265b992a68069c1ef5c4259ce51412411107379488601bd5fc09df4711",
+    "signature": "e6a6d4b8edb2c428d2b0c38368c5d0ef38826438020441e5f2356ba9bda55b336cd767f596814a4a913da34476a6ea8a37371a867ff7e90590352de2ad12980b",
+    "publicKey": "MCowBQYDK2VwAyEAuCdQvfPWbtyeVg8T45YLTXFjdO4MXYx4qQTU/Wi4z0A="
+  },
+  "journeyId": "d4-deck",
+  "projectId": "proj_ligma"
+}

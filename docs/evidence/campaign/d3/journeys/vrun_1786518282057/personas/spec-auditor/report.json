@@ -1,0 +1,149 @@
+{
+  "charter": "spec-auditor",
+  "runId": "vrun_1786518282057",
+  "personaSeed": null,
+  "goalAchieved": null,
+  "stepCount": 84,
+  "wrongTurns": 2,
+  "elapsedMs": 3744332,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "Proving a journey from Verify ran for ~45 minutes, consumed Claude quota (29→32 sessions), then ended in 'error — Harness malfunction — not a verdict — governor denied persona returning-user for 20min (last reason: reserve)'. No behaviour baseline was recorded from the run, and a user-initiated Prove-it gets no access to the 8-session user reserve, so on a busy day the Verify surface simply cannot record what the product does.",
+      "evidence": [
+        "personas/spec-auditor/shots/21-click.png",
+        "personas/spec-auditor/shots/31-requested.png"
+      ],
+      "criterionId": "crit_7"
+    },
+    {
+      "severity": "major",
+      "summary": "Boot-recipe inference pinned port 5173 (its rationale even calls it 'the only honest strategy') while the dev server actually bound 5174, so the first adoption attempt burned an install, a boot, and 120s of health polling before failing; recovery required the user to hand-edit a raw JSON blob rather than accept a suggested fix, even though the correct port was sitting in the dev-server log the product itself displayed.",
+      "evidence": [
+        "personas/spec-auditor/shots/04-click.png",
+        "personas/spec-auditor/shots/05-click.png"
+      ],
+      "criterionId": "crit_2"
+    },
+    {
+      "severity": "minor",
+      "summary": "The journey's proof run is invisible on every Runs surface: while the journey chip said 'running', the project Runs tab said '0 running · 2 total' and the global Runs page said '0 running · 5 total' (all adoption runs). The adoption sheet promises runs are 'watchable like any other run on Runs', but a user has no way to watch or cancel a proof run.",
+      "evidence": [
+        "personas/spec-auditor/shots/28-click.png"
+      ],
+      "criterionId": "crit_7"
+    },
+    {
+      "severity": "minor",
+      "summary": "Re-adopting a repo whose .ligma/ already holds journeys merges without deduplication: 5 accepted proposals produced a Verify surface with 8 journeys including near-duplicates ('Figure out what went wrong' vs 'Diagnose problems and report a bug'; 'Ground designs in my codebase's design system' vs 'Ground generated designs in my repo's design system'; 'Make the app mine' vs 'Tune how the app behaves').",
+      "evidence": [
+        "personas/spec-auditor/shots/20-click.png"
+      ],
+      "criterionId": "crit_5"
+    },
+    {
+      "severity": "minor",
+      "summary": "Completed runs' displayed durations grow with wall-clock time: the same finished adoption run showed 'adopt · 25m 21s total', then '45m 56s total', then later times, and an older done run climbed from '2h 19m' to '2h 51m' — durations appear computed against now instead of the run's end time.",
+      "evidence": [
+        "personas/spec-auditor/shots/31-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Immediately after clicking 'Prove it' the journey chip read 'failed' with no run started; ~6 minutes later it flipped to 'running' with a new last-run timestamp, with no user action in between. The transient 'failed' state with no explanation reads as an instant failure.",
+      "evidence": [
+        "personas/spec-auditor/shots/21-click.png"
+      ],
+      "criterionId": "crit_7"
+    },
+    {
+      "severity": "note",
+      "summary": "A freshly created project inherited a 'done' verdict chip, a 'Last run 2026-08-12 07:56' link, a populated regression corpus, and a central baseline recorded at 08:25 — all from runs that predate the project's creation. Useful continuity, but nothing tells the user this history came from a previous adoption of the same repo.",
+      "evidence": [
+        "personas/spec-auditor/shots/20-click.png",
+        "personas/spec-auditor/shots/41-goto.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": [
+    {
+      "criterionId": "crit_goal",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/01-goto.png",
+        "personas/spec-auditor/shots/18-click.png",
+        "personas/spec-auditor/shots/19-requested.png",
+        "personas/spec-auditor/shots/40-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/01-goto.png",
+        "personas/spec-auditor/shots/02-click.png",
+        "personas/spec-auditor/shots/03-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/06-requested.png",
+        "personas/spec-auditor/shots/04-click.png",
+        "personas/spec-auditor/shots/05-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/06-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/06-requested.png",
+        "personas/spec-auditor/shots/16-click.png",
+        "personas/spec-auditor/shots/17-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/20-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/19-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "not-met",
+      "evidence": [
+        "personas/spec-auditor/shots/21-click.png",
+        "personas/spec-auditor/shots/31-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_8",
+      "status": "met",
+      "evidence": [
+        "personas/spec-auditor/shots/39-click.png",
+        "personas/spec-auditor/shots/40-requested.png",
+        "personas/spec-auditor/shots/41-goto.png"
+      ]
+    }
+  ],
+  "transcriptPath": "personas/spec-auditor/transcript.jsonl",
+  "invalid": false
+}

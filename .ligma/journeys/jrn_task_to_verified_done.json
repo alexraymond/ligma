@@ -1,0 +1,17 @@
+{
+  "id": "jrn_task_to_verified_done",
+  "title": "Follow a task to a verified done",
+  "goal": "You want to know whether a finished task is actually proven, not just marked complete. Starting from the board, find out what backs up its done-ness.",
+  "steps": [
+    "Find a task that claims to be done",
+    "Open it and find whether it was verified",
+    "Follow the verification to the evidence behind it",
+    "See the per-criterion outcomes and at least one artefact the panel captured",
+    "Tell apart a task that passed verification from one that is merely marked done"
+  ],
+  "tags": ["core", "verify", "evidence"],
+  "origin": "human",
+  "schedule": null,
+  "createdAt": "2026-08-11T00:00:00.000Z",
+  "updatedAt": "2026-08-11T00:00:00.000Z"
+}

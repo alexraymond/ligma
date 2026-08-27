@@ -1,0 +1,93 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786494086592",
+  "personaSeed": "You are a careful academic researcher. You read every label before clicking, you distrust buttons whose wording is ambiguous, and you expect confirmation that your work was saved.",
+  "goalAchieved": false,
+  "stepCount": 53,
+  "wrongTurns": 6,
+  "elapsedMs": 838168,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "The product crashed mid-session and stayed unreachable (ERR_CONNECTION_REFUSED on every page) for over 10 minutes of retries, ending the session entirely. It went down immediately after ordinary navigation (clicking a task card, then opening a project board).",
+      "evidence": [
+        "personas/naive-user-2/shots/21-goto-failed.png",
+        "personas/naive-user-2/shots/50-requested.png",
+        "personas/naive-user-2/shots/51-goto-failed.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "blocker",
+      "summary": "There is no single place to clear the waiting items. The Deck — the only page framed as the queue for 'when your AI agents need your input' — shows 'No pending decisions' while a design approval sits in the Priority Matrix, a task verdict sits under a project's Verify tab, and no brief is visible anywhere. A user told 'several things are waiting' finds an empty Deck.",
+      "evidence": [
+        "personas/naive-user-2/shots/08-goto.png",
+        "personas/naive-user-2/shots/10-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The verdict cannot be spot-checked: the verification page shows only the word 'Error' with a timestamp — no verdict content, no criteria, no approve/reject controls — and its Timeline/other tabs show nothing extra. The Runs page reveals verification runs repeatedly failing with 'Harness malfunction — not a verdict — verification exited 1'.",
+      "evidence": [
+        "personas/naive-user-2/shots/13-click.png",
+        "personas/naive-user-2/shots/14-click.png",
+        "personas/naive-user-2/shots/16-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The design-approval task ('Review and approve landing page design', assigned to me) cannot be acted on: clicking its card in the Priority Matrix does nothing — no detail view, no approve/request-changes controls appear, despite the card text saying 'Approve or request changes.'",
+      "evidence": [
+        "personas/naive-user-2/shots/18-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Answered decision cards on the Deck are inert — clicking one does nothing — so there is no way to review an answer's detail or take a decision back after it has been answered.",
+      "evidence": [
+        "personas/naive-user-2/shots/09-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "On first visit the Deck rendered completely blank (only a breadcrumb, with the sidebar degraded to 'Governor offline'); a manual reload was required to see any content. Background requests for project briefs returned 404 on the same load.",
+      "evidence": [
+        "personas/naive-user-2/shots/02-goto.png",
+        "personas/naive-user-2/shots/08-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "No 'brief' is findable anywhere in the product (project pages, Library, search), even though the app itself requests project briefs in the background and gets 404s — so a stale brief waiting on the user is invisible.",
+      "evidence": [
+        "personas/naive-user-2/shots/05-goto.png",
+        "personas/naive-user-2/shots/15-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Global search for 'approve' does not find the 'Review and approve landing page design' task; it returns unrelated fuzzy matches (e.g. brain-dump notes and an unrelated mission), so search cannot route a user to their own pending approval.",
+      "evidence": [
+        "personas/naive-user-2/shots/07-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Every page load logs a React hydration-mismatch error in the console, and background API calls intermittently fail (404 on /api/projects/*/brief, 405 on /api/dashboard, aborted /api/tasks and /api/sidebar).",
+      "evidence": [
+        "personas/naive-user-2/shots/01-goto.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-2/transcript.jsonl",
+  "invalid": false
+}

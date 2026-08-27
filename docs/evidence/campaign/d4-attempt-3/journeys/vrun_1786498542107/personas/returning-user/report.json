@@ -1,0 +1,73 @@
+{
+  "charter": "returning-user",
+  "runId": "vrun_1786498542107",
+  "personaSeed": null,
+  "goalAchieved": true,
+  "stepCount": 29,
+  "wrongTurns": 3,
+  "elapsedMs": 417201,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "Deck card-view answer buttons fail silently. Clicking 'The judge got this wrong' twice, 'Looks right' twice, and 'Raise the attempt cap' once each left the card on screen with no feedback, no error, and no visible state change; the challenge finally took effect minutes later with no indication it had registered. The same options answered instantly when clicked from the List view.",
+      "evidence": [
+        "personas/returning-user/shots/05-click.png",
+        "personas/returning-user/shots/06-click.png",
+        "personas/returning-user/shots/08-click.png",
+        "personas/returning-user/shots/13-click.png",
+        "personas/returning-user/shots/15-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The design-to-approve and stale-brief items never surfaced as deck cards; the deck declared 'Deck clear — Nothing is waiting on you right now' with them unaddressed. On page load, two brief endpoints (/api/projects/proj_demo_2/brief and /api/projects/proj_demo_3/brief) returned HTTP 404.",
+      "evidence": [
+        "personas/returning-user/shots/18-click.png",
+        "personas/returning-user/shots/02-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Undo window doesn't match its own copy: the page says 'Each answer can be taken back for 10 seconds', but live countdowns showed 'Undo · 87s' on one answer and 'Undo · 17s' on another. The undo itself worked — the answer returned to pending and the answered count dropped from 15 to 14.",
+      "evidence": [
+        "personas/returning-user/shots/15-click.png",
+        "personas/returning-user/shots/17-click.png",
+        "personas/returning-user/shots/16-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Pending counts disagree between views: the header said 'Deck 1 waiting' (and later '2 waiting') while the List view on the same page said 'No pending decisions', because spot-check cards are counted in the header but never listed in List view.",
+      "evidence": [
+        "personas/returning-user/shots/03-click.png",
+        "personas/returning-user/shots/09-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "A background poll to /api/dashboard fails every 30 seconds with HTTP 405 Method Not Allowed, steadily accumulating console errors during the session.",
+      "evidence": [
+        "personas/returning-user/shots/06-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Data persistence held everywhere it was tested: the answers 'Send back to the builder' and 'Leave it, I was wrong' survived reload and a fresh tab session verbatim, and the brain-dump entry 'Deck spot-check note — CTA sits 60px below fold @390×844; re-test after \"hero v2\" fix' came back character-for-character (em-dash, ×, and quotes intact) after both reload and a new session.",
+      "evidence": [
+        "personas/returning-user/shots/20-requested.png",
+        "personas/returning-user/shots/21-goto.png",
+        "personas/returning-user/shots/22-goto.png",
+        "personas/returning-user/shots/23-requested.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/returning-user/transcript.jsonl",
+  "invalid": false
+}

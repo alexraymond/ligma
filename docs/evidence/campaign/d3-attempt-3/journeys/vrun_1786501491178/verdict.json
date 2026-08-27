@@ -1,0 +1,126 @@
+{
+  "runId": "vrun_1786501491178",
+  "taskId": null,
+  "contractId": "ctr_1786501491178",
+  "contractVersion": 3,
+  "outcome": "failed",
+  "criterionVerdicts": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-met",
+      "reasoning": "The whole journey demonstrably works for one repo and demonstrably dead-ends for others. Affirmative: spec-auditor took /Users/alexraymond/ligma-classic from the home form (shots/11-click.png) through a single review sheet (17-requested.png), one confirm (29-click.png), to a live project whose Verify and Knowledge surfaces are populated (163-goto.png, 161-goto.png); naive-user-3 repeated the shape on a second repo. Contradicting: two of the four valid personas never got a project at all — returning-user (shots/20-requested.png) and naive-user-2 (shots/04-requested.png) hit 'Harness malfunction — not a verdict · Command failed: pnpm install' on /Users/alexraymond/open-design and /Users/alexraymond/mission-control across four attempts, with no retry control, no run log, no way to correct the install command (correction is only offered after install succeeds), and no adoption run listed on Runs. So 'a user can accomplish this without help' holds only for repos the product's own pnpm install happens to survive. Separately, the goal's 'without anything being written into that repo that does not belong to it' clause is contradicted on its face by the confirm footer 'One confirm writes .ligma/ into the repo and creates the project' (29-click.png) and the post-adopt toast '5 journeys written into .ligma/' (30-click.png) — a product-intent call I have flagged for a human. WEAKENED BY THE INVALID RUN: naive-user-1 (the impatient, non-technical spreadsheet persona) produced no usable evidence, so the 'without help' clause is untested for exactly the user least likely to cope with the failure page or the long review sheet.",
+      "evidence": [
+        "personas/spec-auditor/shots/11-click.png",
+        "personas/spec-auditor/shots/29-click.png",
+        "personas/spec-auditor/shots/163-goto.png",
+        "personas/returning-user/shots/20-requested.png",
+        "personas/naive-user-2/shots/04-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "reasoning": "spec-auditor's shots/11-click.png shows the Home page 'What are we making?' card in 'Adopt a repo' mode with /Users/alexraymond/ligma-classic typed and Adopt in flight; that submission produced the adoption review sheet (17-requested.png) and then the ligma-classic project (30-click.png). The contract's named repo was brought in from the home page. naive-user-3 corroborates with a second repo. Note the same entry point failed for open-design and mission-control (returning-user shots/20-requested.png), but the criterion is about bringing in an existing repo from the home page and the named example did it.",
+      "evidence": [
+        "personas/spec-auditor/shots/11-click.png",
+        "personas/spec-auditor/shots/17-requested.png",
+        "personas/spec-auditor/shots/30-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "met",
+      "reasoning": "spec-auditor's shots/17-requested.png shows the review sheet leading with an inferred 'Boot recipe' — prose rationale ('The root pnpm dev runs turbo, which launches an Electron desktop app … the only plain HTTP surface is the ligma-website package'), the derived JSON ([REDACTED]) rendered read-only, and a single 'Correct it' escape hatch. No fields to fill. It is accepted by the one bottom button 'Adopt this repo' (29-click.png), and afterwards Knowledge shows the same recipe marked 'ready' (161-goto.png). Weaker than it looks for comprehension: the invalid naive-user-1 run means the least technical persona never had to read a raw JSON boot recipe, and naive-user-3 flagged that on a self-adopted repo the recipe on Knowledge contradicts the project.md printed directly below it (naive-user-3 shots/56-requested.png).",
+      "evidence": [
+        "personas/spec-auditor/shots/17-requested.png",
+        "personas/spec-auditor/shots/29-click.png",
+        "personas/spec-auditor/shots/161-goto.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "met",
+      "reasoning": "The crawl produced repo-specific journeys, not generic ones: spec-auditor's shots/163-goto.png lists journeys each badged 'PROPOSED BY CRAWL' with descriptions tied to the actual ligma-classic product ('Get the right installer for my machine and get past macOS Gatekeeper', 'Compare Ligma against the tool I already use'), and the pre-adopt sheet also carried a 'Confusion log' of findings the exploratory persona hit inside that repo's site (29-click.png). naive-user-3 independently reports 5 crawl-proposed journeys on its adoption.",
+      "evidence": [
+        "personas/spec-auditor/shots/163-goto.png",
+        "personas/spec-auditor/shots/29-click.png",
+        "personas/spec-auditor/shots/17-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "met",
+      "reasoning": "The review happens before any write: spec-auditor's sheet (17-requested.png, 29-click.png) shows the boot recipe with 'Correct it', the project name/shape, the proposed journeys and the confusion log, and its footer states plainly 'One confirm writes .ligma/ into the repo and creates the project' next to the single 'Adopt this repo' button — and Missions was still empty at that point (15-goto.png), confirming nothing had been committed yet. Two caveats I am not treating as failures but am escalating: proposals arrive pre-accepted '5 of 5' (opt-out, not opt-in) and the confirm button sits below roughly five screens of content, which naive-user-3 could only find by probing button names.",
+      "evidence": [
+        "personas/spec-auditor/shots/17-requested.png",
+        "personas/spec-auditor/shots/29-click.png",
+        "personas/spec-auditor/shots/15-goto.png",
+        "personas/naive-user-3/shots/36-requested.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "met",
+      "reasoning": "spec-auditor's shots/163-goto.png is the ligma-classic project's Verify tab, showing a Journeys list where every entry carries the 'PROPOSED BY CRAWL' badge and a 'Prove it' action — the adoption's proposals landed on the Verify surface without further user action. The same journeys also appear summarised on Knowledge with a 'Prove them in Verify' link (162-click.png).",
+      "evidence": [
+        "personas/spec-auditor/shots/163-goto.png",
+        "personas/spec-auditor/shots/162-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "met",
+      "reasoning": "spec-auditor's shots/161-goto.png shows the ligma-classic Knowledge tab populated straight from the crawl: the boot recipe badged 'ready' with its resolved install/dev/port/health values, the inferred Shape (ui), and the repo's project.md rendered inline with the adoption run stamp; scrolling further (162-click.png) shows the full first UX audit and the journeys list. Corroborated by naive-user-3 on a second adoption (shots/56-requested.png), which also flagged the recipe/project.md contradiction there.",
+      "evidence": [
+        "personas/spec-auditor/shots/161-goto.png",
+        "personas/spec-auditor/shots/162-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "unknown",
+      "reasoning": "No persona ever saw a behaviour record actually held centrally. The only surface that speaks to this is the Baselines panel on Knowledge (spec-auditor shots/162-click.png), which asserts 'recorded centrally and never in the repo' but then says 'No characterization baselines yet. The first panel run over a journey records one.' — a promise with zero data behind it, which is a claim, not an observation. What evidence there is points the other way: the behaviour description that does exist, the first UX audit / confusion log, is labelled on the sheet itself as 'appended to .ligma/project.md on adopt' (29-click.png, naive-user-3 shots/36-requested.png), and Knowledge shows the boot recipe living at /Users/alexraymond/ligma-classic/.ligma/boot.json with a toast '5 journeys written into .ligma/' (30-click.png). Browser-only personas could not inspect the filesystem or git status to settle where anything really sits. Whether .ligma/ config counts separately from 'what it recorded about the current behaviour' is precisely the distinction the panel needs to rule on, so I am not calling this not-met — but nothing here lets a user satisfy themselves of the claim.",
+      "evidence": [
+        "personas/spec-auditor/shots/162-click.png",
+        "personas/spec-auditor/shots/29-click.png",
+        "personas/spec-auditor/shots/30-click.png",
+        "personas/naive-user-3/shots/36-requested.png"
+      ]
+    }
+  ],
+  "humanDecisions": [
+    {
+      "question": "Does .ligma/ (boot.json, journeys/*.json, the UX audit appended to project.md) count as 'belonging to' the adopted repo, or does writing it violate the goal's no-foreign-writes clause?",
+      "context": "The confirm footer says 'One confirm writes .ligma/ into the repo and creates the project' and the post-adopt toast says '5 journeys written into .ligma/'; Knowledge shows the recipe at /Users/alexraymond/ligma-classic/.ligma/boot.json. This is disclosed, deliberate and consistent — it is a product-intent call, not a bug, but it is the exact thing crit_goal and crit_7 fence off."
+    },
+    {
+      "question": "Is 'the repo must survive our pnpm install' an acceptable precondition for adoption, given the failure is a total dead end?",
+      "context": "open-design and mission-control failed four times across two personas with 'Harness malfunction — not a verdict'. The page misattributes a repo-side failure ('packages field missing or empty') to the harness, says retrying is safe when retrying is identical, offers no retry button, no log, no way to edit the install command, and logs no run on the Runs page. Two personas rated this a blocker; each attempt also burned Claude quota (Governor 4/40 → 8/40)."
+    },
+    {
+      "question": "Should re-adopting an already-adopted repo be blocked or warned, rather than silently merging a second batch of journeys?",
+      "context": "spec-auditor's second adoption of ligma-classic left Verify with 8 journeys including near-duplicate pairs ('Download and install the desktop app' vs 'Download and successfully install the app'), which pollutes the verification queue and would be paid for twice."
+    },
+    {
+      "question": "Is opt-out review acceptable — proposals arriving pre-accepted '5 of 5' with the only commit button below ~5 screens of content?",
+      "context": "The review sheet technically precedes all writes, but a hurried user can scroll past everything and confirm without reading; naive-user-3 located the confirm button only by blind-probing button names."
+    },
+    {
+      "question": "Which description of 'how it runs' is authoritative when the inferred boot recipe contradicts the repo's own project.md on the same Knowledge page?",
+      "context": "naive-user-3 shots/56-requested.png: the recipe says Vite/Electron, fixed port 5173, marker '/@vite/client', while the project.md rendered directly beneath says boot.json boots a Next.js app in apps/web on an OS-assigned port with marker 'Ligma'. A reader cannot tell which is true."
+    },
+    {
+      "question": "Is the repeated /api/dashboard HTTP 405 background poll worth fixing before ship?",
+      "context": "Three independent personas observed a POST to /api/dashboard returning 405 every 30–45s while sitting on Home, filling the console with errors. Harmless to the journey, visible to anyone with devtools open."
+    }
+  ],
+  "judgeModel": "opus",
+  "createdAt": "2026-08-12T04:05:34.575Z",
+  "signature": {
+    "payloadHash": "1d01063858dc49c8ec4e7c8c6c193828bca2d75b69b1e184044f450571f9ab94",
+    "signature": "facbcbf0c3c4338df366a425f00275a733201baafbb1d8b6b78ea18dec913d98a99ae3ddbc8b8e0ffe9e598076cd12a45aef682c12f52f630ccf720fd33a3f0a",
+    "publicKey": "MCowBQYDK2VwAyEAuCdQvfPWbtyeVg8T45YLTXFjdO4MXYx4qQTU/Wi4z0A="
+  },
+  "journeyId": "d3-adopt",
+  "projectId": "proj_ligma"
+}

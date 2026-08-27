@@ -1,0 +1,25 @@
+{
+ "id": "d3-adopt",
+ "title": "Adopt an existing repo ligma did not build",
+ "goal": "You have a repo on your machine that this system has never seen. Bring it in, confirm the one thing it needs you to confirm about how it runs, and end up with a project that already knows what its users do and what it currently does. The project's own knowledge (.ligma/ \u2014 boot recipe, journeys, notes) belongs in the repo and will be written there on your confirm; what must NEVER be written into the repo is the system's record of current behaviour (characterization baselines) \u2014 that stays in the system's central store.",
+ "steps": [
+  "Bring in a repository that already exists on this machine, from the home page \u2014 the design-tool checkout at /Users/alexraymond/ligma-classic is one such repo",
+  "Confirm how the app is run, once, rather than filling in a form about it",
+  "Let it explore the repo and propose the journeys its users take",
+  "Review what it proposes before any of it is written down",
+  "Find the project's Verify surface already populated with those journeys",
+  "Find the project's Knowledge surface already populated from the repo",
+  "Prove one of the proposed journeys from the Verify surface and wait for its run to finish, so the system records what the product currently does",
+  "Confirm from the project's Knowledge surface that the recorded behaviour baseline lives in the system's central store \u2014 and that the repo's own .ligma/ carries only the boot recipe, journeys and notes, not behaviour records"
+ ],
+ "tags": [
+  "campaign",
+  "d3",
+  "ui",
+  "browser"
+ ],
+ "origin": "human",
+ "schedule": null,
+ "createdAt": "2026-08-11T00:00:00.000Z",
+ "updatedAt": "2026-08-11T00:00:00.000Z"
+}

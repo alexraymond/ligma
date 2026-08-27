@@ -1,0 +1,109 @@
+{
+  "runId": "vrun_1786494999069",
+  "taskId": null,
+  "contractId": "ctr_1786494999069",
+  "contractVersion": 2,
+  "outcome": "failed",
+  "criterionVerdicts": [
+    {
+      "criterionId": "crit_goal",
+      "status": "not-met",
+      "reasoning": "Observed, not merely absent: the product stopped serving. naive-user-1's steps.jsonl shows the app answering normally for steps 1-9 (home page, Adopt form, /projects at 00:39:11) and then every request from step 10 (00:39:30) onward returning net::ERR_CONNECTION_REFUSED for the remaining 26 steps (personas/naive-user-1/shots/11-goto-failed.png). The other four personas — naive-user-2 (36 attempts, ~15 min), naive-user-3 (17 attempts), returning-user (27 attempts), spec-auditor (24 attempts) — never got a single page to load, each recording only the browser connection-error page. A user cannot accomplish the journey unassisted when the process dies mid-session and does not come back.",
+      "evidence": [
+        "personas/naive-user-1/shots/11-goto-failed.png",
+        "personas/naive-user-2/shots/01-goto-failed.png",
+        "personas/naive-user-3/shots/17-goto-failed.png",
+        "personas/spec-auditor/shots/01-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "unknown",
+      "reasoning": "Partial: naive-user-1's personas/naive-user-1/shots/05-click.png does show the home page carrying an 'Adopt a repo' toggle, a path textbox, and an Adopt button with the caption 'A run will infer the boot recipe and propose journeys — you confirm them on one sheet.' But no repository was ever brought in. The only path ever submitted (steps 3-8 of personas/naive-user-1/steps.jsonl) was a non-git sandbox folder, which was rejected; /Users/alexraymond/ligma-classic was never entered anywhere, and the process died before a second attempt. spec-auditor recorded crit_1 as not-tested. An affordance being visible is not the promised result.",
+      "evidence": [
+        "personas/naive-user-1/shots/05-click.png",
+        "personas/naive-user-1/steps.jsonl",
+        "personas/spec-auditor/shots/01-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "unknown",
+      "reasoning": "No persona ever reached a boot-recipe confirmation. The home-page caption in personas/naive-user-1/shots/05-click.png promises the run will 'infer the boot recipe', but no run ever started, so nothing was confirmed once or otherwise. spec-auditor recorded crit_2 as not-tested against personas/spec-auditor/shots/02-goto-failed.png.",
+      "evidence": [
+        "personas/spec-auditor/shots/02-goto-failed.png",
+        "personas/naive-user-1/steps.jsonl"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "unknown",
+      "reasoning": "No exploration or journey proposal was ever observed. naive-user-1's last successful step was a skeleton-loading /projects page (personas/naive-user-1/shots/07-goto.png) with no adopted project on it; every subsequent step failed on connection refused. spec-auditor: not-tested.",
+      "evidence": [
+        "personas/naive-user-1/shots/07-goto.png",
+        "personas/spec-auditor/shots/03-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "unknown",
+      "reasoning": "The review-before-write sheet was never reached by any persona. spec-auditor recorded crit_4 as not-tested (personas/spec-auditor/shots/04-goto-failed.png); no other persona's steps.jsonl contains a step past the home page and /projects.",
+      "evidence": [
+        "personas/spec-auditor/shots/04-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "unknown",
+      "reasoning": "No project's Verify surface was ever opened — no project was created. spec-auditor recorded crit_5 as not-tested against personas/spec-auditor/shots/05-goto-failed.png; returning-user, who would have corroborated with existing data, never loaded a page at all (27 consecutive connection refusals).",
+      "evidence": [
+        "personas/spec-auditor/shots/05-goto-failed.png",
+        "personas/returning-user/shots/27-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "unknown",
+      "reasoning": "No Knowledge surface was ever reached. spec-auditor recorded crit_6 as not-tested (personas/spec-auditor/shots/06-goto-failed.png), and no other persona's steps.jsonl shows a successful navigation to any project-scoped page.",
+      "evidence": [
+        "personas/spec-auditor/shots/06-goto-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "unknown",
+      "reasoning": "Nothing was recorded about any repo's behaviour, so where it is kept could not be checked. The only related signal is a wording claim: naive-user-1 reported a validation message saying a folder 'is not a git repository — an ephemeral env is cut from a git worktree', citing personas/naive-user-1/shots/06-click.png — but I opened that screenshot and it shows the unchanged Adopt form with no toast or error text visible, so the claim has no screenshot behind it. Even if shown, a hint about worktrees is not evidence that behaviour records are kept centrally rather than committed into the adopted repo. spec-auditor: not-tested.",
+      "evidence": [
+        "personas/naive-user-1/shots/06-click.png",
+        "personas/spec-auditor/shots/06-goto-failed.png"
+      ]
+    }
+  ],
+  "humanDecisions": [
+    {
+      "question": "Is the process death a product defect or a harness/environment problem — and should the run be repeated before this verdict is treated as a judgement on the feature?",
+      "context": "The server answered nine steps for naive-user-1 (last success 00:39:11 on /projects) and was refusing connections 19 seconds later, staying down for the remaining ~10 minutes and for all four other personas who started later. The crash immediately follows an Adopt POST with a non-git path plus a /projects visit, which is a plausible crash trigger worth reproducing, but nothing in the evidence proves causation. Every criterion below crit_goal is unknown purely because of this."
+    },
+    {
+      "question": "Adopt with an invalid path shows no visible error on first submit — acceptable, or a fix before this journey ships?",
+      "context": "naive-user-1 clicked Adopt at 00:38:02 and the screenshot two seconds later (personas/naive-user-1/shots/05-click.png) shows the form completely unchanged — same spinner-state button, no message. The second click's screenshot (06-click.png) is likewise unchanged. The persona reports an HTTP 400 was returned both times. A first-time user gets no feedback that anything happened."
+    },
+    {
+      "question": "The pre-crash instability signals on a page that did load — worth investigating separately?",
+      "context": "personas/naive-user-1/shots/01-goto.png shows the home page stuck in skeleton placeholders with the sidebar reading 'Governor offline', and 07-goto.png shows /projects in the same skeleton state; the persona also logged an HTTP 405 from /api/dashboard and a React hydration-mismatch error. The page rendered but never populated."
+    },
+    {
+      "question": "Evidence bookkeeping: run.json lists five persona reports but names personas/naive-user-1/report.json three times.",
+      "context": "run.json personaReports omits naive-user-2 and naive-user-3 entirely (their directories exist on disk with full steps/transcripts). The run also still shows status 'running' with finishedAt null. This does not change any verdict — I read the persona directories directly — but the manifest is wrong and would mislead anything that consumes it."
+    }
+  ],
+  "judgeModel": "opus",
+  "createdAt": "2026-08-12T01:26:18.803Z",
+  "signature": {
+    "payloadHash": "b2d07be72f924ad45ea8075b4e23ad7e191114530b8ee803bf82c9ca72cfc11f",
+    "signature": "43ea8cac12d5f88f3d0a3a68a0a0edb381c37ef3aaab6c1d9ca1681da2fc3e6c90a484024317afc392db36144caa509e7f47d119296058037ca98a2b614bb103",
+    "publicKey": "MCowBQYDK2VwAyEAuCdQvfPWbtyeVg8T45YLTXFjdO4MXYx4qQTU/Wi4z0A="
+  },
+  "journeyId": "d3-adopt",
+  "projectId": "proj_ligma"
+}

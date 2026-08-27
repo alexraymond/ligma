@@ -1,0 +1,77 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786531953814",
+  "personaSeed": "You are a careful academic researcher. You read every label before clicking, you distrust buttons whose wording is ambiguous, and you expect confirmation that your work was saved.",
+  "goalAchieved": true,
+  "stepCount": 52,
+  "wrongTurns": 5,
+  "elapsedMs": 700944,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "The primary handoff path is broken: 'Promote to build' on a locked brief fails every time — /api/projects/{id}/promote/preview returns HTTP 500 (4 consecutive attempts), the dialog shows a raw '500 Internal Server Error' string, and 'Confirm and compile' stays disabled with no retry guidance or explanation. The user cannot compile the contract or freeze acceptance criteria; Health stays at 'No criteria frozen yet'.",
+      "evidence": [
+        "personas/naive-user-2/shots/22-requested.png",
+        "personas/naive-user-2/shots/30-requested.png",
+        "personas/naive-user-2/shots/25-click-failed.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Clicking 'Start' on the home page creates the mission silently: no navigation, no confirmation, and the promised discovery form ('Discovery will ask a few questions as a form') is nowhere on screen. The user must hunt through Projects and the project's sub-tabs before a 'Brief' tab eventually appears with the questions.",
+      "evidence": [
+        "personas/naive-user-2/shots/03-click.png",
+        "personas/naive-user-2/shots/05-goto.png",
+        "personas/naive-user-2/shots/08-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Submitting discovery answers with 'Answer' gives no acknowledgment — the form still reads 'Ready to send.' and 'Discovery is still running' until the user manually reloads, leaving doubt about whether the answers were saved.",
+      "evidence": [
+        "personas/naive-user-2/shots/15-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "Contradictory brief status: the pipeline badge showed 'Brief ✓ locked' while the page body still said 'Discovery is still running' and offered a 'Lock the brief' button that had not been clicked yet.",
+      "evidence": [
+        "personas/naive-user-2/shots/20-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "'Run all project tasks' (icon-only button) gives no visible feedback when clicked — the task stays in 'Not started' on the Overview and the user only discovers the dispatch actually worked by opening the Runs tab, where the developer session is running.",
+      "evidence": [
+        "personas/naive-user-2/shots/46-click.png",
+        "personas/naive-user-2/shots/47-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Visiting the fresh project's Overview logs a console error: /api/projects/{id}/journeys responds HTTP 409 Conflict; nothing is shown to the user but the error fires on a page a brand-new user lands on immediately.",
+      "evidence": [
+        "personas/naive-user-2/shots/05-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Manual fallback works end to end: creating a task from the locked brief, assigning it to the Developer, and dispatching it produced a running developer session and a 'New assignment' delegation message in the Inbox — described, agreed, and handed to the builders despite the broken promote path.",
+      "evidence": [
+        "personas/naive-user-2/shots/44-click.png",
+        "personas/naive-user-2/shots/48-requested.png",
+        "personas/naive-user-2/shots/49-goto.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-2/transcript.jsonl",
+  "invalid": false
+}

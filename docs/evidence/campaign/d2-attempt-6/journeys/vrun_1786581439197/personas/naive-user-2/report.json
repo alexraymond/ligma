@@ -1,0 +1,68 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786581439197",
+  "personaSeed": "You are a careful academic researcher. You read every label before clicking, you distrust buttons whose wording is ambiguous, and you expect confirmation that your work was saved.",
+  "goalAchieved": true,
+  "stepCount": 15,
+  "wrongTurns": 3,
+  "elapsedMs": 540952,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "The brief explicitly asked to weigh in on the look before anything gets built, yet on first visit the pipeline already showed Build with 3 tasks running before the user had seen or reacted to any mockup.",
+      "evidence": [
+        "personas/naive-user-2/shots/02-goto.png",
+        "personas/naive-user-2/shots/03-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "After the user requested a design change, the newly generated version (v3) appeared already marked 'approved' with the Approve button disabled — the user never approved the revised design and was given no way to; the approval act happens without them.",
+      "evidence": [
+        "personas/naive-user-2/shots/11-click.png",
+        "personas/naive-user-2/shots/12-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The 'Open in focus mode' buttons on design cards are hover-revealed and sit behind the Critique panel at default viewport size, so clicking them times out; three attempts failed until the viewport was enlarged and the card body was clicked instead.",
+      "evidence": [
+        "personas/naive-user-2/shots/05-click-failed.png",
+        "personas/naive-user-2/shots/06-click-failed.png",
+        "personas/naive-user-2/shots/07-click-failed.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "After the requested change finished generating (v3 present, status back to 'approved'), the prompt bar still showed a 'Stop' button instead of 'Send', leaving it ambiguous whether generation was still running.",
+      "evidence": [
+        "personas/naive-user-2/shots/12-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "The Promote to build confirmation explains itself in internal jargon — 'compiles and signs the contract, freezes the oracle' — which a first-time user cannot interpret before a consequential, hard-to-reverse action.",
+      "evidence": [
+        "personas/naive-user-2/shots/14-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "The core flow succeeded end to end: prototypes were on screen, one pointed reaction produced a new version (v3, '1 file(s) from prompt'), the design baseline was frozen as approved, and Confirm and compile landed the build tasks on the Board.",
+      "evidence": [
+        "personas/naive-user-2/shots/09-click.png",
+        "personas/naive-user-2/shots/13-click.png",
+        "personas/naive-user-2/shots/15-goto.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-2/transcript.jsonl",
+  "invalid": false
+}

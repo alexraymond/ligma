@@ -1,0 +1,67 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786581439197",
+  "personaSeed": "You are a developer in a hurry between meetings. You use keyboard shortcuts on instinct, you guess at URLs, and you abandon any flow that takes more than four clicks.",
+  "goalAchieved": true,
+  "stepCount": 19,
+  "wrongTurns": 4,
+  "elapsedMs": 1331017,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "The mission brief explicitly said 'I want to see design mockups first so I can weigh in on the look before anything gets built', yet on first visit a builder had already built the settings screen ('Ready for verification: Build settings screen interface' in the inbox) and Autopilot kept launching more builder runs while I was still reviewing designs, draining the session budget from 14/40 to 26/40 without any action from me.",
+      "evidence": [
+        "personas/naive-user-3/shots/01-goto.png",
+        "personas/naive-user-3/shots/02-goto.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "At the default viewport, design cards in the Studio wall are effectively unclickable: every click is intercepted by the sticky page header, the pipeline nav, or the Critique panel, and the hover-only 'Open in focus mode' button times out. I could only select a prototype after enlarging the browser window to 1920x1400.",
+      "evidence": [
+        "personas/naive-user-3/shots/05-click-failed.png",
+        "personas/naive-user-3/shots/06-click-failed.png",
+        "personas/naive-user-3/shots/07-click-failed.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "After I sent my one change request, the Studio status stayed on 'drafting' with a Stop button for over six minutes even though the new version (v4) had already been saved; only a page reload revealed the true finished/approved state. A user watching the live page would think it was still working or stuck.",
+      "evidence": [
+        "personas/naive-user-3/shots/09-click.png",
+        "personas/naive-user-3/shots/15-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The new version generated from my feedback appeared already marked 'approved' — the Approve button was never enabled for me to click, so the explicit sign-off moment the design flow implies never actually happened; I only got to confirm the promote step.",
+      "evidence": [
+        "personas/naive-user-3/shots/16-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "The Tweaks panel shows '#000000' for every color token and 0 for every slider regardless of the design's real values, and the console fills with 'value must be a valid CSS color' warnings, so a user cannot read or trust the current design tokens from it.",
+      "evidence": [
+        "personas/naive-user-3/shots/16-requested.png",
+        "personas/naive-user-3/shots/18-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "The Promote to build confirmation dialog explains itself as 'One confirm compiles and signs the contract, freezes the oracle and lands the tasks on the Board' — jargon that means nothing to a first-time user deciding whether to hand designs to builders.",
+      "evidence": [
+        "personas/naive-user-3/shots/19-click.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-3/transcript.jsonl",
+  "invalid": false
+}

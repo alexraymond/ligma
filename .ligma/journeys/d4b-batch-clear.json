@@ -1,0 +1,21 @@
+{
+ "id": "d4b-batch-clear",
+ "title": "Clear a big queue in one pass",
+ "goal": "Fifteen-plus cards are waiting on you and you have two minutes, not twenty. Clear at least five decisions in a single pass using the together/batch review the queue offers when ten or more are waiting \u2014 answering them one at a time defeats the purpose and will not fit in the time you have. Success is the waiting count dropping by at least five after one batch action.",
+ "steps": [
+  "Open the queue of things waiting on you",
+  "Take the batch/together review the queue offers while ten or more are waiting \u2014 not the one-at-a-time cards",
+  "Select at least five decisions and answer them in one pass",
+  "Confirm the waiting count dropped by at least five in that single action"
+ ],
+ "tags": [
+  "campaign",
+  "d4",
+  "ui",
+  "browser"
+ ],
+ "origin": "human",
+ "schedule": null,
+ "createdAt": "2026-08-12T00:00:00.000Z",
+ "updatedAt": "2026-08-12T00:00:00.000Z"
+}

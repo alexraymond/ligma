@@ -1,0 +1,69 @@
+{
+  "charter": "returning-user",
+  "runId": "vrun_1786489166774",
+  "personaSeed": null,
+  "goalAchieved": false,
+  "stepCount": 38,
+  "wrongTurns": 4,
+  "elapsedMs": 723298,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "Adopting a repo never succeeds: five runs across three different local repos all died in the harness before the review sheet ('Command failed: pnpm install', 'packages field missing or empty', 'Env … never became healthy at http://localhost:5173'), each failure deterministic on retry. A returning user cannot bring any existing repo into the product at all.",
+      "evidence": [
+        "personas/returning-user/shots/12-requested.png",
+        "personas/returning-user/shots/16-requested.png",
+        "personas/returning-user/shots/20-requested.png",
+        "personas/returning-user/shots/24-requested.png",
+        "personas/returning-user/shots/33-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "The adoption failure page is a dead end: no retry button, no way to see the env's boot log, and no way to view or correct the inferred boot recipe it chose (it guessed pnpm for every repo). The user must navigate back Home and re-type the path from scratch each attempt.",
+      "evidence": [
+        "personas/returning-user/shots/33-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Each failed adoption silently burned Claude session quota — the Governor gauge went from 20/40 to 25/40 across five harness-fault runs, spending a quarter of the user's remaining agent budget on runs the product itself calls malfunctions.",
+      "evidence": [
+        "personas/returning-user/shots/24-requested.png",
+        "personas/returning-user/shots/30-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "On the Home 'Start something new' form, the 'Adopt a repo' mode toggle and the 'Adopt' submit button have overlapping accessible names; a click matching 'Adopt' can hit the toggle instead, which flips the form back to prompt mode and silently discards the repo path the user typed, with no warning.",
+      "evidence": [
+        "personas/returning-user/shots/07-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "What the product did keep, it kept intact: the failed adoption run record echoed my entered path '/Users/alexraymond/ligma-classic' character for character, survived /reload unchanged, and was still identical in a brand-new tab/session (path, error text, and env id all string-exact). The failure copy is also honest — 'harness malfunction, not a verdict' and 'nothing was written into the repo'.",
+      "evidence": [
+        "personas/returning-user/shots/33-requested.png",
+        "personas/returning-user/shots/34-requested.png",
+        "personas/returning-user/shots/36-requested.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Runs → Environment Preflight already warns '1 of 10 checks need attention: git worktree support — HEAD is detached, envs will branch off a bare commit', a plausible contributor to ephemeral envs never becoming healthy, but nothing links the adoption failures to this diagnostic.",
+      "evidence": [
+        "personas/returning-user/shots/30-click.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/returning-user/transcript.jsonl",
+  "invalid": false
+}

@@ -1,0 +1,111 @@
+{
+  "runId": "vrun_1786509888773",
+  "taskId": null,
+  "contractId": "ctr_1786509888774",
+  "contractVersion": 3,
+  "outcome": "failed",
+  "criterionVerdicts": [
+    {
+      "criterionId": "crit_goal",
+      "status": "unknown",
+      "reasoning": "No single persona completed the whole journey. naive-user-1 did clear the entire deck from the Deck alone in ~2.5 minutes (12 decisions, then the design approval, the stale brief, the verdict spot-check — see the 12→3→2→1 'waiting' counter across shots 02, 16, 17, 18), but its take-back attempt was issued ~9.5s after answering and the Undo control was already gone (steps.jsonl index 19, 10s timeout, 19-click-failed.png). The take-back was demonstrated separately by spec-auditor in a re-seeded session (23/24/25-click.png), and the batch pass was never attempted by anyone. Partial coverage across two sessions is not an observation of the goal being accomplished end to end, so this stays unknown.",
+      "evidence": [
+        "personas/naive-user-1/shots/02-goto.png",
+        "personas/naive-user-1/shots/16-click.png",
+        "personas/naive-user-1/shots/17-click.png",
+        "personas/naive-user-1/shots/18-click.png",
+        "personas/naive-user-1/shots/19-click-failed.png"
+      ]
+    },
+    {
+      "criterionId": "crit_1",
+      "status": "met",
+      "reasoning": "naive-user-1's 02-goto.png shows the Deck at '12 waiting' holding decision cards, and its later shots show the same Deck surfacing the design approval (16-click.png), the stale brief (17-click.png) and the verdict spot-check — all four kinds cleared from /deck without leaving it. spec-auditor also marks crit_1 met (07-goto.png, 08-click.png). The later personas' 'Nothing is waiting on you' (naive-user-2 13-goto.png, naive-user-3 15-goto.png) is the shared instance already emptied by naive-user-1, not a contradiction of the populated state.",
+      "evidence": [
+        "personas/naive-user-1/shots/02-goto.png",
+        "personas/naive-user-1/shots/17-click.png",
+        "personas/spec-auditor/shots/08-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_2",
+      "status": "met",
+      "reasoning": "naive-user-1's 02-goto.png shows a decision card carrying its own context paragraph, the linked task, and three option buttons; 12 consecutive single clicks on option buttons (steps 3–15) drove the counter from 12 waiting to 3 waiting (16-click.png) with no navigation and no keyboard. spec-auditor corroborates with a plain text click on 'CSS animations only (lightweight)' producing an 'Answered' toast (23/24-click.png) and marks crit_2 met. One caveat: naive-user-1 step 10 clicked the option's words where they also appear in the body copy and nothing happened (10/11-click.png) — the button itself worked on retry.",
+      "evidence": [
+        "personas/naive-user-1/shots/02-goto.png",
+        "personas/naive-user-1/shots/16-click.png",
+        "personas/spec-auditor/shots/24-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_3",
+      "status": "unknown",
+      "reasoning": "The offer exists — naive-user-1's 02-goto.png shows the banner '12 cards are waiting. One at a time will take a while — review the decisions together instead.' with a 'Batch review' button — but no persona ever took it. Grepping every steps.jsonl shows zero clicks on 'Batch review'; naive-user-1 answered all 12 one card at a time, and spec-auditor marks crit_3 not-tested because by its session the queue was down to one card. Selecting five, acting on all five in one pass, and checking the count dropped by five was never performed or observed.",
+      "evidence": [
+        "personas/naive-user-1/shots/02-goto.png",
+        "personas/spec-auditor/shots/08-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_4",
+      "status": "met",
+      "reasoning": "naive-user-1's 16-click.png shows the design-approval card on the Deck at '3 waiting': title 'Approve \"Landing page — hero and CTA\"?', a rendered preview of the design, and Versions/Critique score 82/Open pins 0, with 'Approve' and 'Keep iterating' buttons. Step 16 clicked Approve and the next shot (17-click.png) shows the Deck at '2 waiting' on the next card — the approval registered without leaving the Deck. spec-auditor recorded this as not-tested because the card was gone by its session; naive-user-1's shots are the affirmative evidence.",
+      "evidence": [
+        "personas/naive-user-1/shots/16-click.png",
+        "personas/naive-user-1/shots/17-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_5",
+      "status": "met",
+      "reasoning": "naive-user-1's 17-click.png shows the Deck at '2 waiting' with the card 'The brief changed after its contract was compiled', tagged 'Stale brief', showing both the compiled contract line and the new brief text, with 'Acknowledge — the change is cosmetic'. Step 17 clicked it and the following shot (18-click.png) shows the Deck emptied down to the verdict card's completion — the badge dropped to 1 and the deck went clear. Handled entirely from the Deck.",
+      "evidence": [
+        "personas/naive-user-1/shots/17-click.png",
+        "personas/naive-user-1/shots/18-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_6",
+      "status": "met",
+      "reasoning": "spec-auditor's 24-click.png shows the spot-check card in full on the Deck: 'CRITERION UNDER REVIEW — CTA button is above the fold on mobile' and 'The judge said — not-met: At 390×844 the CTA sits 60px below the fold…', with 'Looks right' / 'The judge got this wrong'. Both the criterion and the judge's reasoning are on the card; step 26 answered it from there with no navigation into the run. naive-user-1 also answered the same card from the Deck (step 18) and got a 'Verdict confirmed' toast (18-click.png). spec-auditor marks crit_6 met.",
+      "evidence": [
+        "personas/spec-auditor/shots/24-click.png",
+        "personas/spec-auditor/shots/26-click.png",
+        "personas/naive-user-1/shots/18-click.png"
+      ]
+    },
+    {
+      "criterionId": "crit_7",
+      "status": "met",
+      "reasoning": "spec-auditor answered the animation-library decision (step 23) and clicked Undo within the same second (step 24): 24-click.png shows the 'Answered — Which animation library for the hero secti…' toast with a live countdown at 10 and the button in its 'Undoing…' state while the Deck reads '1 waiting'; the next shot 25-click.png shows '2 waiting' with that exact decision card back at the front of the queue. That is the answer returning to the queue, observed. Three personas reported 'no undo ever appeared', but naive-user-1's 18-click.png disproves the general claim — the toast with the countdown and an Undo button is plainly visible after a spot-check answer; those personas simply looked after the 10s window had closed (naive-user-1's own attempt came ~9.5s later and timed out).",
+      "evidence": [
+        "personas/spec-auditor/shots/24-click.png",
+        "personas/spec-auditor/shots/25-click.png",
+        "personas/naive-user-1/shots/18-click.png"
+      ]
+    }
+  ],
+  "humanDecisions": [
+    {
+      "question": "The take-back works, but 10 seconds via a transient toast is the only path — once it lapses the answer is permanent everywhere. Is that window acceptable?",
+      "context": "spec-auditor's first genuine Undo attempt timed out (17-click-failed.png) and naive-user-1's attempt ~9.5s after answering found no Undo control anywhere — not in the Answered list, not in List view, not on the item's own page (19-click-failed.png, 20-click.png, 21-goto.png). All 12 prior answers showed 'Undo window closed'. Three of five personas concluded the feature did not exist at all, which is itself a signal about discoverability."
+    },
+    {
+      "question": "Should a verdict spot-check, design approval or stale-brief acknowledgement leave a visible record on the Deck the way decisions do?",
+      "context": "After clearing everything, naive-user-1's List view shows 'Answered (12)' — the decisions only (20-click.png). The design approval, brief acknowledgement and verdict confirmation vanish with no history entry, so a user cannot see what they chose. Two personas read this absence as 'my answer did not save'."
+    },
+    {
+      "question": "The batch flow was never exercised — is a re-run needed before signing off, and should the seed be per-persona?",
+      "context": "All five personas shared one instance. naive-user-1 drained the queue card-by-card in the first 2.5 minutes, so personas 2, 3 and the returning user arrived at an empty Deck and 'Load demo data' only re-seeds a single decision (spec-auditor 06/19-click.png). The 'Batch review' offer at 12 waiting is visible in naive-user-1/02-goto.png but nobody clicked it, and no later persona could reach a 10+ queue to try."
+    }
+  ],
+  "judgeModel": "opus",
+  "createdAt": "2026-08-12T05:20:22.783Z",
+  "signature": {
+    "payloadHash": "f5beff95d73596b98cf0abc3301e57642e62e76f3eec9e435bab12cfdd08c748",
+    "signature": "2621623d2a8421c4b606cae141d7c78dc9fe900451c091df932450ef514e3bdb1471657c01bb002e565b32102d4706377dc86796ce308c751f61506f65898d01",
+    "publicKey": "MCowBQYDK2VwAyEAuCdQvfPWbtyeVg8T45YLTXFjdO4MXYx4qQTU/Wi4z0A="
+  },
+  "journeyId": "d4-deck",
+  "projectId": "proj_ligma"
+}

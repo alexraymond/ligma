@@ -1,0 +1,5 @@
+{"ts": "2026-08-09T14:02:14.800Z", "role": "assistant", "text": "Trying to break the hit-points invariant. First the form, then the raw API if the form blocks me."}
+{"ts": "2026-08-09T14:02:22.100Z", "role": "tool", "text": "bridge.fill(selector=\"[name=hp]\", value=\"-999\") -> ok"}
+{"ts": "2026-08-09T14:02:30.600Z", "role": "assistant", "text": "Client validation caught it. Going around it with a direct API call."}
+{"ts": "2026-08-09T14:02:44.900Z", "role": "tool", "text": "bridge.request(method=\"POST\", url=\"/api/characters/char_1a2b\", body={\"hp\":-999}) -> 200"}
+{"ts": "2026-08-09T14:02:45.200Z", "role": "assistant", "text": "200 response is suspicious — the server should reject this. Could not verify the persisted state before the session closed."}

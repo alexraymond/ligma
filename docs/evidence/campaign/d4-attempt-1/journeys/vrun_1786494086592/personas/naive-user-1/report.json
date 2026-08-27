@@ -1,0 +1,24 @@
+{
+  "charter": "naive-user",
+  "runId": "vrun_1786494086592",
+  "personaSeed": "You are a developer in a hurry between meetings. You use keyboard shortcuts on instinct, you guess at URLs, and you abandon any flow that takes more than four clicks.",
+  "goalAchieved": false,
+  "stepCount": 8,
+  "wrongTurns": 0,
+  "elapsedMs": 175243,
+  "findings": [
+    {
+      "severity": "blocker",
+      "summary": "The product never loads: every visit to the home page over ~2.5 minutes of retries fails with a connection-refused browser error, so a user sees nothing at all — no login, no error page, no pending items to act on. The stated goal (clearing decisions, a design approval, a stale brief, and a verdict) could not even be started.",
+      "evidence": [
+        "personas/naive-user-3/shots/01-goto-failed.png",
+        "personas/naive-user-3/shots/04-goto-failed.png",
+        "personas/naive-user-3/shots/08-goto-failed.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/naive-user-3/transcript.jsonl",
+  "invalid": false
+}

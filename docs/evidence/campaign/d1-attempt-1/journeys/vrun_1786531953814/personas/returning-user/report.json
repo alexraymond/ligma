@@ -1,0 +1,52 @@
+{
+  "charter": "returning-user",
+  "runId": "vrun_1786531953814",
+  "personaSeed": null,
+  "goalAchieved": true,
+  "stepCount": 74,
+  "wrongTurns": 4,
+  "elapsedMs": 768716,
+  "findings": [
+    {
+      "severity": "major",
+      "summary": "The 'Promote to build' step — the product's own path to compile the locked brief into builder tasks — failed three consecutive times with a raw '500 Internal Server Error' shown in the confirm dialog, leaving 'Confirm and compile' permanently disabled. The handoff had to be done manually via the New Task dialog instead.",
+      "evidence": [
+        "personas/returning-user/shots/44-click.png",
+        "personas/returning-user/shots/45-click-failed.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "major",
+      "summary": "Submitting the discovery questionnaire failed silently (HTTP 409, then two HTTP 400s, visible only in the console) — the page kept saying 'Ready to send.' with no error message, and reloading wiped all selected answers, forcing full re-entry. The same answers were later accepted unchanged, so the rejections were spurious.",
+      "evidence": [
+        "personas/returning-user/shots/11-click.png",
+        "personas/returning-user/shots/12-click.png",
+        "personas/returning-user/shots/19-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "minor",
+      "summary": "In the Create Task dialog, two different projects render identically truncated labels ('I want a REST API that shortens URLs, with rate limiting …') in the Project dropdown, making it impossible to tell which project a task is being attached to without checking afterwards.",
+      "evidence": [
+        "personas/returning-user/shots/62-click.png"
+      ],
+      "criterionId": null
+    },
+    {
+      "severity": "note",
+      "summary": "Data that was accepted came back byte-for-byte intact across /reload and a fresh new-tab session: the mission ask 'I want a REST API that shortens URLs, with rate limiting per client (returning-user acceptance pass #7).', all 13 discovery answers, the locked-brief state, and the handoff task title 'Build the URL shortener REST API per locked brief (pass #7)' with its full 141-character description assigned to the developer.",
+      "evidence": [
+        "personas/returning-user/shots/64-requested.png",
+        "personas/returning-user/shots/65-requested.png",
+        "personas/returning-user/shots/67-requested.png",
+        "personas/returning-user/shots/69-requested.png"
+      ],
+      "criterionId": null
+    }
+  ],
+  "criterionResults": null,
+  "transcriptPath": "personas/returning-user/transcript.jsonl",
+  "invalid": false
+}
