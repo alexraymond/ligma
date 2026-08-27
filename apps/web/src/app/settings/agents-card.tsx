@@ -90,7 +90,7 @@ export function AgentsCard() {
   }
 
   return (
-    <Card>
+    <Card id="agents">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>

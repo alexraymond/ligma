@@ -1,5 +1,6 @@
 'use client';
 
+import { AuthBanner } from '@/components/auth-banner';
 import { BreadcrumbNav } from '@/components/breadcrumb-nav';
 import { ErrorState } from '@/components/error-state';
 import { KickoffComposer } from '@/components/kickoff-composer';
@@ -137,6 +138,10 @@ export default function HomePage() {
   return (
     <div className="space-y-6">
       <BreadcrumbNav items={[]} />
+
+      {/* First-run guidance: there is no in-app auth, so this is the only
+          place a fresh clone learns it needs a signed-in Claude Code CLI. */}
+      <AuthBanner />
 
       {/* The front door (UX spec F1): one prompt box, and the result lands in the rail. */}
       <KickoffComposer />
