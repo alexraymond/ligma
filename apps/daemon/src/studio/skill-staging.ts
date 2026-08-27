@@ -24,7 +24,7 @@
 import type { Dirent } from 'node:fs';
 import { copyFile, mkdir, readdir, rm, stat } from 'node:fs/promises';
 import path from 'node:path';
-import { skillCatalogRoot } from '../routes/skill-catalog/route';
+import { rootForSkill } from '../routes/skill-catalog/route';
 import { designDir, resolveInsideRoot } from './paths';
 
 /**
@@ -113,12 +113,15 @@ export async function stageSkills(
   await rm(root, { recursive: true, force: true });
   if (ids.length === 0) return [];
 
-  const catalog = skillCatalogRoot();
   const staged: StagedSkill[] = [];
   let budget = MAX_STAGED_BYTES;
 
   for (const id of ids.slice(0, MAX_MENTIONS)) {
     if (!SKILL_ID.test(id)) continue;
+    // Authored skills (DATA_DIR) shadow vendored ones, exactly as the catalog
+    // route lists them — an `@mention` stages what the catalog shows.
+    const catalog = await rootForSkill(id);
+    if (catalog === null) continue;
     const from = path.join(catalog, id);
     const files = await skillFiles(from);
     // No SKILL.md, no skill — an `@` that happens to match a stray directory

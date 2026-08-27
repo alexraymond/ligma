@@ -26,7 +26,7 @@ import path from 'node:path';
 import type { SkillCatalogDetail, SkillCatalogEntry, SkillCatalogResponse } from '@ligma/api';
 import { parseFrontmatter } from '@ligma/core/skills';
 import { type NextRequest, NextResponse } from '../../http';
-import { REPO_ROOT } from '../../paths';
+import { REPO_ROOT, dataRootInfo } from '../../paths';
 import { isSafeSegment } from '../verification-runs/_lib';
 
 /** The vendored catalog root. Overridable so tests can point at a fixture. */
@@ -34,6 +34,35 @@ export function skillCatalogRoot(): string {
   return process.env.LIGMA_SKILLS_DIR
     ? path.resolve(process.env.LIGMA_SKILLS_DIR)
     : path.join(REPO_ROOT, 'skills');
+}
+
+/**
+ * Where user-authored skills are written (`store/sync-commands.ts`).
+ *
+ * Store data, so it follows DATA_DIR and gets no knob of its own — the same
+ * split `design-systems/route.ts` already makes between the vendored catalog
+ * and `authoredDesignSystemsRoot()`. The vendored tree is read-only, tracked
+ * content of the checkout; a skill the user authors is theirs and belongs in
+ * their store.
+ */
+export function authoredSkillsRoot(): string {
+  return path.join(dataRootInfo().path, 'skills');
+}
+
+/**
+ * Both roots, lowest priority first — authored shadows vendored on a shared id,
+ * matching `loadAllSkills()`'s project > user > builtin merge.
+ */
+export function skillRoots(): string[] {
+  return [skillCatalogRoot(), authoredSkillsRoot()];
+}
+
+/** Which root holds `<id>`, authored first. null when neither does. */
+export async function rootForSkill(id: string): Promise<string | null> {
+  for (const root of [...skillRoots()].reverse()) {
+    if (await isDirectory(path.join(root, id))) return root;
+  }
+  return null;
 }
 
 async function isDirectory(target: string): Promise<boolean> {
@@ -86,14 +115,13 @@ async function listFiles(dir: string): Promise<string[]> {
   return out;
 }
 
-async function list(root: string): Promise<SkillCatalogResponse> {
+async function listRoot(root: string, into: Map<string, SkillCatalogEntry>): Promise<void> {
   let entries: string[];
   try {
     entries = await readdir(root);
   } catch {
-    return { skills: [] };
+    return;
   }
-  const skills: SkillCatalogEntry[] = [];
   for (const id of entries.sort()) {
     // `LICENSE`, `README.md`, `AGENTS.md` sit beside the packages, not inside
     // one; `_`/`.`-prefixed entries mirror the schema-directory convention the
@@ -104,9 +132,15 @@ async function list(root: string): Promise<SkillCatalogResponse> {
     if (!(await isDirectory(dir))) continue;
     const raw = await readSkillMd(dir);
     if (raw === null) continue;
-    skills.push(summarise(id, raw));
+    into.set(id, summarise(id, raw));
   }
-  return { skills };
+}
+
+/** Vendored ∪ authored, by id — later root wins, so authored shadows vendored. */
+async function list(): Promise<SkillCatalogResponse> {
+  const merged = new Map<string, SkillCatalogEntry>();
+  for (const root of skillRoots()) await listRoot(root, merged);
+  return { skills: [...merged.values()].sort((a, b) => a.id.localeCompare(b.id)) };
 }
 
 async function detail(root: string, id: string): Promise<SkillCatalogDetail | null> {
@@ -118,19 +152,19 @@ async function detail(root: string, id: string): Promise<SkillCatalogDetail | nu
 }
 
 export async function GET(request: NextRequest): Promise<Response> {
-  const root = skillCatalogRoot();
   const id = request.nextUrl.searchParams.get('id');
   const headers = { 'Cache-Control': 'private, max-age=30, stale-while-revalidate=300' };
 
   if (id === null) {
-    return NextResponse.json(await list(root), { headers });
+    return NextResponse.json(await list(), { headers });
   }
   // A traversal attempt is rejected before it ever reaches the filesystem —
   // ids are bare directory names, so anything with a separator is invalid.
   if (!isSafeSegment(id)) {
     return NextResponse.json({ error: 'Invalid skill id' }, { status: 400 });
   }
-  const found = await detail(root, id);
+  const root = await rootForSkill(id);
+  const found = root === null ? null : await detail(root, id);
   if (!found) {
     return NextResponse.json({ error: `Skill not found: ${id}` }, { status: 404 });
   }

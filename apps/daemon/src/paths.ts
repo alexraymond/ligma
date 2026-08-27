@@ -39,9 +39,9 @@ export type RootSource = 'env' | 'default';
  * `~/.ligma/data`, NOT `<repo>/data` (docs/DECISIONS.md 2026-08-13, "Data root
  * moves outside the checkout"): product evidence, per-project baselines,
  * contracts and pty sessions are a user's data, and a checkout is not where a
- * user's data goes. `LIGMA_DATA_DIR` is the only override — the dogfood
- * instance uses it to pin the store back to `<repo>/data`, visibly, in
- * `apps/daemon/package.json`'s scripts.
+ * user's data goes. `LIGMA_DATA_DIR` is the only override, and nothing in this
+ * repo sets it any more: the dogfood pin back to `<repo>/data` is gone, so a
+ * daemon started from a checkout writes nothing into that checkout.
  *
  * Shaped like `productsRootInfo()` (store/product-repo.ts) so a caller that
  * wants to *show* the path can also say why it is that path.

@@ -4,8 +4,8 @@ import type { AgentDefinition, SkillDefinition } from '@ligma/api';
 import { getAgents, getSkillsLibrary } from './data';
 
 import { WORKSPACE_ROOT } from '../paths';
+import { authoredSkillsRoot } from '../routes/skill-catalog/route';
 const COMMANDS_DIR = path.join(WORKSPACE_ROOT, '.claude', 'commands');
-const SKILLS_DIR = path.join(WORKSPACE_ROOT, 'skills');
 
 // ─── Agent Command Generation ──────────────────────────────────────────────
 
@@ -122,7 +122,17 @@ function generateSkillFileContent(skill: SkillDefinition): string {
 }
 
 /**
- * Writes/updates `skills/<skill.id>/SKILL.md` from skill data.
+ * Writes/updates `<DATA_DIR>/skills/<skill.id>/SKILL.md` from skill data.
+ *
+ * The store, not the checkout and not `WORKSPACE_ROOT/skills` (where this used
+ * to write): an authored skill is the user's data. `/api/skill-catalog` reads
+ * this root overlaid on the vendored one, so a skill written here is a skill
+ * the catalog and the studio's `@`-mentions can see.
+ *
+ * Migration: skills authored before the move wrote to `WORKSPACE_ROOT/skills`
+ * (`~/skills`), a directory nothing ever read back. `skills-library.json` is
+ * the source of truth for every one of them, so `POST /api/sync` rewrites the
+ * lot into the new root and the old directory is stale — delete it by hand.
  */
 export async function syncSkillFile(skill: SkillDefinition): Promise<void> {
   // The id becomes a directory name. Validated at the write routes too
@@ -133,7 +143,7 @@ export async function syncSkillFile(skill: SkillDefinition): Promise<void> {
     throw new Error(`Unsafe skill id "${skill.id}" — must match /^[A-Za-z0-9_-]+$/`);
   }
   const content = generateSkillFileContent(skill);
-  const dir = path.join(SKILLS_DIR, skill.id);
+  const dir = path.join(authoredSkillsRoot(), skill.id);
   await mkdir(dir, { recursive: true });
   await writeFile(path.join(dir, 'SKILL.md'), content, 'utf-8');
 }

@@ -23,7 +23,7 @@ canonical source if this page and the code ever disagree.
 | `LIGMA_WORKSPACE_ROOT` | `REPO_ROOT/..` | The directory containing the checkout — used to resolve sibling repos. |
 | `LIGMA_CRAFT_DIR` | `<repo>/craft` | The craft rule-file directory the studio critic reads. |
 | `LIGMA_DESIGN_SYSTEMS_DIR` | `<repo>/design-systems` | The vendored design-system catalog root. |
-| `LIGMA_SKILLS_DIR` | `<repo>/skills` | The skill-catalog directory served by `/api/skill-catalog`. |
+| `LIGMA_SKILLS_DIR` | `<repo>/skills` | The **vendored** (read-only) half of the skill catalog. `/api/skill-catalog` serves it overlaid with `<DATA_DIR>/skills`, where user-authored skills are written; an authored id shadows a vendored one. |
 | `LIGMA_DAEMON_PORT` | `4477` | The daemon's HTTP port (binds `127.0.0.1` only). |
 | `NEXT_PUBLIC_LIGMA_DAEMON_URL` | `http://127.0.0.1:4477` | Where the web app's `/api/*` rewrite points (`apps/web/next.config.ts`). Only needs setting if the daemon runs on a non-default port or host. |
 

@@ -7,20 +7,25 @@
  * checkout, except for the one "the real checkout is actually served" test.
  */
 
-import { mkdtempSync } from 'node:fs';
-import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { existsSync, mkdtempSync } from 'node:fs';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import type { SkillCatalogDetail, SkillCatalogResponse } from '@ligma/api';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { DaemonRequest } from '../src/http';
+import { REPO_ROOT } from '../src/paths';
 
 const dataDir = mkdtempSync(path.join(tmpdir(), 'ligma-skill-catalog-'));
 process.env.LIGMA_DATA_DIR = dataDir;
 
-const { GET: getSkillCatalog, skillCatalogRoot } = await import(
-  '../src/routes/skill-catalog/route'
-);
+const {
+  GET: getSkillCatalog,
+  authoredSkillsRoot,
+  skillCatalogRoot,
+} = await import('../src/routes/skill-catalog/route');
+const { syncSkillFile } = await import('../src/store/sync-commands');
+const { stageSkills, stagedSkillsDir } = await import('../src/studio/skill-staging');
 
 afterAll(async () => {
   await rm(dataDir, { recursive: true, force: true });
@@ -166,5 +171,104 @@ describe('skillCatalogRoot()', () => {
     process.env.LIGMA_SKILLS_DIR = '/tmp/custom-skills';
     expect(skillCatalogRoot()).toBe('/tmp/custom-skills');
     delete process.env.LIGMA_SKILLS_DIR;
+  });
+});
+
+// ─── The authored overlay ────────────────────────────────────────────────────
+//
+// A skill the user authors is written to <DATA_DIR>/skills, never into the
+// checkout and never into `WORKSPACE_ROOT/skills` (where `syncSkillFile` used
+// to write, and where nothing ever read it back). The catalog serves the two
+// roots as one, authored shadowing vendored.
+
+describe('authored skills overlay', () => {
+  const vendored = path.join(tmpdir(), `ligma-skills-vendored-${Date.now()}`);
+
+  const skillMd = (id: string, description: string, body: string) =>
+    ['---', `name: ${id}`, 'description: >', `  ${description}`, '---', '', body, ''].join('\n');
+
+  beforeAll(async () => {
+    await mkdir(path.join(vendored, 'brand-extract'), { recursive: true });
+    await writeFile(
+      path.join(vendored, 'brand-extract', 'SKILL.md'),
+      skillMd('brand-extract', 'The vendored one.', '# vendored body'),
+    );
+  });
+
+  afterEach(async () => {
+    await rm(authoredSkillsRoot(), { recursive: true, force: true });
+  });
+
+  afterAll(async () => {
+    await rm(vendored, { recursive: true, force: true });
+  });
+
+  it('writes an authored skill under DATA_DIR, not the checkout', async () => {
+    await syncSkillFile({
+      id: 'my-own-skill',
+      name: 'My own skill',
+      description: 'Authored here.',
+      content: '# mine',
+      agentIds: [],
+      tags: [],
+      createdAt: '2026-08-27T00:00:00.000Z',
+      updatedAt: '2026-08-27T00:00:00.000Z',
+    });
+
+    expect(authoredSkillsRoot()).toBe(path.join(dataDir, 'skills'));
+    const written = await readFile(
+      path.join(dataDir, 'skills', 'my-own-skill', 'SKILL.md'),
+      'utf-8',
+    );
+    expect(written).toContain('name: my-own-skill');
+    // The vendored catalog in the checkout is untouched.
+    expect(existsSync(path.join(REPO_ROOT, 'skills', 'my-own-skill'))).toBe(false);
+  });
+
+  it('lists authored and vendored skills as one catalog', async () => {
+    process.env.LIGMA_SKILLS_DIR = vendored;
+    await mkdir(path.join(authoredSkillsRoot(), 'my-own-skill'), { recursive: true });
+    await writeFile(
+      path.join(authoredSkillsRoot(), 'my-own-skill', 'SKILL.md'),
+      skillMd('my-own-skill', 'Authored here.', '# mine'),
+    );
+
+    const body = (await (await skillCatalog()).json()) as SkillCatalogResponse;
+    expect(body.skills.map((s) => s.id)).toEqual(['brand-extract', 'my-own-skill']);
+  });
+
+  it('an authored skill shadows a vendored one with the same id', async () => {
+    process.env.LIGMA_SKILLS_DIR = vendored;
+    await mkdir(path.join(authoredSkillsRoot(), 'brand-extract'), { recursive: true });
+    await writeFile(
+      path.join(authoredSkillsRoot(), 'brand-extract', 'SKILL.md'),
+      skillMd('brand-extract', 'The authored one.', '# authored body'),
+    );
+
+    const body = (await (await skillCatalog()).json()) as SkillCatalogResponse;
+    expect(body.skills).toHaveLength(1);
+    expect(body.skills[0].description).toBe('The authored one.');
+
+    const detail = (await (await skillCatalog('?id=brand-extract')).json()) as SkillCatalogDetail;
+    expect(detail.body).toBe('# authored body');
+  });
+
+  it('stages the authored copy for an @mention', async () => {
+    process.env.LIGMA_SKILLS_DIR = vendored;
+    await mkdir(path.join(authoredSkillsRoot(), 'brand-extract'), { recursive: true });
+    await writeFile(
+      path.join(authoredSkillsRoot(), 'brand-extract', 'SKILL.md'),
+      skillMd('brand-extract', 'The authored one.', '# authored body'),
+    );
+
+    const projectId = 'proj_overlay';
+    const designId = 'dsn_overlay';
+    const staged = await stageSkills(projectId, designId, ['brand-extract']);
+    expect(staged).toEqual([{ id: 'brand-extract', files: ['SKILL.md'], truncated: false }]);
+    const copied = await readFile(
+      path.join(stagedSkillsDir(projectId, designId), 'brand-extract', 'SKILL.md'),
+      'utf-8',
+    );
+    expect(copied).toContain('# authored body');
   });
 });
